@@ -1,0 +1,28 @@
+# AC-LOAN-03 黑盒并发验证证据（2026-11-18，dev 实例运行中实测）
+
+脚本：/tmp/acc-concurrency-check.mjs 与 /tmp/acc-conc3-check.mjs（副本已归档到本目录）
+
+## 场景 1：10 个并发请求借同一副本（副本 C00000031，读者 R000006）
+```
+S1: 201=1 COPY_NOT_AVAILABLE=9 other=[]
+PASS | 10 并发借同一副本恰好 1 成功
+active-on-copy=1 PASS
+```
+
+## 场景 2：同一读者并发借 8 本不同书目（读者 R000010）
+（第一次尝试用同一书目 8 副本，被 D4② DUPLICATE_BOOK_LOAN 正确拒绝——规则本身工作正常）
+```
+reader=R000010 books=8
+201=5 LIMIT=3 other=[]
+PASS | 同一读者并发借 8 本不同书成功数≤5
+activeLoanCount=5 PASS
+```
+
+## 场景 3：同一借阅并发还两次（借阅 id=13）
+```
+S3: statuses=409,200 codes=LOAN_ALREADY_RETURNED|OK
+PASS | 并发还两次恰好 1 成功
+```
+
+## 结论
+AC-LOAN-03 黑盒并发验证全部通过；与后端 LoanConcurrencyTest（mvn verify 中通过）相互印证。

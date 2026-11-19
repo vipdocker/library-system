@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>图书馆管理系统 · 项目交付总结报告（简版）</title>
+  <style>
+    :root { --navy: #193550; --ink: #25313b; --muted: #62717e; --line: #d8dfe5; --paper: #fff; --tint: #f3f6f8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #e9edf1; color: var(--ink); font: 13px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .sheet { width: min(210mm, calc(100% - 32px)); margin: 28px auto; padding: 12mm 15mm 10mm; background: var(--paper); box-shadow: 0 3px 18px #1935500c; }
+    header { border-top: 4px solid var(--navy); border-bottom: 1px solid var(--line); padding: 14px 0 12px; }
+    .eyebrow { margin: 0 0 4px; color: var(--muted); font-size: 10px; letter-spacing: 2px; }
+    h1 { margin: 0; color: var(--navy); font-size: 25px; line-height: 1.45; font-weight: 650; letter-spacing: 1px; }
+    .subtitle { margin: 2px 0 9px; color: var(--navy); font-size: 16px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 4px 24px; color: var(--muted); font-size: 11px; }
+    .conclusion { border-left: 3px solid var(--navy); background: var(--tint); padding: 10px 13px; margin: 17px 0 13px; }
+    .conclusion strong { color: var(--navy); }
+    p { margin: 0; }
+    section { margin-top: 13px; }
+    h2 { margin: 0 0 5px; font-size: 14px; color: var(--navy); font-weight: 650; }
+    .number { display: inline-block; min-width: 22px; font-family: Georgia, serif; font-variant-numeric: tabular-nums; }
+    .metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--line); margin: 8px 0 5px; }
+    .metric { padding: 8px 4px; text-align: center; border-right: 1px solid var(--line); }
+    .metric:last-child { border-right: 0; }
+    .metric dt { font-size: 10.5px; color: var(--muted); }
+    .metric dd { margin: 0; font-size: 23px; line-height: 1.4; font-family: Georgia, "Times New Roman", serif; color: var(--navy); font-variant-numeric: tabular-nums; }
+    .small { font-size: 10.5px; color: var(--muted); }
+    .stages { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 1.6; }
+    .stages th, .stages td { padding: 5px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .stages thead { background: var(--tint); color: var(--navy); }
+    .stages tbody th { width: 78px; white-space: nowrap; font-weight: 600; }
+    .stages tr { break-inside: avoid; }
+    ul { margin: 4px 0 0; padding-left: 18px; }
+    li { margin: 2px 0; }
+    li::marker { color: var(--muted); }
+    a { color: var(--navy); text-decoration-color: #9eafbd; text-underline-offset: 3px; }
+    a:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
+    sup { font-size: 9px; margin-left: 2px; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; overflow-wrap: anywhere; }
+    .access { border-top: 1px solid var(--line); padding-top: 8px; }
+    footer { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 7px; font-size: 10px; line-height: 1.7; color: var(--muted); }
+    .references { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-bottom: 3px; }
+    @media (max-width: 560px) {
+      body { background: #fff; font-size: 13px; }
+      .sheet { width: 100%; margin: 0; padding: 22px 18px; box-shadow: none; }
+      h1 { font-size: 23px; }
+      .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .metric { border: 0; }
+      .metric:nth-child(n+4) { border-top: 1px solid var(--line); }
+      .stages { font-size: 12px; }
+      .stages th, .stages td { padding: 5px; }
+      .stages tbody th { width: 65px; }
+    }
+    @page { size: A4; margin: 13mm 15mm; }
+    @media print {
+      body { background: #fff; font-size: 12px; line-height: 1.5; color: #17232e; }
+      .sheet { width: 100%; margin: 0; padding: 0; box-shadow: none; }
+      header { padding-top: 8px; padding-bottom: 8px; }
+      section { margin-top: 9px; }
+      .stages { line-height: 1.45; }
+      .stages th, .stages td { padding-top: 4px; padding-bottom: 4px; }
+      .conclusion { margin: 12px 0 10px; padding-top: 8px; padding-bottom: 8px; }
+      footer { margin-top: 10px; }
+      h2 { break-after: avoid; }
+      section, .conclusion, .metrics, footer { break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+      .conclusion, .metrics { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+<main class="sheet">
+  <header>
+    <p class="eyebrow">项目交付 · 管理摘要</p>
+    <h1>图书馆管理系统</h1>
+    <p class="subtitle">项目交付总结报告（简版）</p>
+    <div class="meta"><span>报告日期：2026年11月18日</span><span>交付范围：首版本机应用</span></div>
+  </header>
+
+  <div class="conclusion">
+    <p><strong>综合结论：首版交付工作已完成，独立评审与独立验收均通过。</strong><sup><a href="stage-results.md" aria-label="证据1：环节结论登记">[1]</a></sup><br>系统已具备本机业务演示与功能验证条件。本次结论限于已约定的交付范围，不包含生产部署及上线审批。</p>
+  </div>
+
+  <section aria-labelledby="delivery">
+    <h2 id="delivery"><span class="number">一、</span>开发流程与环节交付</h2>
+    <table class="stages">
+      <thead><tr><th scope="col">开发环节</th><th scope="col">实施说明与交付成果</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">方案设计</th><td>采用 Spring Boot、React 与 SQLite，明确管理员与读者的功能边界，形成方案、接口契约、任务拆解及验收标准；预约、罚款和生产部署不纳入首版。<sup><a href="../design/solution-design.md" aria-label="方案设计文档">[6]</a></sup></td></tr>
+        <tr><th scope="row">开发实现</th><td>按模块完成管理端的分类、图书、副本、读者、借还续及统计报表功能；完成读者端的检索、本人借阅与资料查询、口令修改，配套角色权限控制、运行脚本和演示数据。</td></tr>
+        <tr><th scope="row">集成验证</th><td>修复跨模块接口、缓存刷新及登录跳转问题，执行全量验证，交付可运行应用、操作说明、测试记录和需求核验矩阵。</td></tr>
+        <tr><th scope="row">独立评审</th><td>由 Qwen4-Max 在独立于开发的会话中审查正确性、安全性及测试质量，形成通过结论与非阻断改进清单。<sup><a href="stage-results.md" aria-label="证据1：独立评审结论">[1]</a></sup></td></tr>
+        <tr><th scope="row">独立验收</th><td>由 GLM-5.3 在干净工作副本中依据操作说明验证功能、构建与启停，形成验收报告及操作证据，结论为通过。<sup><a href="acceptance/acceptance-report.md" aria-label="证据2：独立验收结论">[2]</a></sup></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section aria-labelledby="quality">
+    <h2 id="quality"><span class="number">二、</span>质量核验结果</h2>
+    <dl class="metrics" aria-label="核验通过数与总数">
+      <div class="metric"><dt>验收标准</dt><dd>43/43</dd></div>
+      <div class="metric"><dt>交付完成条件</dt><dd>12/12</dd></div>
+      <div class="metric"><dt>后端测试</dt><dd>515/515</dd></div>
+      <div class="metric"><dt>前端测试</dt><dd>323/323</dd></div>
+      <div class="metric"><dt>端到端测试</dt><dd>8/8</dd></div>
+    </dl>
+    <p class="small">来源：验收标准、交付完成条件、后端及端到端结果见 [2]；前端结果见 [3]。数字表示通过项数／总项数。</p>
+    <p>并发专项验证结果符合预期：10 个请求同时借同一副本，仅 1 个成功；同一读者并发借 8 本不同书，成功数为 5；同一借阅并发归还，仅 1 个成功。<sup><a href="acceptance/acceptance-report.md" aria-label="证据2：并发专项结果">[2]</a></sup>前端生产依赖审计报告为 0 个已知漏洞。<sup><a href="logs/t13-npm-audit.log" aria-label="证据4：依赖审计输出">[4]</a></sup></p>
+    <p class="small">验收报告未记录新增缺陷；该结果不代表系统不存在已知限制，也不替代生产环境安全与性能评估。</p>
+  </section>
+
+  <section aria-labelledby="limitations">
+    <h2 id="limitations"><span class="number">三、</span>已知限制</h2>
+    <ul>
+      <li><strong>账号停用后的会话控制：</strong>旧会话仍可访问部分接口，包括修改本人口令；持续活动时不会因空闲超时失效。重新登录及管理员为该读者办理借书、续借均被拒绝。</li>
+      <li><strong>账号切换的边界场景：</strong>旧请求的迟到响应可能使新登录会话退出；该风险来自代码审查推断，尚未完成专项运行时复现。</li>
+      <li><strong>维护与文档：</strong>仍有表单工具重复、前端包体积较大及部分文档计数不精确等改进项。<sup><a href="summary-report.html#risks" aria-label="详细报告：遗留风险与建议">[5]</a></sup></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="actions">
+    <h2 id="actions"><span class="number">四、</span>后续建议</h2>
+    <p>建议项目负责人先组织业务试用并汇总反馈；由开发负责人优先完善停用账号会话失效机制及账号切换边界处理。若拟进入生产环境，应另行明确部署、安全和性能要求，并对相关改动安排回归核验。</p>
+  </section>
+
+  <section class="access" aria-labelledby="access">
+    <h2 id="access"><span class="number">五、</span>查阅与试用</h2>
+    <p>在项目根目录执行 <code>bash scripts/dev.sh</code>，浏览器访问 <code>http://localhost:15195</code>；演示账号及操作步骤见 <a href="../../README.md">操作说明</a>。账号仅限本地测试使用。</p>
+  </section>
+
+  <footer>
+    <nav class="references" aria-label="证据出处">
+      <a href="stage-results.md">[1] 环节结论登记</a>
+      <a href="acceptance/acceptance-report.md">[2] 独立验收报告</a>
+      <a href="logs/t13-test-all-final.log">[3] 全量验证日志</a>
+      <a href="logs/t13-npm-audit.log">[4] 依赖审计输出</a>
+      <a href="summary-report.html#risks">[5] 遗留风险说明</a>
+      <a href="../design/solution-design.md">[6] 方案设计</a>
+    </nav>
+    <p>本报告依据已归档证据编制。正文可离线查阅；证据链接需与项目文件一同保留。</p>
+  </footer>
+</main>
+</body>
+</html>

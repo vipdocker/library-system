@@ -1,0 +1,56 @@
+// AC-AUTH-09 / AC-UI-05：菜单按角色隔离；D4① 修改口令入口两个角色都有。
+import { describe, expect, it } from 'vitest';
+import { menuForRole, selectedMenuKey } from '../menu';
+
+describe('AC-AUTH-09 / AC-UI-05 角色菜单', () => {
+  it('READER 菜单只有检索、我的借阅、我的资料、修改口令', () => {
+    const keys = menuForRole('READER').map((entry) => entry.key);
+    expect(keys).toEqual(['/books', '/my/loans', '/my/profile', '/account/password']);
+  });
+
+  it('READER 菜单不含任何 /admin/* 入口', () => {
+    expect(menuForRole('READER').some((entry) => entry.key.startsWith('/admin'))).toBe(false);
+  });
+
+  it('ADMIN 菜单包含全部管理入口与修改口令（D4①）', () => {
+    const keys = menuForRole('ADMIN').map((entry) => entry.key);
+    for (const required of [
+      '/admin/dashboard',
+      '/admin/books',
+      '/admin/categories',
+      '/admin/readers',
+      '/admin/circulation',
+      '/admin/loans',
+      '/admin/reports/overdue',
+      '/admin/stats',
+      '/account/password',
+    ]) {
+      expect(keys, required).toContain(required);
+    }
+  });
+
+  it('每个菜单项都有标签与图标', () => {
+    for (const role of ['ADMIN', 'READER'] as const) {
+      for (const entry of menuForRole(role)) {
+        expect(entry.label).toBeTruthy();
+        expect(entry.icon).toBeTruthy();
+      }
+    }
+  });
+});
+
+describe('selectedMenuKey 最长前缀匹配', () => {
+  const entries = menuForRole('ADMIN');
+
+  it('子路径归属到父菜单', () => {
+    expect(selectedMenuKey('/admin/books/3/edit', entries)).toBe('/admin/books');
+    expect(selectedMenuKey('/admin/books/new', entries)).toBe('/admin/books');
+    expect(selectedMenuKey('/admin/readers/9', entries)).toBe('/admin/readers');
+    expect(selectedMenuKey('/books/5', entries)).toBe('/books');
+  });
+
+  it('精确匹配与未匹配', () => {
+    expect(selectedMenuKey('/admin/dashboard', entries)).toBe('/admin/dashboard');
+    expect(selectedMenuKey('/403', entries)).toBeUndefined();
+  });
+});

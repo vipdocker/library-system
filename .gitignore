@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Java / Maven 构建产物
+target/
+
+# Node / 前端
+node_modules/
+dist/
+
+# 本地运行时数据库（SQLite，含 WAL/SHM/journal）
+backend/data/
+
+# 测试与覆盖率产物
+test-results/
+playwright-report/
+blob-report/
+coverage/
+
+# 日志
+*.log
+
+# 本地环境变量覆盖文件
+.env
+.env.local

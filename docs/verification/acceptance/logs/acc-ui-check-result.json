@@ -1,0 +1,67 @@
+[
+  {
+    "name": "I-09a 未登录访问受保护页带 redirect",
+    "ok": true,
+    "detail": "http://localhost:15195/login?redirect=%2Fadmin%2Freaders"
+  },
+  {
+    "name": "I-09b 登录后回到原页面（redirect 生效）",
+    "ok": true,
+    "detail": "http://localhost:15195/admin/readers"
+  },
+  {
+    "name": "I-09c 管理页登出后 /login 无 redirect 残留",
+    "ok": true,
+    "detail": "http://localhost:15195/login"
+  },
+  {
+    "name": "I-09d 读者登录后落在读者首页且无 403",
+    "ok": false,
+    "detail": "http://localhost:15195/books"
+  },
+  {
+    "name": "AC-AUTH-09 读者访问 /admin/books 显示 403 页",
+    "ok": true,
+    "detail": "http://localhost:15195/403"
+  },
+  {
+    "name": "AC-UI-05 读者菜单为四项且无管理员项",
+    "ok": true,
+    "detail": "图书检索/我的借阅/我的资料/修改口令"
+  },
+  {
+    "name": "AC-LOAN-07 我的借阅显示逾期",
+    "ok": true,
+    "detail": "图书馆管理系统|图书检索|我的借阅|我的资料|修改口令|读者|演示读者二|退出登录|我的借阅|借期 30 天 · 应还日当天归还仍算按期|您有 1 册图书已逾期|逾期期间不能借书和续借，请尽快归还。|当前借阅|历史|书名\t条码\t借阅日\t应还日\t状态||书名|\t|条码|\t|借阅日|\t|应还日|\t|状态"
+  },
+  {
+    "name": "AC-RDR-06 我的资料显示卡号姓名",
+    "ok": true,
+    "detail": "图书馆管理系统|图书检索|我的借阅|我的资料|修改口令|读者|演示读者二|退出登录|我的资料|卡号\tR000002\t姓名\t演示读者二|用户名\treader2\t状态\t启用|电话\t未填写\t邮箱\t未填写|在借数量\t1\t逾期数量\t1|创建时间\t2026-11-18"
+  },
+  {
+    "name": "AC-UI-04 柜台回车借书",
+    "ok": false,
+    "detail": "card=false bc=false 图书馆管理系统|仪表盘|图书检索|图书管理|分类管理|读者管理|流通柜台|借阅记录|逾期报表|借阅统计|修改口令|管理员|admin|退出登录|流通柜台|借书 · 还书 · 续借|借书|还书|读者卡号|副本条码| |借书|查在借|扫码或输入后回车即可借书；只输入卡号回车可查看该读者在借列表。借出成功后条码框自动清空并保持焦点。"
+  },
+  {
+    "name": "AC-LOAN-05/D2 柜台提供续借操作",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "AC-UI-06 统计页渲染（日/月切换）",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "AC-STAT-04 逾期报表含 reader2 逾期借阅",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "AC-UI-06 仪表盘渲染",
+    "ok": true,
+    "detail": "图书馆管理系统|仪表盘|图书检索|图书管理|分类管理|读者管理|流通柜台|借阅记录|逾期报表|借阅统计|修改口令|管理员|admin|退出登录|仪表盘|2026 年 11 月 18 日 星期三|借阅统计|逾期报表|图书种类|13|副本总数|"
+  }
+]

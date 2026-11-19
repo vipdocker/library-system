@@ -1,0 +1,92 @@
+// 错误码 → 中文文案。契约来源：docs/design/solution-design.md 第 8.2 节（design-v0.1-R1）全部错误码，
+// 外加前端本地使用的 NETWORK_ERROR（网络失败或非 JSON 响应）。
+// METHOD_NOT_ALLOWED 为修订 R1 新增（approval-record §1.1，I-02，T13 实施）。
+// 本文件由 T02 一次写全，之后对其他任务只读（T13 除外）。完整性由 AC-UI-03 单测逐项比对。
+
+export const ERROR_CODES = [
+  'VALIDATION_FAILED',
+  'AUTH_REQUIRED',
+  'AUTH_INVALID_CREDENTIALS',
+  'AUTH_ACCOUNT_DISABLED',
+  'AUTH_PASSWORD_MISMATCH',
+  'FORBIDDEN',
+  'CSRF_INVALID',
+  'CATEGORY_NOT_FOUND',
+  'BOOK_NOT_FOUND',
+  'COPY_NOT_FOUND',
+  'READER_NOT_FOUND',
+  'LOAN_NOT_FOUND',
+  'ACTIVE_LOAN_NOT_FOUND',
+  'READER_PROFILE_NOT_FOUND',
+  'CATEGORY_NAME_DUPLICATE',
+  'ISBN_DUPLICATE',
+  'USERNAME_DUPLICATE',
+  'CATEGORY_IN_USE',
+  'BOOK_HAS_ACTIVE_LOANS',
+  'BOOK_HAS_LOAN_HISTORY',
+  'COPY_ON_LOAN',
+  'COPY_HAS_LOAN_HISTORY',
+  'READER_HAS_ACTIVE_LOANS',
+  'READER_HAS_LOAN_HISTORY',
+  'READER_DISABLED',
+  'READER_HAS_OVERDUE',
+  'LOAN_LIMIT_EXCEEDED',
+  'DUPLICATE_BOOK_LOAN',
+  'COPY_NOT_AVAILABLE',
+  'LOAN_ALREADY_RETURNED',
+  'LOAN_OVERDUE',
+  'RENEW_LIMIT_REACHED',
+  'DB_BUSY',
+  'METHOD_NOT_ALLOWED',
+  'INTERNAL_ERROR',
+  'NETWORK_ERROR',
+] as const;
+
+export type ErrorCode = (typeof ERROR_CODES)[number];
+
+export const ERROR_MESSAGES: Record<ErrorCode, string> = {
+  VALIDATION_FAILED: '请求参数不合法，请检查后重试',
+  AUTH_REQUIRED: '请先登录',
+  AUTH_INVALID_CREDENTIALS: '用户名或密码错误',
+  AUTH_ACCOUNT_DISABLED: '账号已停用，请联系管理员',
+  AUTH_PASSWORD_MISMATCH: '旧密码不正确',
+  FORBIDDEN: '无权限执行该操作',
+  CSRF_INVALID: '页面安全令牌已失效，请重试',
+  CATEGORY_NOT_FOUND: '分类不存在或已被删除',
+  BOOK_NOT_FOUND: '图书不存在或已被删除',
+  COPY_NOT_FOUND: '副本不存在或已被删除',
+  READER_NOT_FOUND: '读者不存在或已被删除',
+  LOAN_NOT_FOUND: '借阅记录不存在',
+  ACTIVE_LOAN_NOT_FOUND: '该条码没有对应的在借记录',
+  READER_PROFILE_NOT_FOUND: '未找到您的读者档案，请联系管理员',
+  CATEGORY_NAME_DUPLICATE: '分类名称已存在',
+  ISBN_DUPLICATE: '该 ISBN 的图书已存在',
+  USERNAME_DUPLICATE: '用户名已存在',
+  CATEGORY_IN_USE: '该分类下仍有图书，不能删除',
+  BOOK_HAS_ACTIVE_LOANS: '该图书有在借副本，不能删除',
+  BOOK_HAS_LOAN_HISTORY: '该图书存在借阅历史，不能删除',
+  COPY_ON_LOAN: '副本正在借出中，不能执行该操作',
+  COPY_HAS_LOAN_HISTORY: '副本存在借阅历史，不能删除',
+  READER_HAS_ACTIVE_LOANS: '该读者有在借图书，不能删除，可改为停用',
+  READER_HAS_LOAN_HISTORY: '该读者存在借阅历史，不能删除，可改为停用',
+  READER_DISABLED: '读者已停用，不能借书或续借',
+  READER_HAS_OVERDUE: '读者有逾期未还图书，不能借书或续借',
+  LOAN_LIMIT_EXCEEDED: '读者在借数量已达上限',
+  DUPLICATE_BOOK_LOAN: '该读者已在借同一书目的其他副本',
+  COPY_NOT_AVAILABLE: '副本不可借（已借出或不可用）',
+  LOAN_ALREADY_RETURNED: '该借阅已归还，请勿重复操作',
+  LOAN_OVERDUE: '该借阅已逾期，不能续借',
+  RENEW_LIMIT_REACHED: '续借次数已达上限',
+  DB_BUSY: '系统繁忙，请稍后再试',
+  METHOD_NOT_ALLOWED: '请求方法不被该接口支持，请刷新页面后重试',
+  INTERNAL_ERROR: '系统内部错误，请稍后再试',
+  NETWORK_ERROR: '网络异常，请检查连接后重试',
+};
+
+/** 取错误码对应的中文文案；未知错误码回退到通用提示。 */
+export function errorMessage(code: string | null | undefined): string {
+  if (code && code in ERROR_MESSAGES) {
+    return ERROR_MESSAGES[code as ErrorCode];
+  }
+  return '操作失败，请稍后再试';
+}
