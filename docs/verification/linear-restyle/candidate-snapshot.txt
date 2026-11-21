@@ -1,0 +1,480 @@
+LDR-CANDIDATE-SNAPSHOT-v2
+Task: linear-design-restyle-20261121
+Subtask: LDR-INT
+Operation: integrate
+Dispatch-round: 2
+Session-round: 6
+Plan: linear-restyle-plan-v1.1
+Design: linear-restyle-design-v1-R1
+Definition: linear-restyle-ac-dod-v1
+Candidate: linear-restyle-20261121-c2-288c7b59c108
+Root: /Users/duff/Documents/Lingma-Demo/qoder-pl-test10
+HEAD: c1e30e646bf7bd8c39e59b353a001f79192ca9f6
+Source-count: 339
+Source-digest-sha256: 288c7b59c108feff7d910dd8239c5d289c9f6029c18e598f3dfc777f3df857e8
+Previous-candidate: linear-restyle-20261121-5c7c5b33b27d (C1, ACC NEEDS_WORK / ACC-D01 FAIL)
+Previous-source-digest: 5c7c5b33b27dcd304b72e85d1f286b766d485b9dddeec4cdd16a223326b3fe0c
+R5-input: 339 actual source files verified before/after test-all; source digest equals current C2 digest. Only3 changes from C1, listed in C1_TO_C2 below; no source changes during integrate round2.
+Tracked-diff-sha256: 8a507f1573d531f2bacc7a0376f4afb8abf3114c57874ae2cbbc66b61b910730
+Tracked-diff-bytes: 70475
+Tracked-diff-command: git diff --binary --full-index HEAD -- <all SOURCE_FILES paths>
+Tracked-diff-reproduction: HEAD objects plus the actual uncommitted files below reproduce the exact recorded diff. Untracked source files are individually covered below, not silently omitted from the candidate.
+Source-order: POSIX repository-relative identifiers sorted by JavaScript Array.sort() default UTF-16 code-unit order, NOT localeCompare.
+Source-digest-method: Build a plain object M by inserting sorted relative paths as keys and lowercase SHA256(file bytes) strings as values; SHA256 the UTF-8 bytes of JSON.stringify(M). No JSON whitespace or final newline.
+Path-resolution: Every manifest identifier resolves to the absolute Root + '/' + identifier. No symlink/source path outside Root is included.
+Source-selection: git ls-files for backend/src/**, backend/pom.xml, frontend/**, scripts/**, docs/design/**, .gitignore, AGENTS.md, LICENSE, README.md (334 tracked files), plus DESIGN.md, docs/design/linear-restyle-design.md, frontend/e2e/linear-theme.spec.ts, frontend/src/styles/__tests__/linearTheme.test.ts, frontend/src/styles/linearTheme.ts (5 new source/design files).
+Source-exclusions: backend/data and WAL/SHM, bak, credentials and environment-secret files, .git internals, node_modules, target, dist, caches, generated reports, and all docs/verification evidence. None of these is required to recompute the source digest.
+No-self-hash-cycle: This snapshot, matrix, logs, screenshots and evidence records are excluded from Source-digest. Evidence hashes are listed independently after SOURCE_FILES. This file never includes its own hash.
+Normative-input: docs/design/linear-restyle-design.md SHA256 551d621d4b78fc6d056a35f89efbb4e91c72862c5b2f7f1a8380d1822b2ed455
+Upstream-original: /tmp/linear-DESIGN.md SHA256 30bd30e72c48a16e4bdbd010f2d1c85fab657c6fae3cc85389399aab10f9cb5f
+Root-DESIGN: SHA256 70ca40c5a5dadee01eb368135ad71d1bce1ab102fa9f95183277f6e7d1b2d8f5; exact original bytes recovered by removing only the unique approved YAML comment block.
+Environment: macOS 26.6.2 build25G83 arm64; /opt/homebrew/bin/node v26.7.0; npm11.19.0; Maven3.9.16; Homebrew OpenJDK21.0.12 via scripts/env.sh; Playwright1.65.0 Chromium.
+Integration-command: bash -o pipefail -c 'bash scripts/test-all.sh 2>&1 | tee docs/verification/linear-restyle/development/integration/round2/test-all.log'
+Integration-exit: 0
+Integration-result: Fresh round2 backend617 tests/0 failures/0 errors/0 skipped (including6 architecture tests), frontend lint28 boundary tests, typecheck,410 unit tests/41 files,build,37 E2E tests all pass (original13 business plus24 visual). Existing >500kB frontend chunk warning remains. No source modification in this integration.
+Data-isolation: Existing test profile temporary SQLite databases; E2E18096/15196 and os.tmpdir()/library-e2e-<timestamp>.db. Development DB and backups untouched; no concurrent dev or other E2E process; test-owned services exited.
+Delivery-boundary: Stable C2 candidate for independent reacceptance only. C2 independent acceptance NOT_RUN, pending main-session dispatch; C1 ACC-D01 FAIL retained. Review not enabled/not PASS. No commit/staging/push/deploy performed. Historical task gates unchanged.
+
+[SOURCE_FILES]
+53138822d00fa170308b91b41fd0a58a851c4e438c7a6ee8eb931875f3309c58  .gitignore
+c7652e7fd7cc7e16d3cb133ebe840ac0caf09d19aaef31fabf45e58feeb8a6ce  AGENTS.md
+70ca40c5a5dadee01eb368135ad71d1bce1ab102fa9f95183277f6e7d1b2d8f5  DESIGN.md
+bdf415a794442d6fb45f8c9c1a385ee87be3fdd50ff5806e85c38e1e065d6587  LICENSE
+a496ad1db12bc6007b65d46270918311510d01844a9135029ced323e4496db53  README.md
+abfec06e42a4ca77e1704dd1b7ba701e371d1f75742e453b11f1fb82ed16a493  backend/pom.xml
+c7c53343a9d4693b02229619cf4bcebe4e25c24f269320709e72aa02bb1563ce  backend/src/main/java/com/example/library/LibraryApplication.java
+243cb5ae8e215af2120fecab64d63fd7345f532e23bf7b443f478355d7b9a615  backend/src/main/java/com/example/library/auth/AuthController.java
+7cebc43cdc743b533dd1545501117960378d8d0ef123b2fc52266c3c7ab4e5f5  backend/src/main/java/com/example/library/auth/ChangePasswordService.java
+55216cc2af92dba2ff706b67ca2a89b5f009eb6939a9806c26806835fdc75aca  backend/src/main/java/com/example/library/auth/dto/ChangePasswordRequest.java
+9dc3db8fb767aa32eaefb336934dfb90ccaf26c87d88bd803f54f0b8dd475078  backend/src/main/java/com/example/library/auth/dto/LoginRequest.java
+10f5957dbd757b9fc57cf994f22b20a29c54ba229e1df616a7507763dd3e1c37  backend/src/main/java/com/example/library/auth/dto/UserInfo.java
+0271746b855743fe87bc6a5282aaba2c71a1de0fa8a61e327f2cb59f40d9c210  backend/src/main/java/com/example/library/catalog/BookController.java
+e815ab8477678a42ee73f26e61c347157b33aeda91d7455aa64e66595aea6b9b  backend/src/main/java/com/example/library/catalog/BookService.java
+00549b1b9abfa27f7be01d9d27080111e2a87127deae7169ca2fafaf97ec0130  backend/src/main/java/com/example/library/catalog/CategoryController.java
+1403cc292a4d30a1e9d65a9ed9eef941c0a4bdca9573fad48b58bd3172baecae  backend/src/main/java/com/example/library/catalog/CategoryService.java
+8ae8b1f465444ae2ab12df5b620137fbf3d8f2a986d057618ef1bd4429306dce  backend/src/main/java/com/example/library/catalog/CopyController.java
+a45d3b22f7662a2e25dc45a8cf63b88ae8594de7eea24590765d0b6cd0d7181a  backend/src/main/java/com/example/library/catalog/CopyService.java
+92b4353bc02489fb236106bab95a9b8a092eaee899118ec9f7e7571da769c554  backend/src/main/java/com/example/library/catalog/dto/BookCreateRequest.java
+fb7308542198ae78fb50c9ca99dd4d7a2b515cc4e3fe6c0d9c3f900e4f1bf056  backend/src/main/java/com/example/library/catalog/dto/BookDetailResponse.java
+4fb0b3dd4629514299a13bb20962a1d6d7c35929dc430ea589cb50ed1d4d19ee  backend/src/main/java/com/example/library/catalog/dto/BookSummaryResponse.java
+cb72cb59caea5a01fa7a1f5d86faefaa9a14e8b462ea7c0ff6a81079b376b20c  backend/src/main/java/com/example/library/catalog/dto/BookUpdateRequest.java
+228c71d3d553a7e5836f5b8e24519120b678b274b746ee916f0010481f35d993  backend/src/main/java/com/example/library/catalog/dto/CategoryRef.java
+f9038ff977d00e2c6cf7c41b64a8b9a849850c4c190bc67e1b9eb672c01ab3b5  backend/src/main/java/com/example/library/catalog/dto/CategoryRequest.java
+ecc385798074b2eb281b72e23d80f65b4083ef3fb5263d38ba3af7999d7573ad  backend/src/main/java/com/example/library/catalog/dto/CategoryResponse.java
+001a6f147e2b730a5d1fffc4e323115aebc16c73cae11fcb3cabae9a3f35e511  backend/src/main/java/com/example/library/catalog/dto/CopyBatchRequest.java
+6339290ef8803fe48efb8e655c0788610d7b0fbcd829ac4bee83642a3c268138  backend/src/main/java/com/example/library/catalog/dto/CopyResponse.java
+c6b84731beb9f1babcad9725d13573f7aea3bf57c799fd5a6b612cdfcb09e344  backend/src/main/java/com/example/library/catalog/dto/CopyStatusRequest.java
+bff2015a4c7976bdd93a47afaeed8664a29016ade11c87f456681fd6075ee2ce  backend/src/main/java/com/example/library/catalog/package-info.java
+39960f0f22c38ae7b4f154a2e28deaa389389071d05ac71afec911859424a2ab  backend/src/main/java/com/example/library/common/config/ClockConfig.java
+0d96d83ff7b57da5548dbd5de2685181207e66cd02f38753e21db1d5124e211c  backend/src/main/java/com/example/library/common/config/DatabaseDirectoryInitializer.java
+bb9d1c792cc3b6336c4a73763980a8fa2cd19e5bf4c79b621ed4016ad333ea81  backend/src/main/java/com/example/library/common/config/LibraryProperties.java
+268f66b944885902b0be233b2002da91f8da098b85fb573ce2ce25a7c298a592  backend/src/main/java/com/example/library/common/config/LibrarySQLiteDialect.java
+8d130ee5e5a513f041931afc8b635a5d4ef28c1b54822c4120706675ab293a3c  backend/src/main/java/com/example/library/common/config/WebConfig.java
+2fbf978ab27dc6ffe44ff3bdbe5abb197cc37ba806046876add340f8e3a3f123  backend/src/main/java/com/example/library/common/error/ApiException.java
+488b64939e027706641202ec324b5b344734fca9c2e1ec4dadfa1794f1ef5776  backend/src/main/java/com/example/library/common/error/ErrorCode.java
+5b000350cd4d40920e304fceb1a3d4c035a99735524aabb4c4275e69ff0c33c5  backend/src/main/java/com/example/library/common/error/ErrorResponse.java
+1da05eb3029bca60a1cfa4542f0e4a781a2d9529f6965938a1f039d5331f7a74  backend/src/main/java/com/example/library/common/error/GlobalExceptionHandler.java
+d96f952d4c64b54f169e95ed1b65b4955a89362e2a94ca3c36f0e86d76f68252  backend/src/main/java/com/example/library/common/util/IsbnUtils.java
+29737250448a6cdd687c3caa4bce691dba3473c20d4efd28ef4a50f7a0e0bfd6  backend/src/main/java/com/example/library/common/util/LikeEscaper.java
+d8fd4f177d292df35f75c68e997bd9eb886be88add9a99813d23089a9d09179c  backend/src/main/java/com/example/library/common/util/Texts.java
+9a65a69ad50938acf0bc7c7bee4893ea830b83e14d15fd0b3eb0b2ac9ad67a0d  backend/src/main/java/com/example/library/common/web/PageRequestParams.java
+7804dac2e95f066f18390ee5c2428aa96dc1b798b9b6b06d9a6e377121076e3e  backend/src/main/java/com/example/library/common/web/PageResponse.java
+3d6229c165c79a7aa111b6d5bc69499d23acba904ea6e4aa2be228526560961b  backend/src/main/java/com/example/library/domain/converter/EpochMillisInstantConverter.java
+fd020d0256bdfdbe598a76726030346eb1112e4e57cb004ed30fdc682ad0c187  backend/src/main/java/com/example/library/domain/converter/IsoLocalDateConverter.java
+2b48f051451d15311119191ce7f02166dee7b261c892009ba8aec90771aa44b0  backend/src/main/java/com/example/library/domain/entity/AppUser.java
+50515ee9baf2040f1a79953bb586ae8f1b049437ded8721f9a9d0b69a4cabc8b  backend/src/main/java/com/example/library/domain/entity/Book.java
+03d477f2205dadb0ea7956086e1256fe676b3b4839ee7492cd9abcb3c9b5e397  backend/src/main/java/com/example/library/domain/entity/BookCopy.java
+92f5789049135332f7a35c57d294cb3268efbc7602fcc9082e3b40b937f519cb  backend/src/main/java/com/example/library/domain/entity/Category.java
+585c9afcd796c42928c544747a62c50085de3299fa749c5b4db054ea157f0006  backend/src/main/java/com/example/library/domain/entity/DunningRecord.java
+2cf505e760389899f802be946eaeedafdaeba022aac3cdbed6c9fb7fb9dcd042  backend/src/main/java/com/example/library/domain/entity/Loan.java
+31064523beb407f1526249fdd7b562acc771bede65bbb1180b9b91aa617de0f5  backend/src/main/java/com/example/library/domain/entity/Notification.java
+79d219da92f9fb31ceb21e8f4c7cc90334a24b6c0cb5b9c965dd9efddb873a94  backend/src/main/java/com/example/library/domain/entity/Reader.java
+2a45bb1fc06a5583677aeed1d20ba223c8ba698f880ec262cadc7bab18187641  backend/src/main/java/com/example/library/domain/enums/CopyStatus.java
+e56d95af3445f96f5203884d04225e022b068612f4b775fc9d4f4a658e318766  backend/src/main/java/com/example/library/domain/enums/DunningMethod.java
+e9e884670b3430678eef9c5a7a0b73a351cbbf0fe9c4ac38f1322c897282a610  backend/src/main/java/com/example/library/domain/enums/LoanStatus.java
+e6665af9d9cdcc5f8bc89e047cd1969f6899726bb754d8f0ff7f0fbd636f5ee5  backend/src/main/java/com/example/library/domain/enums/NotificationType.java
+0fcd9b0fe70042bf3f0c55b5f236b4bea361fb826cf70e91854cbd315384a6eb  backend/src/main/java/com/example/library/domain/enums/ReaderStatus.java
+6e590228b1abc6f51e4d1da050369f3eaae59f4693670a4c04bb0e3bbdf2f129  backend/src/main/java/com/example/library/domain/enums/Role.java
+b8e459a5b4777afef3eecae1a3a38a3721e58216020343dbc4217babdb4af94a  backend/src/main/java/com/example/library/domain/repository/AppUserRepository.java
+86ebbba57a2b4444817c9aac4dc0edf459eed73dfdd1c3b64d18bba157adb90f  backend/src/main/java/com/example/library/domain/repository/BookCopyRepository.java
+c9b953d2a33006f9dadad1eeec3a3243fe7c2252af9af330fc813377fcc495f7  backend/src/main/java/com/example/library/domain/repository/BookRepository.java
+298c2f8560df2296d922ba5506197835406050f491c0fbbc2a3520f8d0fa1970  backend/src/main/java/com/example/library/domain/repository/CategoryRepository.java
+9540dce4b8f886e21c1fd414c7dd834551615cef69753d8f69e9808684c34b45  backend/src/main/java/com/example/library/domain/repository/DunningRecordRepository.java
+f9d54c4f5eab4cadd78ff131689441f34c181e1481ed7d488cd80f89c3d3b0ff  backend/src/main/java/com/example/library/domain/repository/LoanRepository.java
+b901b2fc79b8a72eefd736e3ac6b953dbf1432eee82da6271fcd417a7b01ec4c  backend/src/main/java/com/example/library/domain/repository/NotificationRepository.java
+9b1c8f9b9042fa95ab2b1ded822b9c48234312e441bdb3ff1b1b4b805008860d  backend/src/main/java/com/example/library/domain/repository/ReaderRepository.java
+40221932773a81562fa49ab24b93647743748f0336aca99e1409ef31fd2d7f93  backend/src/main/java/com/example/library/dunning/DunningCaseResponse.java
+17d29f97dfce8703096690b597e701bd101b7ee5d0b4f7dc581bdb8a1dfb99ff  backend/src/main/java/com/example/library/dunning/DunningCaseSummary.java
+c9224a351b19cbdef7710a90fcde0ff7bd577683a6efff32ec49563a822c6522  backend/src/main/java/com/example/library/dunning/DunningController.java
+a779edf71632d96adda27ad9e070b7ae963894a492387a9914e1438826fe4c0e  backend/src/main/java/com/example/library/dunning/DunningRecordResponse.java
+30b5e37c77ce51a48429fd78493cc9eaca1fc1ece6093100152c888dfbb46a5d  backend/src/main/java/com/example/library/dunning/DunningRequest.java
+5b7e84f7749c292be09dc0be78755fd53060499b722587ff51675851eac1e5a7  backend/src/main/java/com/example/library/dunning/DunningService.java
+64568ba8c9432dd0c9afee1b269ec69e5cde8cb381358768a6c37f3ff0cfeb1d  backend/src/main/java/com/example/library/loan/LoanController.java
+6bb126d6f73cdad42eab3f397bdd4d85465f66e9bc4b28932cf20ae0d7d2de86  backend/src/main/java/com/example/library/loan/LoanPolicy.java
+9d68232eb4a0dbadf5e9b9e84426944b4630eca2a6b9a18d9962b2a678be23b2  backend/src/main/java/com/example/library/loan/LoanService.java
+1473b265cce4480bb60816d73ddaf5179928818a0a5e84a57962ec4c3088c81f  backend/src/main/java/com/example/library/loan/LoanViewMapper.java
+f0e08d19d75e24c35866576bc9da653f1e2f448af7532a394a368e282488163f  backend/src/main/java/com/example/library/loan/dto/BorrowRequest.java
+bb65983eac29b45493a38a142863611192c817c4ab0c1f1078edb665d58649c1  backend/src/main/java/com/example/library/loan/dto/LoanResponse.java
+c038364de2fc0eec70fefd3214ee19a40b2a104d7cf36e532f1300dfe46871ac  backend/src/main/java/com/example/library/loan/dto/ReturnByBarcodeRequest.java
+4ef270e11bb947582b0ea1159f81e3e4164e6e3c53cabc1b8c01dd1f841fbe9e  backend/src/main/java/com/example/library/loan/package-info.java
+5619e807c880242207d3dc8d6d01a604c038029d5149c44781d697b14d0728c8  backend/src/main/java/com/example/library/reader/ReaderController.java
+bac6fc29fc9ab8594fca3d2cfe21cb8a3bb2f1916f1c90d60e91155647544948  backend/src/main/java/com/example/library/reader/ReaderService.java
+c26b322216979deb111775e0206f33a860d33039dbcc50a61fa5d6f18b324e7a  backend/src/main/java/com/example/library/reader/dto/ReaderCreateRequest.java
+ea0b1f231b439b1d95300df1d7531749226c71e51153ff1267f5fbb5c2c13f59  backend/src/main/java/com/example/library/reader/dto/ReaderPasswordResetRequest.java
+511f5d27008d55a76a24c6bad8bcbe5aab14c4fd802dcf06a8733776c325ebb7  backend/src/main/java/com/example/library/reader/dto/ReaderResponse.java
+ec644daa3a26978a1ddf0af1b260c7ac1bfce008f70b2110e174673aa9ee6a8b  backend/src/main/java/com/example/library/reader/dto/ReaderUpdateRequest.java
+df221a08704071696e7fada0ad2f39acf30d2e7058dce32edc71794408ed765c  backend/src/main/java/com/example/library/reader/package-info.java
+772e0f7f20e880bf08b981e554b1791148e2c4000a02c357eea04132f1268993  backend/src/main/java/com/example/library/reminder/NotificationController.java
+d403ecc2aecc855c438c1138a9516d18d2bf96369efcabe94692ee1b0b8b8775  backend/src/main/java/com/example/library/reminder/NotificationResponse.java
+3806bcf3e61bf30e78380569e52955b99da28a491902ff0e1009a7e3e22e604b  backend/src/main/java/com/example/library/reminder/NotificationService.java
+cf842e4372c1e41803325ab370383de964fc3d76a346b4a03d5a0c62aff299e3  backend/src/main/java/com/example/library/reminder/ReminderConfiguration.java
+201e917229df2649bb94318b713b561c4056bbd51ea960c834b46551f6b11334  backend/src/main/java/com/example/library/reminder/ReminderProperties.java
+67315663b38dc1200fb57d53031565f4cc6d0a0a56836b7a4cca266dad6aa6b0  backend/src/main/java/com/example/library/reminder/ReminderScanner.java
+4f08017099bf3991a38330c26df761351c065364733e0cff0e046899735b379a  backend/src/main/java/com/example/library/reminder/ReminderScheduler.java
+dca64004ae5ab0fdbeb04903e96032b786044b84f99870db5e69de41d31ba49a  backend/src/main/java/com/example/library/reminder/ReminderWriter.java
+096a0626fbe63cb4d0ca9a9eb8f110f3e455c3c13ba2a226451abd877924f239  backend/src/main/java/com/example/library/security/AdminBootstrap.java
+56fa4e4ca0544709ae69fdcdd2efe481f5e2f65acabd1deb4b8f157911e07995  backend/src/main/java/com/example/library/security/CurrentUser.java
+34ea6670a5f4a0408e2a2304299c7ecfece4c4148db2378f44692420416cb911  backend/src/main/java/com/example/library/security/CurrentUserArgumentResolver.java
+f0ffb4aea5847ad82e2adefdaed99f693368901b2b425037234e1371e873cd66  backend/src/main/java/com/example/library/security/JsonAccessDeniedHandler.java
+76a3ed9105a98f878012b0b6d835371d8d950f5695cfca4907ba79cf09226dd1  backend/src/main/java/com/example/library/security/JsonAuthenticationEntryPoint.java
+d9eebfca388ada7f1ec429301c7f2bb409f38f1334562e150cefcef440c1a7ca  backend/src/main/java/com/example/library/security/LibraryUserDetailsService.java
+97e72a8b502d8b9a5a314a6759b9163ef87440ac1c1f62805f0963ece816ea01  backend/src/main/java/com/example/library/security/LibraryUserPrincipal.java
+163ed3a37d56b133b8dd5aded8e808cc2ee9c035fd4b83ca597234cdf54bd6b9  backend/src/main/java/com/example/library/security/PasswordPolicy.java
+f27b946c6f1b847df1900c1bbb3daabeeb4415f5d8fbb50beb6b2a9c3137c2ea  backend/src/main/java/com/example/library/security/PasswordPolicyValidator.java
+192199a88dcd0060318b5280c88d58f6b3b1c768cd2eb3e43efc2b4714d99fda  backend/src/main/java/com/example/library/security/SecurityConfig.java
+bd8f2fef64d18fca00d26ee37bdb574f1b21130411cbe7a9dec59f9d99d27610  backend/src/main/java/com/example/library/security/ValidPassword.java
+d4e84e19975f7db7e03ecedf1d7b08f00f51cf3f6e9eb2208f19ba7ea882af9c  backend/src/main/java/com/example/library/seed/DemoDataLoader.java
+563110c75fcad7e0c46d27ac9b1591ef6667e303b2bfe150e897bfd5dada1aa9  backend/src/main/java/com/example/library/stats/StatsController.java
+a376ff3a2e4f7aa7ba4bb3014b7797e949f4cad850ebdce976afbe1df55be095  backend/src/main/java/com/example/library/stats/StatsGranularity.java
+8b2a0b2c680244e2a43245d395bdde5c44a12c19c098eaa33a260892292e09e6  backend/src/main/java/com/example/library/stats/StatsQueryRepository.java
+9f778a639d817fd348052d6d8533e2365f02733a24e95b7818b9bdd645db6d30  backend/src/main/java/com/example/library/stats/StatsService.java
+827ae44c3a941a4dbd285200218bf98039b26e8e488b40ee3bf4e88a09177836  backend/src/main/java/com/example/library/stats/dto/LoanSeriesPoint.java
+bca2f3a88e45c297a83446f75e35e765e8b69bee541c761dcd46c9f1339e1422  backend/src/main/java/com/example/library/stats/dto/OverdueItem.java
+18ba0d8ec8791b4533d455317e8e63bd7d49b9fc37802326ca5590c40f258567  backend/src/main/java/com/example/library/stats/dto/StatsOverview.java
+c611693ab872a71154ae737d0ea3c9deea431a40539ccab1036b42d36351bb8f  backend/src/main/java/com/example/library/stats/dto/TopBook.java
+e3fc9a26347450d61bc1a5c2aa49bff902fcd332a912cd60d0efb5366407cc45  backend/src/main/java/com/example/library/stats/package-info.java
+84c871d4faf70260f5d3eb4cfb52fbd92192c5195bc227a27aee23dcb492add3  backend/src/main/resources/application-dev.yml
+926da648499bb3a779f9f66e609daeef71ca6f033b1ca53325087dd26b12ed59  backend/src/main/resources/application.yml
+878e242b447834a20f5ca665fb4c9ef971d73da39b33203a614d87a61c5b0ee6  backend/src/main/resources/db/migration/V1__init_schema.sql
+c4758f8516b07003b7b3bceb0d5129a32a780318d1a53959432efa8fe79f6d52  backend/src/main/resources/db/migration/V2__reminders_dunning.sql
+7e1dac1043b0e3bf01d1c9f2d7fb51b112ccec485500346a4ab7debce66e6a46  backend/src/test/java/com/example/library/architecture/ArchitectureTest.java
+84773e467a50cabbd3d30696e65cc78c0ecd1451eeb12286fee60611551db71b  backend/src/test/java/com/example/library/auth/AdminBootstrapTest.java
+4bcae4526df06c7b6862bdd270aa1445ad22fd8e9b936a3f58edc8ca6a229ce2  backend/src/test/java/com/example/library/auth/AuthControllerTest.java
+3f2010a91bc8cbd713d540b91ad60702cf8dd77a50c9f7d7727dddde576b6051  backend/src/test/java/com/example/library/auth/ChangePasswordTest.java
+c8480eaf300b9b06eaffd63bbca96ff004f7c8086f81c427f9646b47e0f34786  backend/src/test/java/com/example/library/auth/SessionCookieTest.java
+5b1bf23d5fc70ac4014ad275a2530decf94e2106443bc3c14fb6657eaa0bc51b  backend/src/test/java/com/example/library/catalog/BookApiTest.java
+2b3d9df21f63ceb6bee128e6ee345baa184e23c435728a0372637cfc346e6a51  backend/src/test/java/com/example/library/catalog/BookSearchTest.java
+f38d15f4e818014eecbf0df8323cafd0b02794b92e462c0e278b1fcc2c3b7082  backend/src/test/java/com/example/library/catalog/CatalogAuthorizationTest.java
+0ac7823adb0412bc7e2fda0663de96356f6ea6a7e9a5bcb1170593f2e58ae107  backend/src/test/java/com/example/library/catalog/CatalogTestBase.java
+c07748cea3cab022f281acda55ff460f924c1b74141807aad049d796f851bc2c  backend/src/test/java/com/example/library/catalog/CategoryApiTest.java
+22df66e2f715d828e9e8d7ba2a88aff68fe31e6bea34a70e7bfa90731d28a00c  backend/src/test/java/com/example/library/catalog/CopyApiTest.java
+1fab41776433c6f5c30fedd4de5c4f9e865847afa1de6b138c80348821398725  backend/src/test/java/com/example/library/common/GlobalExceptionHandlerTest.java
+5d2ae6cd80e676efb92ff1ccedbd947b9ccbe7d56d11cfc7ab7168c8b6611f26  backend/src/test/java/com/example/library/common/IsbnUtilsTest.java
+21d3a0532d0b737e9c81ba3fc65bd80c32d27e651be79ebd75fc31ffabefe6ef  backend/src/test/java/com/example/library/common/LikeEscaperTest.java
+49f22be6cf45fa2d352abf4d5fe45826f3cba00b369a812e82d5859bd56a86d7  backend/src/test/java/com/example/library/common/PageRequestParamsTest.java
+94e07529933686f063e1aee6804eaba0c1a791ea16d840eae840daea049e8cd3  backend/src/test/java/com/example/library/domain/RepositorySmokeTest.java
+9916c84e3063ca9071bb0c18ad869b4ed05cacbf1c9aa54141adaa9aa379c090  backend/src/test/java/com/example/library/dunning/DunningApiTest.java
+2f7375330ed8dfdf44c427f49afb6e8b1e6ae6375f5799520b62cbcaf532e5fc  backend/src/test/java/com/example/library/dunning/DunningTransactionTest.java
+cd2f4355e3169c7d8e634787a75de096e1c1309d6d7611c3642979b21646334a  backend/src/test/java/com/example/library/loan/BorrowApiTest.java
+2fb06f8a08d3fa49ded8d717626c03769a7fc04e92be8664d9d18e438fba972c  backend/src/test/java/com/example/library/loan/LoanAuthorizationTest.java
+bdf3ab30c5772b97306a616a677299f3960c185261deb4f85ee100edb6be3910  backend/src/test/java/com/example/library/loan/LoanConcurrencyTest.java
+35326240f4971329aaef4c0f7926e4e7c1bc92a2be6d92009b4eb0ddf8c9158c  backend/src/test/java/com/example/library/loan/LoanEventLogTest.java
+15bfe5468545883a06ed902e764232289750b8cf1446dd57eda3c3aa482a06ed  backend/src/test/java/com/example/library/loan/LoanListApiTest.java
+43d0f775594d8b36564e11da5b1278073c7837471a78ed88f223471d491fae19  backend/src/test/java/com/example/library/loan/LoanPolicyTest.java
+8982a8c2554d1f23b64033025eb1ec6d497325095f98ae74b9b62bcd74eb0c7a  backend/src/test/java/com/example/library/loan/LoanTestBase.java
+c8c4457bbcf21a3a7eb40793b928b38b5d93bf0cc93da7fd2e8c8fbdd5703dda  backend/src/test/java/com/example/library/loan/MyLoansSelfRenewTest.java
+c4703bc7e9e1f48c3f8fc2805512c905ce794df35134f1eab0130535ffde3923  backend/src/test/java/com/example/library/loan/RenewApiTest.java
+e7f310aaca0d50cd1f9043f8a6d0681dd833843cfe273124d0bd01020cc40453  backend/src/test/java/com/example/library/loan/RenewSelfServiceTest.java
+f9272ead229a6a329557a562e96fbe6115f0fb58a8dfd363eaf8b5070652df75  backend/src/test/java/com/example/library/loan/ReturnApiTest.java
+c66050a50552dcb3bab2a6a2f65949aebc4c94c9d40cc6e247cae3927cf8b218  backend/src/test/java/com/example/library/reader/ReaderAuthorizationTest.java
+2cfd5306402548ad65560e0988e8e83e03d7c1683a2e0cf2be0efd1137ecfca4  backend/src/test/java/com/example/library/reader/ReaderCreateTest.java
+1507ea969f2a5f990300faf3a28bc44cdc354392db5f472e89bb3de7f5c4bf03  backend/src/test/java/com/example/library/reader/ReaderDeleteTest.java
+11aaf61062f9244bfd612c577bd6534ba28bbcd3ed59ff402c74b9f73c6ee24b  backend/src/test/java/com/example/library/reader/ReaderMeTest.java
+1ded0ceeac12291105a61f2b06ce5ecf359cdc55ba9c4371a5bcdda7655737a2  backend/src/test/java/com/example/library/reader/ReaderPasswordResetTest.java
+0533f6ff27ce35d428ae5c6a2ba4a96bed2ea7e30f31433bf188757105405caa  backend/src/test/java/com/example/library/reader/ReaderSearchTest.java
+48745c1fbbfba9e77a6da6c7ef8ba84a3dc277cc0712fc3e883cb431ef05e1e1  backend/src/test/java/com/example/library/reader/ReaderStatusTest.java
+0fe831f1f9687f6e4fa6a4b4b1732cafb341f969b18b0318a25f4f08749e381b  backend/src/test/java/com/example/library/reader/ReaderTestBase.java
+b8decaddfad555e44ee8fd92b22c40a04d2ba53046035de17961dba7a2eb24ed  backend/src/test/java/com/example/library/reminder/DunningNotificationTest.java
+f95833b7f55ff0da34c71563ab5a3f99d5490e2a0dacb0902a9679b67be6b63c  backend/src/test/java/com/example/library/reminder/ReminderApiTest.java
+43c169f6ea0b322c45377af4cbaab92cec766db76043f9c6b7a448e1853fb105  backend/src/test/java/com/example/library/reminder/ReminderConcurrencyTest.java
+fc10b7eca7697964ca4d4263c6fc2a010dc498cacba428d5c7b8e8e2802e144c  backend/src/test/java/com/example/library/reminder/ReminderConfigurationTest.java
+f6923918d9775499452f6628d596f42007b234c6b9d40446afd19461c4ee253b  backend/src/test/java/com/example/library/reminder/ReminderMigrationTest.java
+1c5b26f0ace1c9135bfc7211fcd0a06b99d9b58ac936e7ab436bcaecdca09df4  backend/src/test/java/com/example/library/reminder/ReminderSchedulerTest.java
+b1761039d87b1a00f6e5b7fa5035b73f5c27cf261a11969e02fd91e151e1d7b5  backend/src/test/java/com/example/library/reminder/ReminderStartupTest.java
+4547f0db4c7a3549afa8dd7479c2ae4594c43801d0b00da73a7aa923c106db36  backend/src/test/java/com/example/library/security/AuthorizationMatrixD2Test.java
+29ff498c640bd3661ded099825ea78dd68532b2fbe3ff65e65d649410d85e1a8  backend/src/test/java/com/example/library/security/AuthorizationMatrixTest.java
+0aace4684f1cd8bb6fc30dc037370f19a2f80a43b19c20e2c61f0bf5434ef8d3  backend/src/test/java/com/example/library/security/MethodNotAllowedTest.java
+a7103e31835e8ad19bd76868d8d7e0fb4c3b0004f2ccf129c0b9ddfc7ad0f5ea  backend/src/test/java/com/example/library/security/PasswordPolicyTest.java
+21b65c90bf91540ce33a3119cc3083269ce20d2a48c10ab657ca680c1d047857  backend/src/test/java/com/example/library/seed/DemoDataIsbnTest.java
+38574000db54169afaab3c3d32aac2faf60b932bea2558a23497c304182f412e  backend/src/test/java/com/example/library/seed/DemoDataLoaderTest.java
+d7393d5996f8a4f75d66819fda9ac54000f0bcec1e77689e916c321f6d0e0231  backend/src/test/java/com/example/library/seed/TestProfileNoSeedTest.java
+d51e9db1257c03006f97982e8ffe07653cce7ff795a0a3ac0c4127a0bf799150  backend/src/test/java/com/example/library/stats/LoanSeriesApiTest.java
+da38fef2b0db57c3cffab31992c17116407a9983a9a4aca96c94d07a1bfb4b14  backend/src/test/java/com/example/library/stats/OverdueReportApiTest.java
+cac35636c34757012f311fab84231eee649fd53fbc9312ad003086f15d7767f5  backend/src/test/java/com/example/library/stats/StatsAuthorizationTest.java
+ea5c8a48f365786002971861c7ae94ae4bdc9c4df79f22acf683488023829000  backend/src/test/java/com/example/library/stats/StatsOverviewApiTest.java
+160dc145d2cc1bdc5252be36d9b4534e5f8ed4531ed4fde198fd2dc9deccafb9  backend/src/test/java/com/example/library/stats/StatsTestBase.java
+adaef54899d74ed8ac8391b5989e099afb3780dcf8fbeb0105eba0e54535fe4b  backend/src/test/java/com/example/library/stats/TopBooksApiTest.java
+8bd01868ca68cc47320ed6a67b6b19ae5cef83b9f6a5b530fe40ca272226d874  backend/src/test/java/com/example/library/support/AuthTestHelper.java
+806da833c06a7b10912fe28a24aa3c9524771f698fff0fe82d0ab03aee014347  backend/src/test/java/com/example/library/support/ContextLoadsTest.java
+d9f7ae93d671799420d07289a5e3bee7246a26b4acfa1fe39f1db6440ff616fe  backend/src/test/java/com/example/library/support/IntegrationTestBase.java
+cdeff272f0b78025c3353743e7b5a3bd241e1d095e186232443c17e07c610d07  backend/src/test/java/com/example/library/support/MutableClock.java
+117a99cf81f0f663af65231730525d06cdf70ec05fa66c0b8625c3bb0b0ea2d8  backend/src/test/java/com/example/library/support/TestDataFactory.java
+04f416fc53c14299f5ab69a532a982525dd7e07a5990298f2baa315f63ce1ee6  backend/src/test/java/com/example/library/support/TestDatabase.java
+ad07586b7d67e6c6d413e1d2bec615232bae4cf0a2065bd74fb42841c7b11db7  backend/src/test/java/com/example/library/support/TestSupportConfig.java
+e2bca16f3589852005d15ae5162fcc1a899ba5ec5da2a1d031fc3513cc4931a7  backend/src/test/resources/application-test.yml
+51cb9de0ad05063cc625450a120610500cafba5066abdf55b081972d44826bfb  docs/design/ac-dod.md
+4b70c32ac2309969e1be5bdcc15433ceb582241f59c3fc330b69b25debb583cc  docs/design/approval-record.md
+c44924408c92a4a89f7c20407534d7a1cc75453cc777afd6505e342a75244b3d  docs/design/implementation-plan.md
+551d621d4b78fc6d056a35f89efbb4e91c72862c5b2f7f1a8380d1822b2ed455  docs/design/linear-restyle-design.md
+c0c38f35f3ca6e78f89294e4838f67538ef181293567855b2de00d9409ae1ede  docs/design/reminder-increment.md
+f8439ccfd8449952df74a9b0dabd23a3b02b8ad5db7340b5613bb3e25062cbe1  docs/design/solution-design.md
+9f0f461cd82b2a72370baccdaafdb16c0951b92f17275c579aaa83a805094178  frontend/e2e/helpers.ts
+2bf2977dab6d8456845a4ad6fac9dd02c099407b7054abe695394b5766c79a18  frontend/e2e/linear-theme.spec.ts
+6d810de0780aab1ccc0e481a72fe7ae06102d4457d69b90d56b61682f980b149  frontend/e2e/login.spec.ts
+addbe2056b58db2654efb9ac832bfb422d4e12124cb58f01cd9da97e4fa03387  frontend/e2e/reminders.spec.ts
+93320ec33d01b469585ea8e72e76791d6b929c713bda3bc60698aa4fbab09ed2  frontend/e2e/smoke.spec.ts
+77458459e65fd71f95a228b280055e0f991597e315bd7e95ad0986784cce29f8  frontend/eslint.config.js
+acfe15c3414083860c13c995e6b00917de5b2b24c4714f5ac37123f6e5f9b739  frontend/eslint.config.test.mjs
+8385fadbd8327cc3ce1193bcf66ba373fa7f09c638fdcb9c9a39b0f59fccd3ec  frontend/index.html
+8031aa6271dc7729d44e69eee7b3e45af986c9f56ededf26a8643fc1258365c7  frontend/package-lock.json
+d83527724cc7ee817f886058e084af36ed91d3e05f428096ec0fe30de508c0f8  frontend/package.json
+fbafda772caa51ac21bf9497179d167d3be7553003596f42983f123b18fa32dc  frontend/playwright.config.ts
+ff835cad59e99dcc04e8789fe5c338da75c0f10295693ec39377d7f6f7b62363  frontend/src/App.tsx
+cba381ef96802a47cf46d839849bd69e5a80bbce7f2766063b23bd03a957508b  frontend/src/api/__tests__/__snapshots__/errors.test.ts.snap
+780e0fab617888a117cfe4d85d42e316cfd5a818530ab0855ef3552d8c32f904  frontend/src/api/__tests__/client.test.ts
+7b49feb35e13eacb50069221adb6600c32e61849105b2687b57b1ecf3165c555  frontend/src/api/__tests__/errors.test.ts
+130e306ad9dce3fc5ab41e3f401ed05e5448fc90c136e650dd087aa176fa9ed8  frontend/src/api/client.ts
+2bf18af9b7cc61282526a13fdb73c7c9946e3f6012693b9fece91c8477424c16  frontend/src/api/errors.ts
+9133cd16c329a7a78a364af242fb2a7542fb06d23e23d6bd8267bbe1f86bff49  frontend/src/api/queryClient.ts
+b69a238076ea9f854d829488bbfcd9df691522e49b404f1878c98508d44a5aa1  frontend/src/api/types.ts
+30a44142e7cb928ade44e474c5ebb6d584e785da281439dc36a3f06aa01a1972  frontend/src/app/RootRedirect.tsx
+e09f0aaabab1044f65b46101efefa0c9ea8f2ea8bd4e11591ecc75e7236e36a1  frontend/src/app/__tests__/logout.test.tsx
+cce4817c05edd494b652c40300b6b3622aa3c4d9357620d4a37fb701843222c1  frontend/src/app/__tests__/menu.test.ts
+3305aeda11a48a0144c2ac972717e0e5442ae3b91822d84b8e84b57a815b3d9a  frontend/src/app/__tests__/router.test.tsx
+638534a701236de97edfb435365744c0fb1841961c16cf7daeedd8c2f3e1f71b  frontend/src/app/layouts/AppLayout.tsx
+3fc046f82aad0c044e1a97fad8db87243113b142546ccfa8919ca4a422789846  frontend/src/app/layouts/__tests__/notifications.test.tsx
+515aec78079fa07296b48eb4164a4075729ae19de75136f72bc6f38bdf30fcc2  frontend/src/app/menu.ts
+487478e32e3039dd2ec5b0d670dcce1c3eddd052cd39c7dde138a9f0feb5a873  frontend/src/app/router.tsx
+6f93a006f294e23d2ab1b6169e2e5e6767df4a907d0e85ce0a190a9aa8b1b62f  frontend/src/auth/AuthContext.tsx
+c626dce591068bcdc303efac922500ae670558dc40bf1d193191006a91a168b9  frontend/src/auth/LoginPage.tsx
+6ff9fe8a031d47ca9cd9e9b23d6aa5bef2fbb668e2e82aa20c68090716e3489c  frontend/src/auth/RequireAuth.tsx
+11fa984ca65ca2e5360db431ffa03a9aa0f250ad6aada2a5003f81c5ad5c2d7f  frontend/src/auth/RequireRole.tsx
+a508ca71409ffed13ea40cdb2c3767153888d510f40915a46d009402470d5f68  frontend/src/auth/SessionGuard.tsx
+12bca5bee19ce76ae529591c8e90ca7764291309a82e1095a05880d5f9df3493  frontend/src/auth/__tests__/LoginPage.test.tsx
+3db7210c15f5d79067bea78ee2fee986b90c7c46a8385aabf1387e6057d954cf  frontend/src/auth/__tests__/SessionGuard.test.tsx
+38e70404cb4cf8d07ec45b9031781a7d51e7c03bfee2296d4e83a6af9fcc5da5  frontend/src/auth/__tests__/guards.test.tsx
+ba2a5d715d9aa4912c7bb721f0a3bb5d3e9dce25556293e101fe8f6ed3cbfdbd  frontend/src/auth/__tests__/redirect.test.ts
+87bc3bfc7f73528c16e2ad7a0b81672b40827e55cac5e4291ca8129631d3d2ae  frontend/src/auth/redirect.ts
+d91c9822650364eb91dc5cc616e64003081a16b28584186a86241dea34352cfb  frontend/src/components/EmptyState.tsx
+32942c0bb6248c2d2b287af8196c5ea740967754d2d8fc59e17af4e7fa09f672  frontend/src/components/ForbiddenPage.tsx
+04b260fda3ca0460f3172a7189708015a549e22d3ee26d473fa7cb8626051ca4  frontend/src/components/NotFoundPage.tsx
+56159bdb56056dd9ea795fe45e6a6aba49be212894318234b366ef0a9af4917f  frontend/src/components/PageError.tsx
+7f2b9760798b6a71e2ec7747d1772e65245f44c0122d640bd782b15d7f11ce6a  frontend/src/components/PageLoading.tsx
+34231d23b2a090e26b8f6d2c7e7094adc97df62c5cf19705c5fac6a1facf9285  frontend/src/components/__tests__/states.test.tsx
+c892759bd2c33f5644ba3fb62f4dc6ae957bee19cf97282ac942ac60184e7fd9  frontend/src/components/pagination.ts
+a94c9df57c16700586c3dcc16e190cc73bf2de5022a91604d394628b9fd783d8  frontend/src/features/account/__tests__/ChangePasswordPage.test.tsx
+d6a70a37d6bd9d9e872b474111811dd963d3926bea46022edfc9d0160ad0f355  frontend/src/features/account/__tests__/api.test.ts
+12945cde0e4b44a5733c59db2e00cd1a9b86f7b568805cfe30e1ed2f7dde8968  frontend/src/features/account/api.ts
+b676e30f6d33e2d41c1b8db63f8850b6ae8b83e627f96b1aa47c3f1ea1ee71e3  frontend/src/features/account/formErrors.ts
+cf795e391b9fc27a0a050837be864d3ff0d29a3c9b901f6664f76cc6b229d508  frontend/src/features/account/pages/ChangePasswordPage.tsx
+fc5f3178a1b4b7195a686c5a970c16268fab47847781c9258f160b016e4df8d3  frontend/src/features/account/validation.ts
+36c3f475ed55d15040699608dbc2e789dd3ddb01461f9528348d93dab3249f42  frontend/src/features/catalog/__tests__/AdminBookListPage.test.tsx
+51499d6834c025d6e27955a8afb54634cf88bd9461a3fdbad8973c44ea5852cb  frontend/src/features/catalog/__tests__/BookDetailPage.test.tsx
+f5395372a2535cc3b2ec6efe6392e9f1771f0d4039d14173d7862ddeaf396285  frontend/src/features/catalog/__tests__/BookFormPage.test.tsx
+b74218abe12a9e1747f1a925436f220b2c2c22a25e3aa69c654774518ffb0b41  frontend/src/features/catalog/__tests__/BookSearchPage.test.tsx
+e50e665dc30303ce17c81fcd73510872120a8173e19d0daea99695f743bffb70  frontend/src/features/catalog/__tests__/CategoryPage.test.tsx
+94699dc9614b53ee4c6b0e43322af93ec665f411569e33fae1104d050fc64469  frontend/src/features/catalog/__tests__/api.test.ts
+7b5a808bcfff1a743e38e4e4a4a1cd5ee73e3e7ad17378b9b7856e13f4b61dcf  frontend/src/features/catalog/__tests__/searchQuery.test.ts
+1cdfbef70d1af6991a1ce13b8fd5cdb6e17ff995b0ed39c813b37f1a6b79e6f6  frontend/src/features/catalog/__tests__/testUtils.tsx
+fa00680423ae1a4f20969ac2eaf9ac874114bc6eae6c4ad9c81d4058a372b9fa  frontend/src/features/catalog/__tests__/validation.test.ts
+e8bfec8ef499d83a23fb4566f65e0c63e8cef9c6439e9ee42a1e292aa19333e8  frontend/src/features/catalog/api.ts
+b104cf3bf9c43b17471da44150a82e6f4c01615a06f7526b55cca1be06e08267  frontend/src/features/catalog/components/AvailabilityBadge.tsx
+26dd431c6d08f079970994b3d50cd19bddd677762bd1e497e4d36f42f5ffd5e3  frontend/src/features/catalog/components/BookCover.tsx
+8da29886168e606116251965ca0a96eafd3e09989b2bd29662618e574dd0e93e  frontend/src/features/catalog/components/CopiesPanel.tsx
+2730036e4b198956b4cce98b811684fffc00787facd2b322c0615f12e9cbc1ab  frontend/src/features/catalog/components/bookColumns.tsx
+e88048a72a3f73b598819f3695b878c76d0c3400cbd47ec699a8e958cc470032  frontend/src/features/catalog/formErrors.ts
+5521fd8119b75048a9c1fc55a6a9367a56f06ada3b30f0e6b1dbc02d2ac532fe  frontend/src/features/catalog/pages/AdminBookListPage.tsx
+56cc702c88a2d4bc631fcfdaf06bab37172a75597682e97e2d24295f38649be7  frontend/src/features/catalog/pages/BookDetailPage.tsx
+6277ed80530ca4672d6b6d779174cd515c8bc4ef2e264d26f49b1fe6afaaee17  frontend/src/features/catalog/pages/BookFormPage.tsx
+29d1ab5936826532c586eabfc6b786f13e8bcc34f28a4933b00a5dd9a862c108  frontend/src/features/catalog/pages/BookSearchPage.tsx
+b910667f9c92c5591e9b2efca50866c9fad980873e6271b27903b0d3206b6ee3  frontend/src/features/catalog/pages/CategoryPage.tsx
+371c5cfcb11ce06d3b54b2bca0e38497e75be5664859d7f7f99ac634caa520be  frontend/src/features/catalog/searchQuery.ts
+fad16d1e2269b156d04cfd3aaac1ab75177b6215c0e0255bf1c89a12b5cc3d4d  frontend/src/features/catalog/validation.ts
+3c90f56941dfe97754b5ae542c7e77538c2af9477ed9b9f20552da764f772cd2  frontend/src/features/circulation/__tests__/AdminLoanListPage.test.tsx
+4703ceede5747165c4753c54f598774e93c8e5200a47e16a361b2a071472ad23  frontend/src/features/circulation/__tests__/CirculationDeskPage.test.tsx
+52a518dc428e546285b7dfb171de9471812d56ddce7c72c1d05683d114150d5f  frontend/src/features/circulation/__tests__/MyLoansPage.test.tsx
+92426ce326a0bb91e1db6752ed191c3b4485a9631166917e949666cdb19aba03  frontend/src/features/circulation/__tests__/api.test.ts
+b8f6b769400b3fc8edf43c4ede2f16e755b1c2bc239e4f560fb0924acb961f83  frontend/src/features/circulation/__tests__/catalogInvalidation.test.tsx
+e0ad297eaf4c4fc6983bf1295ec898cf11b65f782b49e6491e6b3a0440bc1732  frontend/src/features/circulation/__tests__/testUtils.tsx
+1af1e96b6e26b9b0ae0be56b96a19055afaf1d5996d62e15f3d5ed3c9c08b23e  frontend/src/features/circulation/api.ts
+6d5b38e6e6e45c7c7e759526a2b89ae7233fa28dcd8e3ac1ab708eb423c8cb32  frontend/src/features/circulation/circulation.css
+70d2a8044ff4b7f4e266160242e7c5079963402f497a63afd4f9ff7d136a8609  frontend/src/features/circulation/components/DeskResultCard.tsx
+78c49e60c39e62ffaa82fb5fff658873a5ae07feaa0b4761b502f94368ae103c  frontend/src/features/circulation/components/LoanStatusTag.tsx
+ebd051f0c762ee23edde5c9b98ffff87842068ecf0e25a411b29f79322a7cc15  frontend/src/features/circulation/loanErrorText.ts
+fbd4fa897e97320dff4c3f2e0888639a310c2cfe89e7c5d5674a7800402f6894  frontend/src/features/circulation/pages/AdminLoanListPage.tsx
+87d05594d0608a366a8c0d7b8c68f7670743af083497fb187403e3e9534d18ba  frontend/src/features/circulation/pages/CirculationDeskPage.tsx
+669ba2f4f2c675a07bd405e8419114b694ecd0de8f4dd0142da3651c313c9080  frontend/src/features/circulation/pages/MyLoansPage.tsx
+0adc5c367f1bef44939e5691b615b8a1c0fe7a75417c11db756717464b93f863  frontend/src/features/circulation/renewal.ts
+3b3f5ce3650948a2082d6dee1f206f9ba4b9164ca504615fadd4f6a4d94b5aec  frontend/src/features/dunning/__tests__/DunningCaseListPage.test.tsx
+b882bb4bc6677c73babe51fa50d75eb388509540ced47ab4a59d10068263d2ae  frontend/src/features/dunning/__tests__/api.test.ts
+08737df066abe7ac03008d8640e463947c2ae89148a1093ef62c227e49a2dddf  frontend/src/features/dunning/__tests__/browser-selftest.py
+a6b588a222fe5f0c0d4f1377a27cf6ff936c8c3383853702aa96c67e7d0e19f1  frontend/src/features/dunning/__tests__/fixtures.ts
+ebbaffd2f5be78105f9ff4fa25080fb53c3b7e507e8aaf5b56ecc310229ca4dd  frontend/src/features/dunning/api.ts
+fe13f16005789ba9c75270a3e3ecc1cf3650ff20bc3a9f350a687a297f807522  frontend/src/features/dunning/components/DunningHistoryModal.tsx
+198d626b327304ef39f856422c47f6786b9ad8e6f1501d57a34f8cb082285193  frontend/src/features/dunning/components/DunningRegistrationModal.tsx
+24627f4dec27b35f619c4ab6a176b802a72c5d62263b58b939da5bc5ce9fa3ab  frontend/src/features/dunning/dunning.css
+96ad3718f9f231dac9efc29d719de4d447e2db75d1a691e93840c9de67926041  frontend/src/features/dunning/pages/DunningCaseListPage.tsx
+4634a6e713645aeda36c472f1b6dfd30dc1b5e170cd103a60e28cf8e5146bce4  frontend/src/features/dunning/presentation.ts
+de7a4a86db468b3f38abe00824aaa2b1503ff60361cf9f9e9d97d6e17bc78ab0  frontend/src/features/notifications/__tests__/NotificationInboxPage.test.tsx
+49d559dd7f2f10bb15a402f3f42d96e6aa94d1f741adeb269b0dcca1fa66f9f2  frontend/src/features/notifications/__tests__/api.test.ts
+7351961ca2d2a97def9470dd61648917466288697223e9f493da59869255461b  frontend/src/features/notifications/__tests__/browser-selftest.mjs
+c8f9e72ec1e73cea508c6cbbc84daa10f918ef2391536921a287f200f9c66b90  frontend/src/features/notifications/api.ts
+3202529cb7d2029be7280edcb66efd9948c57ae5ec8bcb8b01daac2a38c35cd3  frontend/src/features/notifications/notifications.css
+80a1bae911cd3818dc47f5ad82751a7086dad846b23f7fe349db6ff28634993b  frontend/src/features/notifications/pages/NotificationInboxPage.tsx
+a04d78e98582338d2f7fbb33798dd27b19ce2787d74991cc60fe1844bd43e5bb  frontend/src/features/notifications/useUnreadNotifications.ts
+bc6bd3fcbbc09d6c3ae53cd2e7836e7f95ca7b21b4ecb6a687ae3583dfdca457  frontend/src/features/readers/__tests__/AdminReaderListPage.test.tsx
+c1886ddb2887ef690917924d0d50444791490549e504a4adccb1d942bb9e4ad7  frontend/src/features/readers/__tests__/MyProfilePage.test.tsx
+cd420c68b82f4cbc192c847cd52f34fa31eaa67b58c269205118295e880e9a02  frontend/src/features/readers/__tests__/ReaderDetailPage.test.tsx
+f2b871275d1a1e2aab99cd46a9349094c215441562330a27ef0332c1a832d447  frontend/src/features/readers/__tests__/api.test.ts
+ddd41b0a711a000601d761be0becac13eb77a3cfbb8a93657e9080f48597f46e  frontend/src/features/readers/__tests__/helpers.tsx
+19b288e709de302babf1b8a970ea097f7ab3280dee7127c3aae3604920960008  frontend/src/features/readers/api.ts
+c2bc1f73448f9e5110514d32854b8341d41778a5e69b75a51beedcf012fe1a28  frontend/src/features/readers/components/ReaderCreateModal.tsx
+6aacc9ce98a4266acc3adde8a154c11c1783e322a70d3102fa3ba14f7c0b5500  frontend/src/features/readers/components/ReaderLoansPanel.tsx
+8d644347e4efcc59b8f9998f8aceb462744dc15274a87b2f0ddf4183c6e67530  frontend/src/features/readers/components/ReaderStatusAction.tsx
+08ac2f9acf18e840ea7ad09beec8fe4db5b1e3ba49de9034c54a2b993b5b1df3  frontend/src/features/readers/components/ReaderStatusTag.tsx
+06090240ca0d0f3af4e866cf9a81ff57b300fa5f191e8f7b7050e16571acb379  frontend/src/features/readers/components/ResetPasswordModal.tsx
+70d16aa798a0263bf99f2d55a0773c9218a6491642b01fd4ba0aea66ba14babd  frontend/src/features/readers/formErrors.ts
+9f290c641a217947209693eae2f07165de9accaead6d4ddfb160cef0bd4054e9  frontend/src/features/readers/pages/AdminReaderListPage.tsx
+9cbf6a6b64e674531b31fdc27161d9ead8fa0555cd6522af7f3d57888d4b0a1d  frontend/src/features/readers/pages/MyProfilePage.tsx
+ec05c1f0a79abf2258b3b8b7198f92a473e82dd0648c03d119f398c8b58ac44a  frontend/src/features/readers/pages/ReaderDetailPage.tsx
+fa57cfebebca73999c3a0943e8e65c70a4dc7359f8faeaf12989b4087c57ab2b  frontend/src/features/readers/validation.ts
+8e94d3dc372ea0e14207a667398bad3f35d279655d692c1fbb7c0bc821ac2648  frontend/src/features/stats/__tests__/DashboardPage.test.tsx
+d8ae61b07e115052906657de20644bb0eb5e05cd021a8f48dd83bb60e02d548c  frontend/src/features/stats/__tests__/OverdueDunning.test.tsx
+b168ff4cf3852c6921221c678c775d700d9dce833804d16199ae00e5961b5c48  frontend/src/features/stats/__tests__/OverdueReportPage.test.tsx
+5673ddcab1c607f07a997f92974bef0e80d7e77665307d52d348f33fc3f051b4  frontend/src/features/stats/__tests__/StatsPage.test.tsx
+5be62c54e934a448214f59c717be3dda6b5fbe82579e6915db423149f3febae1  frontend/src/features/stats/__tests__/api.test.ts
+55ce3fe0bdf08d4247df6553a7f010dba78a914e5d73196502c44c4297cc72ad  frontend/src/features/stats/__tests__/fixtures.ts
+6ae5eed70ec6c9e34f576e4eb7047c28324514a7830a9ee7330cd99218cd15f2  frontend/src/features/stats/__tests__/range.test.ts
+badf934ce587b36b0cb228809cf79b577bcf18d5690e5df6843aacd894f5dfc1  frontend/src/features/stats/__tests__/testUtils.tsx
+55f23c57e8f8e482e9f9c5744ae05663fe44898b26e6f078a7394d639836f065  frontend/src/features/stats/api.ts
+c3a663b93b021dc14adc8f3c185f1a74223ccf2cf56a51771f41c2be58127ee6  frontend/src/features/stats/components/TopBooksList.tsx
+8469d75c7f0f9422f541e95fae1b3d63e9f40eaca4e9cf96320e4ab3436ce029  frontend/src/features/stats/components/TrendChart.tsx
+a90cd7c32d0cd4f1e9cee7b3bc62ebff8c9fff5213f6b94f2be25c1646e8668e  frontend/src/features/stats/pages/DashboardPage.tsx
+797a6f15281476b97b457b31fc664938cd4b0f6f23e0e51fd2d9f1dcf4a71b3a  frontend/src/features/stats/pages/OverdueReportPage.tsx
+1db9cf88d8c4431bebd5a5332784326dfee1bb86a8d02b2a082bd503b8d9d660  frontend/src/features/stats/pages/StatsPage.tsx
+af89e274e599eea4fd0c57b051de6d0d8e34041359d5088c6eb256d0d3e13d84  frontend/src/features/stats/range.ts
+a06eba8e3485b808c8016156960f554e67452763f015876f13d8687c73daf0b4  frontend/src/features/stats/stats.css
+42329239bde82246b3eab03f575070f5162e200af0b1bfa7bb1aaf4a4ae3c94e  frontend/src/main.tsx
+f836518c52b045e114176b5711d164494dc4f92967d85a03009d977b5d16ecf6  frontend/src/styles/__tests__/linearTheme.test.ts
+c43a20066d85fc9959ca5d51fd8c9587e35bcbfb6f460ef215f7737840799b43  frontend/src/styles/global.css
+1f7d20be87f5012d82251a8af78c86be07403e0fc957ed91269f70d9eded8b66  frontend/src/styles/linearTheme.ts
+10be72792adf444c2429748fc9246a493be4ec8c253d89d60a9922ae39c37a9e  frontend/tsconfig.json
+73c35695428ec99873f694ca884707d4a2202fd6b15a90eef59f7fa05a85dd79  frontend/vite.config.ts
+f02cea1e2aa7849b202f7432c57fd2532dbf27d85731c0afedc2de9858293219  frontend/vitest.setup.ts
+d7da309e0c8531aceb23da2ae419c90a0ed6325f4d79640cd13f255f6e4b56f3  scripts/dev.sh
+d5cb47b8e7cab3d7e69f6ea7604a7e12ae31d78623dcd5ed30737decb874ed23  scripts/env.sh
+afdb9434a560b696995b97c462330a153285bcfa83d2088a3fc1e6b520b41015  scripts/reset-db.sh
+61e3ee455cbabaa494ef53213864729ec228b13e0a9b64768d9ffd033a09eebc  scripts/test-all.sh
+[END_SOURCE_FILES]
+
+[EVIDENCE_FILES]
+Evidence paths resolve under the same absolute Root, but are NOT source digest inputs. These are DEV/INT-time hashes; later authorized ACC additions to the matrix are new evidence, not source changes.
+887debd48dbd21603a69fdae0bc291927071bc2bbc4733e359965903a563639d  docs/verification/linear-restyle/development/integration/round2/test-all.log
+f9e6b5a3d62d3f5429d8f79371d4107428964d06030b820f9c6278eda396ab00  docs/verification/linear-restyle/ac-dod-matrix.md
+37c9e9fd905db00454c6613ce565b024933cfa46d6eb20c86e05826f1dbc415c  docs/verification/linear-restyle/development/integration/round2/results.json
+12854e8640e56c21b75e0a3a2e32100132e70233eee599c92c1186b24342afeb  docs/verification/linear-restyle/development/r5/results.json
+d18a53921fb75b4c53b4ea8af0048adecf42ff08fa04c1f0c8b70570eee0fcd4  docs/verification/linear-restyle/development/integration/round2/history/c1-candidate-snapshot.txt
+b0175652a5dbb52126aa22e018098194d6b9891abdc00aa00ac1ebd147ba7e18  docs/verification/linear-restyle/development/integration/round2/history/c1-ac-dod-matrix-with-acceptance.md
+6c9ad2feb946f301e5e0ab6f5824e31b9049ecbd7b8f71fcb41297642c7fbbd9  docs/verification/linear-restyle/development/integration/round2/history/c1-integration-results.json
+[END_EVIDENCE_FILES]
+
+[EVIDENCE_TREES]
+Tree-digest-method: For each named directory enumerate direct regular files; sort basenames with default JavaScript Array.sort(); insert basename -> lowercase SHA256(file bytes) into plain object M in that order; SHA256 the UTF-8 bytes of JSON.stringify(M). Count and all content included; no localeCompare or JSON whitespace/newline.
+119 files; 64fe22ce00b5499c6370ddba5ff2d0355202ccb958fcab50f6a004856af81f2c  docs/verification/linear-restyle/development/integration/round2/computed
+4 files; a8f6fa68750f5e33a7077c4ccdb4011ff2a5d03438825655c9507f5083800462  docs/verification/linear-restyle/development/integration/round2/graphics
+11 files; b71e687bb353c3eb2fbd0cb9c227277b665405a324d6c17be575302840b771cf  docs/verification/linear-restyle/development/integration/round2/screenshots
+No-self-reference: Evidence trees contain only generated JSON or PNG files, never this snapshot, matrix or integration results.
+[END_EVIDENCE_TREES]
+
+[GIT_STATUS_SHORT]
+Branch: main
+Staged-files: none
+ M frontend/index.html
+ M frontend/src/App.tsx
+ M frontend/src/app/layouts/AppLayout.tsx
+ M frontend/src/auth/LoginPage.tsx
+ M frontend/src/components/EmptyState.tsx
+ M frontend/src/components/ForbiddenPage.tsx
+ M frontend/src/components/NotFoundPage.tsx
+ M frontend/src/components/PageLoading.tsx
+ M frontend/src/features/catalog/components/BookCover.tsx
+ M frontend/src/features/catalog/components/bookColumns.tsx
+ M frontend/src/features/catalog/pages/BookDetailPage.tsx
+ M frontend/src/features/catalog/pages/BookSearchPage.tsx
+ M frontend/src/features/catalog/pages/CategoryPage.tsx
+ M frontend/src/features/circulation/circulation.css
+ M frontend/src/features/dunning/components/DunningHistoryModal.tsx
+ M frontend/src/features/dunning/dunning.css
+ M frontend/src/features/dunning/pages/DunningCaseListPage.tsx
+ M frontend/src/features/notifications/notifications.css
+ M frontend/src/features/notifications/pages/NotificationInboxPage.tsx
+ M frontend/src/features/stats/pages/DashboardPage.tsx
+ M frontend/src/features/stats/stats.css
+ M frontend/src/main.tsx
+ M frontend/src/styles/global.css
+?? DESIGN.md
+?? docs/design/linear-restyle-design.md
+?? docs/verification/linear-restyle/
+?? frontend/e2e/linear-theme.spec.ts
+?? frontend/src/styles/__tests__/
+?? frontend/src/styles/linearTheme.ts
+[END_GIT_STATUS_SHORT]
+
+[ACTUAL_TRACKED_DIFF_NUMSTAT]
+Format: additions deletions source-path. Exact full-index binary diff reproduced by the header command and bound by Tracked-diff-sha256. All untracked source additions are in SOURCE_FILES.
+1 1 frontend/index.html
+3 31 frontend/src/App.tsx
+14 11 frontend/src/app/layouts/AppLayout.tsx
+1 4 frontend/src/auth/LoginPage.tsx
+2 1 frontend/src/components/EmptyState.tsx
+2 1 frontend/src/components/ForbiddenPage.tsx
+2 1 frontend/src/components/NotFoundPage.tsx
+1 1 frontend/src/components/PageLoading.tsx
+9 18 frontend/src/features/catalog/components/BookCover.tsx
+1 1 frontend/src/features/catalog/components/bookColumns.tsx
+7 8 frontend/src/features/catalog/pages/BookDetailPage.tsx
+3 3 frontend/src/features/catalog/pages/BookSearchPage.tsx
+1 1 frontend/src/features/catalog/pages/CategoryPage.tsx
+21 129 frontend/src/features/circulation/circulation.css
+1 1 frontend/src/features/dunning/components/DunningHistoryModal.tsx
+19 19 frontend/src/features/dunning/dunning.css
+1 1 frontend/src/features/dunning/pages/DunningCaseListPage.tsx
+11 11 frontend/src/features/notifications/notifications.css
+2 2 frontend/src/features/notifications/pages/NotificationInboxPage.tsx
+13 13 frontend/src/features/stats/pages/DashboardPage.tsx
+81 448 frontend/src/features/stats/stats.css
+2 0 frontend/src/main.tsx
+99 149 frontend/src/styles/global.css
+[END_ACTUAL_TRACKED_DIFF_NUMSTAT]
+
+[C1_TO_C2]
+Previous-source-digest: 5c7c5b33b27dcd304b72e85d1f286b766d485b9dddeec4cdd16a223326b3fe0c
+Exactly3 changed files; all other336 source entries identical to preserved C1 manifest:
+frontend/e2e/linear-theme.spec.ts: 2ee0d8b7844a8ae53c825f0b29ab3268a63eebab18672a8a6d64c9b82ef939af -> 2bf2977dab6d8456845a4ad6fac9dd02c099407b7054abe695394b5766c79a18 (add4 true-role graphic/navigation cases, retain original assertions)
+frontend/src/components/ForbiddenPage.tsx: 244a89b99be4752e46f598797d4a93bf19436a88e5abeed63a75f8bca7e48897 -> 32942c0bb6248c2d2b287af8196c5ea740967754d2d8fc59e17af4e7fa09f672 (remove Result exception status display prop)
+frontend/src/components/NotFoundPage.tsx: 5040071c1ec8468c1b8648b7767b32244516d4c10aac69253048802bac8383f4 -> 04b260fda3ca0460f3172a7189708015a549e22d3ee26d473fa7cb8626051ca4 (remove Result exception status display prop)
+Defect: ACC-D01, C1 actual 403/404 illustration not replaced due to antd exception early return. Fixed in R5 with actual RED4 -> GREEN4. C2 tests now assert actual icon data-icon/color/path fills, no ant-result-image, original titles/Chinese subtitles and return-home navigation at1440/390.
+Revalidation: Fresh round2 entire test-all617 backend/410 frontend/37 E2E, plus119 computed sets,4 graph records and11 read screenshots. No source modification in this integrate.
+History: Exact previous snapshot, C1 matrix including ACC failure, and original INT result copied before updates to /Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/linear-restyle/development/integration/round2/history/. Their byte hashes are in EVIDENCE_FILES.
+Acceptance-history: /Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/linear-restyle/acceptance/ remains unchanged (235 regular files, recursive sorted repo-relative path SHA-map digest27b9d5d8696caec039602eb910d7f531fd83c2e06576cde3a4a78e5ce9215724; scripts/node_modules symlink not followed and unchanged). Old ACC-D01 FAIL not relabelled. Old ACC DoD4 mislabel remains historical and belongs to original ACC to correct; current C2 DoD4 NOT_RUN.
+[END_C1_TO_C2]
+
+[HANDOFF]
+State: READY_FOR_CHECKS
+Source-changes-in-this-integration: none. R5 input unchanged; whole test-all rerun successfully rather than assembling partial passes.
+Actual-integration-records: current snapshot; prepended C2 section in docs/verification/linear-restyle/ac-dod-matrix.md with entire C1 original suffix retained; round2/results.json; round2/test-all.log; round2/computed/*; round2/graphics/*; round2/screenshots/*; round2/history/*.
+Visual-check:119 fresh computed sets (106 application,13 labelled component harness),5059 text samples,9 genuine disabled exclusions,0 failures,min4.699901244313427;4 actual graphic records all neutral lock/search;11 fresh key screenshots opened/read. Prior C1 full-gate/visual conclusions remain historical, not proof of this C2.
+Future-acceptance: C2 independent reacceptance NOT_RUN. Main session must separately dispatch original ACC. ACC first checks exact membership/count and all339 file hashes/digest; unauthorized source drift invalidates candidate. Authorized acceptance evidence/matrix additions do not change Source-digest.
+Evidence-warning: frontend/playwright-report is normally generated and may be overwritten by later runs; durable round2 log/JSON/selected PNG hashes above are authoritative. No new full report copy created. No old intermediate pass/report is promoted to this candidate.
+Historical-boundary: Independent review not enabled, not PASS. Old first-version/reminder audit or gate conclusions are not changed by this visual-increment result. No commit/staging/push/deploy.
+[END_HANDOFF]

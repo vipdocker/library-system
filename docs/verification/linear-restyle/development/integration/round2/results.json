@@ -1,0 +1,109 @@
+{
+  "taskId": "linear-design-restyle-20261121",
+  "subtaskId": "LDR-INT",
+  "operation": "integrate",
+  "dispatchRound": 2,
+  "sessionRound": 6,
+  "planVersion": "linear-restyle-plan-v1.1",
+  "designVersion": "linear-restyle-design-v1-R1",
+  "definitionVersion": "linear-restyle-ac-dod-v1",
+  "status": "READY_FOR_CHECKS",
+  "authorization": "Separate main-session integrate round2 after verified R5 ACC-D01 repair. Existing user-approved scope, same session/model, no concurrent source writes, no independent acceptance or deployment authority.",
+  "workspace": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10",
+  "candidateId": "linear-restyle-20261121-c2-288c7b59c108",
+  "sourceDigest": "288c7b59c108feff7d910dd8239c5d289c9f6029c18e598f3dfc777f3df857e8",
+  "sourceFileCount": 339,
+  "sourceDigestMethod": "Same339 C1 relative source/config/test/design paths; default JavaScript Array.sort(), path->file-byte lowercase SHA256 plain map; SHA256 UTF-8 JSON.stringify(map) without whitespace/newline. All evidence and snapshot/matrix/self excluded; no hash cycle.",
+  "baselineHead": "c1e30e646bf7bd8c39e59b353a001f79192ca9f6",
+  "branch": "main",
+  "snapshot": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/linear-restyle/candidate-snapshot.txt",
+  "matrix": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/linear-restyle/ac-dod-matrix.md",
+  "thisRoundSourceChanges": "NONE. R5 hashes checked before and after full test-all; no drift or extra source changes.",
+  "c1ToC2": {
+    "previousCandidateId": "linear-restyle-20261121-5c7c5b33b27d",
+    "previousSourceDigest": "5c7c5b33b27dcd304b72e85d1f286b766d485b9dddeec4cdd16a223326b3fe0c",
+    "previousAcceptance": "NEEDS_WORK / ACC-D01 / AC-3 FAIL, retained as history; not relabelled as C2 PASS",
+    "unchangedFiles": 336,
+    "changedFiles": {
+      "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/src/components/ForbiddenPage.tsx": { "before": "244a89b99be4752e46f598797d4a93bf19436a88e5abeed63a75f8bca7e48897", "after": "32942c0bb6248c2d2b287af8196c5ea740967754d2d8fc59e17af4e7fa09f672", "change": "Removed only Result status=403 display prop; existing Lock icon/title/subtitle/button/aria-hidden remain" },
+      "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/src/components/NotFoundPage.tsx": { "before": "5040071c1ec8468c1b8648b7767b32244516d4c10aac69253048802bac8383f4", "after": "04b260fda3ca0460f3172a7189708015a549e22d3ee26d473fa7cb8626051ca4", "change": "Removed only Result status=404 display prop; existing Search icon/title/subtitle/button/aria-hidden remain" },
+      "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/e2e/linear-theme.spec.ts": { "before": "2ee0d8b7844a8ae53c825f0b29ab3268a63eebab18672a8a6d64c9b82ef939af", "after": "2bf2977dab6d8456845a4ad6fac9dd02c099407b7054abe695394b5766c79a18", "change": "4 new authentic READER403/404 actual-graphic and navigation regressions at1440/390; all existing assertions retained" }
+    },
+    "revalidationScope": "Fresh entire backend verify, frontend four checks and37 standard E2Es including4 graphic regressions and original13 business cases; actual current screenshot review. Not a sum of R5 partial passes."
+  },
+  "normativeInputs": {
+    "designSha256": "551d621d4b78fc6d056a35f89efbb4e91c72862c5b2f7f1a8380d1822b2ed455",
+    "rootDesignSha256": "70ca40c5a5dadee01eb368135ad71d1bce1ab102fa9f95183277f6e7d1b2d8f5",
+    "recoveredOriginalSha256": "30bd30e72c48a16e4bdbd010f2d1c85fab657c6fae3cc85389399aab10f9cb5f",
+    "verification": "Read-only check of exact unique approved YAML block, first---line, all metadata fields and Buffer equality after removing only that block; no serialization/normalization."
+  },
+  "history": {
+    "directory": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/linear-restyle/development/integration/round2/history",
+    "copiedBeforeUpdates": true,
+    "files": {
+      "c1-candidate-snapshot.txt": "d18a53921fb75b4c53b4ea8af0048adecf42ff08fa04c1f0c8b70570eee0fcd4",
+      "c1-ac-dod-matrix-with-acceptance.md": "b0175652a5dbb52126aa22e018098194d6b9891abdc00aa00ac1ebd147ba7e18",
+      "c1-integration-results.json": "6c9ad2feb946f301e5e0ab6f5824e31b9049ecbd7b8f71fcb41297642c7fbbd9"
+    },
+    "currentMatrix": "C2 section prepended; the complete former C1 matrix including ACC failure remains a byte-identical suffix. C1 result/claims are explicitly marked historical, not updated toC2.",
+    "acceptanceUnchanged": { "regularFileCount": 235, "treeSha256": "27b9d5d8696caec039602eb910d7f531fd83c2e06576cde3a4a78e5ce9215724", "method": "Recursive regular acceptance files, repo-relative paths sorted defaultJS, map of file SHA then JSON stringify SHA. Existing scripts/node_modules symlink recorded but not followed or changed." },
+    "accDoD4": "Original report/results and historical table not edited. C1 failed acceptance cannot count as PASS merely because a conclusion was issued; original ACC owns correction on recheck. Current C2 DoD4 explicitly NOT_RUN."
+  },
+  "fullGate": {
+    "command": "bash -o pipefail -c 'bash scripts/test-all.sh 2>&1 | tee docs/verification/linear-restyle/development/integration/round2/test-all.log'",
+    "log": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/linear-restyle/development/integration/round2/test-all.log",
+    "exit": 0,
+    "retries": 0,
+    "result": "[test-all.sh] 全部检查通过。",
+    "exitCodeEvidence": "Unchanged script uses set -euo pipefail and executed all sequential steps plus final success; outer pipefail exit0. Every step therefore returned0; no script instrumentation/config change or skipped stage.",
+    "steps": [
+      { "command": "source scripts/env.sh", "exit": 0, "result": "JDK21 and Homebrew npm" },
+      { "command": "mvn -f backend/pom.xml verify", "exit": 0, "tests": 617, "failures": 0, "errors": 0, "skipped": 0, "architectureTests": 6, "result": "BUILD SUCCESS; JaCoCo generated", "logLines": "2-1718; summary1701,success1714" },
+      { "command": "npm --prefix frontend run lint", "exit": 0, "boundaryTests": 28, "failures": 0, "skipped": 0, "logLines": "1720-1760" },
+      { "command": "npm --prefix frontend run typecheck", "exit": 0, "logLines": "1762-1767" },
+      { "command": "npm --prefix frontend run test", "exit": 0, "tests": 410, "files": 41, "logLines": "1768-1930; totals1922-1923" },
+      { "command": "npm --prefix frontend run build", "exit": 0, "result": "Built; existing >500kB warning remains", "logLines": "1932-1995" },
+      { "command": "npm --prefix frontend run e2e", "exit": 0, "tests": 37, "failures": 0, "originalBusinessCases": 13, "visualCases": 24, "duration": "4.0m", "logLines": "1997-2506; summary2504" }
+    ]
+  },
+  "environment": { "os": "macOS26.6.2 build25G83 arm64", "node": "/opt/homebrew/bin/node v26.7.0", "npm": "/opt/homebrew/bin/npm 11.19.0", "maven": "3.9.16", "jdk": "Homebrew OpenJDK21.0.12 through original scripts/env.sh", "browser": "Playwright1.65.0 Chromium", "database": "Backend tests and E2E system-temporary SQLite only; no backend/data/WAL/SHM/bak", "ports": "18096/15196 single group, no concurrent dev.sh; all18095/15195/18096/15196 free before/after", "dependencies": "Preinstalled; no packages/Skills/configuration/environment change" },
+  "currentUi": {
+    "computed": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/linear-restyle/development/integration/round2/computed",
+    "graphics": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/linear-restyle/development/integration/round2/graphics",
+    "screenshots": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/linear-restyle/development/integration/round2/screenshots",
+    "computedSets": 119,
+    "applicationSets": 106,
+    "labelledComponentHarnessSets": 13,
+    "textSamples": 5059,
+    "disabledExclusions": 9,
+    "contrastFailures": 0,
+    "minEnabledRatio": 4.699901244313427,
+    "graphicCases": 4,
+    "graphicResult": "All four actual iconName lock/search, aria-hidden true, ink-subtle rgb(138,143,152) for icon and every SVG path; graphicSVG count1, old ant-result-image count0; original titles/subtitles and returning to /books retained.",
+    "screenshotsActuallyRead": ["acc-d01-403-1440.png", "acc-d01-404-1440.png", "acc-d01-403-390.png", "acc-d01-404-390.png", "login-default.png", "admin-route-0.png", "reader-route-2.png", "stats-fit-390.png", "catalog-503.png", "catalog-empty.png", "catalog-loading.png"],
+    "observations": "Neutral real lock/magnifier replaces old person/cactus/circle illustration at both widths; readable status text and button; dark login/admin/reader hierarchy; complete narrow date/count fields; muted semantic error/empty/loading preserved. No new visual defect observed.",
+    "coverage": "Full standard suite covers authenticated ADMIN/READER routes and real403/404, notificationsACTIVE/OVERDUE/RETURNED, casesOPEN/CLOSED, modals/select/date/pseudo layers/focus/table/pagination/delete/navigation and1440/1024/390. Four new graphic cases are actual role sessions, not fixtures.",
+    "mockBoundary": "Existing19 read-only loading/empty/503/bootstrap-delay states are marked mock. No identity/role/auth response fabricated. 13 labelled component-harness states for otherwise unavailable warning/disabledDate not treated as business-role proof.",
+    "limits": "Computed contrast is for observed stable text/background/opacity and targeted calendar pseudo layers, not arbitrary graphical coverage. ACC-D01 is now covered by separate actual SVG assertions and read images. Table selection not applicable because feature tables do not implement rowSelection."
+  },
+  "sourceAndEvidenceHashes": {
+    "trackedDiffSha256": "8a507f1573d531f2bacc7a0376f4afb8abf3114c57874ae2cbbc66b61b910730",
+    "trackedDiffBytes": 70475,
+    "trackedDiffCommand": "git diff --binary --full-index HEAD -- <all339 manifest source paths>",
+    "matrixSha256": "f9e6b5a3d62d3f5429d8f79371d4107428964d06030b820f9c6278eda396ab00",
+    "testAllSha256": "887debd48dbd21603a69fdae0bc291927071bc2bbc4733e359965903a563639d",
+    "r5ResultSha256": "12854e8640e56c21b75e0a3a2e32100132e70233eee599c92c1186b24342afeb",
+    "trees": {
+      "computed": { "count": 119, "sha256": "64fe22ce00b5499c6370ddba5ff2d0355202ccb958fcab50f6a004856af81f2c" },
+      "graphics": { "count": 4, "sha256": "a8f6fa68750f5e33a7077c4ccdb4011ff2a5d03438825655c9507f5083800462" },
+      "screenshots": { "count": 11, "sha256": "b71e687bb353c3eb2fbd0cb9c227277b665405a324d6c17be575302840b771cf" }
+    },
+    "treeMethod": "Direct basenames sorted defaultJS Array.sort(), basename -> byte SHA256 map; SHA256 JSON.stringify(map). These evidence files/directories are independent of source digest; no self-reference."
+  },
+  "matrixResults": { "AC-1": "PASS DEV/INT2", "AC-2": "PASS DEV/INT2", "AC-3": "PASS DEV/INT2", "AC-4": "PASS DEV/INT2", "AC-5": "PASS DEV/INT2", "AC-6": "PASS DEV/INT2", "DoD-1": "PASS DEV/INT2", "DoD-2": "PASS DEV/INT2", "DoD-3": "PASS DEV/INT2", "DoD-4": "NOT_RUN independent reacceptance pending", "DoD-5": "PASS DEV/INT2", "DoD-6": "PASS DEV/INT2" },
+  "knownWarnings": ["Existing frontend >500kB chunk warning, unsuppressed"],
+  "notRun": ["C2 independent ACC recheck", "Deployment/release", "Cross-browser/real-device/screen-reader certification beyond approved scope"],
+  "safety": "No source/test fixes made during round2 integrate. No change to old ACC report/results/evidence or old INT evidence. Exact C1 history copies retained before updating this task's current matrix/snapshot; no git staging/commit/push/deploy/install/new sessions or model actions. Protected business/API/router/auth/backend/dependency/rule paths unchanged. Only original temporary test fixtures touched test data.",
+  "skills": "verification-before-completion loaded; same prior approved frontend implementation/browser evidence discipline, no new independent review or tool installation.",
+  "nextOwner": "Main session validates C2 snapshot/hash/evidence and separately dispatches original ACC for recheck. READY_FOR_CHECKS is DEV/INT2 stable-candidate readiness, not independent acceptance or production permission. Source writing stopped."
+}

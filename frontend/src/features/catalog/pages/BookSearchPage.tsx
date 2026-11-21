@@ -99,9 +99,9 @@ export default function BookSearchPage() {
 
       <div
         style={{
-          background: 'var(--lib-paper-deep, #efe9dc)',
-          border: '1px solid rgba(30, 107, 82, 0.14)',
-          borderRadius: 10,
+          background: 'var(--linear-surface-2)',
+          border: '1px solid var(--linear-hairline)',
+          borderRadius: 'var(--linear-radius-lg)',
           padding: 16,
           marginBottom: 16,
         }}

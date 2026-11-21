@@ -75,7 +75,7 @@ export default function BookDetailPage() {
     {
       key: 'category',
       label: '分类',
-      children: book.category ? <Tag color="green">{book.category.name}</Tag> : '未分类',
+      children: book.category ? <Tag>{book.category.name}</Tag> : '未分类',
     },
     {
       key: 'createdAt',
@@ -106,10 +106,9 @@ export default function BookDetailPage() {
         gap={28}
         wrap
         style={{
-          background:
-            'linear-gradient(135deg, var(--lib-green-soft, #d9e6dd) 0%, var(--lib-paper, #f5f2ea) 65%)',
-          border: '1px solid rgba(30, 107, 82, 0.16)',
-          borderRadius: 12,
+          background: 'var(--linear-surface-2)',
+          border: '1px solid var(--linear-hairline)',
+          borderRadius: 'var(--linear-radius-lg)',
           padding: 'clamp(16px, 4vw, 28px)',
           marginBottom: 24,
         }}
@@ -127,7 +126,7 @@ export default function BookDetailPage() {
           <Space size={24} align="center" wrap>
             <div style={{ minWidth: 0, flex: '1 1 220px', maxWidth: 280 }}>
               <Space size={8} align="baseline">
-                <Typography.Text strong style={{ fontSize: 22, color: 'var(--lib-green, #1e6b52)' }}>
+                <Typography.Text strong style={{ fontSize: 22, color: 'var(--linear-ink)' }}>
                   {book.availableCopies}
                 </Typography.Text>
                 <Typography.Text type="secondary">册可借 / 馆藏 {book.totalCopies} 册</Typography.Text>
@@ -135,8 +134,8 @@ export default function BookDetailPage() {
               <Progress
                 percent={percent}
                 showInfo={false}
-                strokeColor="var(--lib-green, #1e6b52)"
-                railColor="rgba(30, 107, 82, 0.14)"
+                strokeColor="var(--linear-ink-subtle)"
+                railColor="var(--linear-surface-3)"
                 size="small"
               />
             </div>

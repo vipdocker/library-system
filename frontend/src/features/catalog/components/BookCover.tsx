@@ -1,12 +1,6 @@
-// 确定性生成的示意书封：由书名哈希取色（图书馆主题色板），无外部图片依赖。
-//  purely decorative —— 对读屏器隐藏，书目信息以文本呈现。
 const PALETTE = [
-  { bg: '#1e6b52', deep: '#152e26', accent: '#e8c98a' },
-  { bg: '#2f6f8f', deep: '#1d4257', accent: '#f0d9a8' },
-  { bg: '#b23a32', deep: '#7c2822', accent: '#f5e3c8' },
-  { bg: '#c9861d', deep: '#8a5c12', accent: '#fffdf7' },
-  { bg: '#3d8b51', deep: '#28593a', accent: '#f5f2ea' },
-  { bg: '#152e26', deep: '#0d1d18', accent: '#e8c98a' },
+  'var(--linear-surface-1)', 'var(--linear-surface-2)', 'var(--linear-surface-3)',
+  'var(--linear-surface-4)', 'var(--linear-surface-2)', 'var(--linear-surface-3)',
 ] as const;
 
 function hashTitle(title: string): number {
@@ -35,12 +29,9 @@ export function BookCover({ title, author, size = 'sm' }: BookCoverProps) {
         width,
         height,
         flex: `0 0 ${width}px`,
-        borderRadius: size === 'lg' ? 6 : 3,
-        background: `linear-gradient(150deg, ${colors.bg} 0%, ${colors.deep} 100%)`,
-        boxShadow:
-          size === 'lg'
-            ? '6px 8px 18px rgba(21, 46, 38, 0.28)'
-            : '2px 2px 5px rgba(21, 46, 38, 0.22)',
+        borderRadius: size === 'lg' ? 'var(--linear-radius-sm)' : 'var(--linear-radius-xs)',
+        background: colors,
+        border: '1px solid var(--linear-hairline-strong)',
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
@@ -57,12 +48,12 @@ export function BookCover({ title, author, size = 'sm' }: BookCoverProps) {
           top: 0,
           bottom: 0,
           width: size === 'lg' ? 3 : 1.5,
-          background: 'rgba(0,0,0,0.28)',
+          background: 'var(--linear-hairline-strong)',
         }}
       />
       <span
         style={{
-          color: colors.accent,
+          color: 'var(--linear-ink)',
           fontSize: size === 'lg' ? 15 : 7,
           lineHeight: 1.35,
           fontWeight: 600,
@@ -77,9 +68,9 @@ export function BookCover({ title, author, size = 'sm' }: BookCoverProps) {
       </span>
       <span
         style={{
-          borderTop: `1px solid ${colors.accent}55`,
+          borderTop: '1px solid var(--linear-hairline-strong)',
           paddingTop: size === 'lg' ? 6 : 2,
-          color: `${colors.accent}cc`,
+          color: 'var(--linear-ink-muted)',
           fontSize: size === 'lg' ? 11 : 5,
           whiteSpace: 'nowrap',
           overflow: 'hidden',

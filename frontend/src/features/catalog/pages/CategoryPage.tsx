@@ -103,7 +103,7 @@ export default function CategoryPage() {
       title: '图书数量',
       dataIndex: 'bookCount',
       width: 110,
-      render: (count: number) => <Tag color={count > 0 ? 'green' : 'default'}>{count} 本</Tag>,
+      render: (count: number) => <Tag>{count} 本</Tag>,
     },
     {
       title: '操作',

@@ -47,7 +47,7 @@ export function bookBaseColumns(sort: string): TableProps<BookSummary>['columns'
       key: 'category',
       width: 130,
       render: (_, book) =>
-        book.category ? <Tag color="green">{book.category.name}</Tag> : <Typography.Text type="secondary">未分类</Typography.Text>,
+        book.category ? <Tag>{book.category.name}</Tag> : <Typography.Text type="secondary">未分类</Typography.Text>,
     },
     {
       title: 'ISBN',

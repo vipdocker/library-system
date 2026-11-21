@@ -58,6 +58,7 @@ export function AppLayout() {
         breakpoint="lg"
         width={232}
         theme="dark"
+        style={{ borderRight: `1px solid ${token.colorBorderSecondary}` }}
       >
         <div
           style={{
@@ -66,12 +67,12 @@ export function AppLayout() {
             gap: 10,
             padding: collapsed ? '18px 0' : '18px 20px',
             justifyContent: collapsed ? 'center' : 'flex-start',
-            color: token.colorBgContainer,
+            color: token.colorText,
           }}
         >
-          <BookOutlined style={{ fontSize: 24, color: '#e8c98a' }} />
+          <BookOutlined style={{ fontSize: 24, color: token.colorPrimary }} />
           {!collapsed && (
-            <Typography.Text strong style={{ color: token.colorBgContainer, fontSize: 16 }}>
+            <Typography.Text strong style={{ color: token.colorText, fontSize: 16 }}>
               图书馆管理系统
             </Typography.Text>
           )}
@@ -84,7 +85,7 @@ export function AppLayout() {
           onClick={({ key }) => navigate(key)}
         />
       </Sider>
-      <Layout>
+      <Layout style={{ minWidth: 0 }}>
         <Header
           style={{
             display: 'flex',
@@ -94,18 +95,19 @@ export function AppLayout() {
             // I-03：antd Header 默认 line-height:64px 会让行内块（ellipsis 文本）基线沉底，
             // 窄屏下看起来像换行；flex 布局不需要它。
             lineHeight: 'normal',
+            borderBottom: `1px solid ${token.colorBorderSecondary}`,
           }}
         >
           {/* I-03：窄屏（390px）下压缩间距并限制用户名宽度，避免顶栏换行 */}
           <Space size="small">
-            <Tag color={user?.role === 'ADMIN' ? 'gold' : 'green'} style={{ marginInlineEnd: 0 }}>
+            <Tag style={{ marginInlineEnd: 0 }}>
               {user?.role === 'ADMIN' ? '管理员' : '读者'}
             </Tag>
             <Space size={8} align="center" style={{ minWidth: 0 }}>
-              <Avatar size="small" icon={<UserOutlined />} style={{ background: token.colorPrimary, flexShrink: 0 }} />
+              <Avatar size="small" icon={<UserOutlined />} style={{ background: token.colorBgElevated, color: token.colorTextSecondary, flexShrink: 0 }} />
               <Typography.Text
                 ellipsis={{ tooltip: user?.displayName ?? user?.username }}
-                style={{ color: token.colorBgContainer, maxWidth: '6em', whiteSpace: 'nowrap' }}
+                style={{ color: token.colorText, maxWidth: '6em', whiteSpace: 'nowrap' }}
               >
                 {user?.displayName ?? user?.username}
               </Typography.Text>
@@ -113,19 +115,20 @@ export function AppLayout() {
             <Button
               type="text"
               icon={<LogoutOutlined />}
-              style={{ color: token.colorBgContainer, whiteSpace: 'nowrap' }}
+              style={{ color: token.colorText, whiteSpace: 'nowrap' }}
               onClick={onLogout}
             >
               退出登录
             </Button>
           </Space>
         </Header>
-        <Content style={{ margin: 24 }}>
+        <Content style={{ margin: 'clamp(12px, 2vw, 24px)', minWidth: 0 }}>
           <div
             style={{
               background: token.colorBgContainer,
-              borderRadius: 12,
-              padding: 24,
+              border: `1px solid ${token.colorBorderSecondary}`,
+              borderRadius: token.borderRadiusLG,
+              padding: 'clamp(12px, 2vw, 24px)',
               minHeight: 'calc(100vh - 160px)',
             }}
           >

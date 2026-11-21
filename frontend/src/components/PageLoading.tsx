@@ -15,7 +15,7 @@ export function PageLoading({ tip = '加载中…' }: { tip?: string }) {
       }}
     >
       <Spin size="large" />
-      <span style={{ color: 'rgba(34, 48, 42, 0.55)' }}>{tip}</span>
+      <span style={{ color: 'var(--linear-ink-subtle)' }}>{tip}</span>
     </div>
   );
 }

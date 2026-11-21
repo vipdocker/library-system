@@ -23,7 +23,7 @@ export function DunningHistoryModal({ item, onClose }: { item: DunningCaseSummar
       {history.isError ? <PageError error={history.error} onRetry={refresh} /> : history.isPending || history.isFetching ? <PageLoading tip="正在加载催还历史…" /> : data && (
         <>
           <div className="dunning-history-state">
-            <Tag color={data.status === 'CLOSED' ? 'green' : 'gold'}>{statusLabels[data.status]}</Tag>
+            <Tag color={data.status === 'CLOSED' ? 'success' : 'warning'}>{statusLabels[data.status]}</Tag>
             <span>共 {data.records.length} 条记录</span>
             {data.closedAt !== null && <time dateTime={data.closedAt}>结案时间：{formatDunningTime(data.closedAt)}</time>}
             {data.closeReason === 'RETURNED' && <span>结案原因：已归还</span>}

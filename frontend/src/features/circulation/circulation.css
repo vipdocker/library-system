@@ -1,130 +1,22 @@
-/* circulation feature 局部样式：沿用全局「墨绿 + 暖纸」视觉语言（src/styles/global.css 的变量）。 */
-
-.circ-page-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
-}
-
-/* ---------- 流通柜台 ---------- */
-
-.circ-desk-tabs .ant-tabs-tab {
-  font-size: 15px;
-}
-
-.circ-scan-form {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding: 16px;
-  border: 1px solid var(--lib-green-soft, #d9e6dd);
-  border-radius: 10px;
-  background: linear-gradient(180deg, rgba(30, 107, 82, 0.045), rgba(30, 107, 82, 0.015));
-}
-
-.circ-scan-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.circ-scan-field label {
-  font-size: 13px;
-  color: rgba(34, 48, 42, 0.65);
-}
-
-.circ-scan-input {
-  width: 220px;
-  font-family: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  letter-spacing: 0.06em;
-}
-
-.circ-scan-hint {
-  margin-top: 8px;
-  font-size: 12px;
-  color: rgba(34, 48, 42, 0.5);
-}
-
-.circ-result {
-  margin-top: 16px;
-}
-
-.circ-reader-panel {
-  margin-top: 20px;
-}
-
-.circ-reader-summary {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-/* ---------- 借阅列表 / 我的借阅 ---------- */
-
-.circ-filter-bar {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding: 16px;
-  margin-bottom: 16px;
-  border: 1px solid var(--lib-green-soft, #d9e6dd);
-  border-radius: 10px;
-  background: rgba(30, 107, 82, 0.03);
-}
-
-.circ-filter-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.circ-filter-field label {
-  font-size: 13px;
-  color: rgba(34, 48, 42, 0.65);
-}
-
-.circ-barcode {
-  font-family: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 12px;
-}
-
-/* 逾期行标红（AC-LOAN-07）：整行浅红底 + 应还日红字，配合红色 Tag 显示逾期天数。 */
-.circ-row-overdue > td {
-  background: rgba(178, 58, 50, 0.055) !important;
-}
-
-.circ-due-overdue {
-  color: #b23a32;
-  font-weight: 600;
-}
-
-.circ-book-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.circ-book-sub {
-  font-size: 12px;
-  color: rgba(34, 48, 42, 0.5);
-}
-
-.circ-overdue-alert {
-  margin-bottom: 16px;
-}
-
+.circ-page-header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--linear-space-md); flex-wrap: wrap; margin-bottom: var(--linear-space-xs); }
+.circ-desk-tabs .ant-tabs-tab { font-size: var(--linear-body-size); }
+.circ-scan-form { display: flex; align-items: flex-start; gap: var(--linear-space-sm); flex-wrap: wrap; padding: var(--linear-space-md); border: 1px solid var(--linear-hairline); border-radius: var(--linear-radius-lg); background: var(--linear-surface-2); }
+.circ-scan-field { display: flex; flex-direction: column; gap: 6px; }
+.circ-scan-field label, .circ-filter-field label { font-size: var(--linear-eyebrow-size); color: var(--linear-ink-muted); }
+.circ-scan-input { width: 220px; font-family: var(--linear-font-mono); letter-spacing: 0.06em; }
+.circ-scan-hint { margin-top: var(--linear-space-xs); font-size: var(--linear-caption-size); color: var(--linear-ink-subtle); }
+.circ-result { margin-top: var(--linear-space-md); }
+.circ-reader-panel { margin-top: var(--linear-space-lg); }
+.circ-reader-summary { display: flex; align-items: center; gap: var(--linear-space-sm); flex-wrap: wrap; margin-bottom: var(--linear-space-sm); }
+.circ-filter-bar { display: flex; align-items: flex-end; gap: var(--linear-space-sm); flex-wrap: wrap; padding: var(--linear-space-md); margin-bottom: var(--linear-space-md); border: 1px solid var(--linear-hairline); border-radius: var(--linear-radius-lg); background: var(--linear-surface-2); }
+.circ-filter-field { display: flex; flex-direction: column; gap: 6px; }
+.circ-barcode { font-family: var(--linear-font-mono); font-size: var(--linear-caption-size); }
+.circ-row-overdue > td { background: var(--linear-surface-2) !important; }
+.circ-due-overdue { color: var(--linear-ink); font-weight: 600; }
+.circ-book-cell { display: flex; flex-direction: column; gap: 2px; }
+.circ-book-sub { font-size: var(--linear-caption-size); color: var(--linear-ink-subtle); }
+.circ-overdue-alert { margin-bottom: var(--linear-space-md); }
 @media (max-width: 720px) {
-  .circ-scan-input {
-    width: 100%;
-  }
-  .circ-scan-field {
-    flex: 1 1 180px;
-  }
+  .circ-scan-input { width: 100%; }
+  .circ-scan-field { flex: 1 1 180px; }
 }

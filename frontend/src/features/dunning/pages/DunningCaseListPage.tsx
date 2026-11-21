@@ -27,7 +27,7 @@ export default function DunningCaseListPage() {
         <>
           {data.items.length === 0 ? <EmptyState description="暂无催还案件" /> : <div className="dunning-cases">
             {data.items.map(item => <article key={item.loanId} className="dunning-case">
-              <div className="dunning-case-head"><h4>{item.book.title}</h4><Tag color={item.status === 'CLOSED' ? 'green' : 'gold'}>{statusLabels[item.status]}</Tag></div>
+              <div className="dunning-case-head"><h4>{item.book.title}</h4><Tag color={item.status === 'CLOSED' ? 'success' : 'warning'}>{statusLabels[item.status]}</Tag></div>
               <div className="dunning-case-meta"><span>{item.reader.name} · {item.reader.cardNo}</span><span>副本：<code>{item.copyBarcode}</code></span><span>借阅号：{item.loanId}</span><span>应还日：{item.dueDate}</span></div>
               <div className="dunning-case-meta"><strong>{item.recordCount} 次</strong><time dateTime={item.lastRecordedAt}>最近登记：{formatDunningTime(item.lastRecordedAt)}</time>{item.closedAt !== null && <time dateTime={item.closedAt}>结案时间：{formatDunningTime(item.closedAt)}</time>}{item.closeReason === 'RETURNED' && <span>结案原因：已归还</span>}</div>
               <Button onClick={() => setSelected(item)} aria-label="查看历史">查看历史</Button>

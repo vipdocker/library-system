@@ -1,0 +1,107 @@
+{
+  "taskId": "linear-design-restyle-20261121",
+  "subtaskId": "LDR-ACC",
+  "stage": "acceptance-verifier",
+  "planVersion": "linear-restyle-plan-v1.1",
+  "dispatchRound": 1,
+  "definitionVersion": "linear-restyle-ac-dod-v1",
+  "designVersion": "linear-restyle-design-v1-R1",
+  "status": "NEEDS_WORK",
+  "statusReason": "1个已确认视觉缺陷ACC-D01：403/404页渲染antd存量彩色插画，批准方案§4.5 F11/F12的中性图标在antd 6.7.1运行时无效（Result对Exception status早退忽略icon prop）。AC-3 FAIL；其余到期必需AC/DoD PASS。只报告不修产品。",
+  "authorization": "主会话交接包明确启用并授权本次独立验收；用户selectionId 3ad760f3-f0d6-4897-b592-559abededf2e confirmed（方案ultimate/开发smodel/验收qmodel_latest/评审关闭）及后续AskUserQuestion批准（仅暗色、低饱和状态色、系统字体、根DESIGN.md、hover深字+实色focus、v0.2方案与AC-DoD v1、R1最小机制）。写入仅限acceptance/目录与矩阵ACCEPT区域。",
+  "workspace": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10",
+  "candidateId": "linear-restyle-20261121-5c7c5b33b27d",
+  "sourceDigestPre": "5c7c5b33b27dcd304b72e85d1f286b766d485b9dddeec4cdd16a223326b3fe0c",
+  "sourceDigestPost": "5c7c5b33b27dcd304b72e85d1f286b766d485b9dddeec4cdd16a223326b3fe0c",
+  "sourceFileCount": 339,
+  "sourceDrift": false,
+  "baselineHead": "c1e30e646bf7bd8c39e59b353a001f79192ca9f6",
+  "snapshotSha256": "d18a53921fb75b4c53b4ea8af0048adecf42ff08fa04c1f0c8b70570eee0fcd4",
+  "designSha256": "551d621d4b78fc6d056a35f89efbb4e91c72862c5b2f7f1a8380d1822b2ed455",
+  "rootDesignSha256": "70ca40c5a5dadee01eb368135ad71d1bce1ab102fa9f95183277f6e7d1b2d8f5",
+  "recoveredUpstreamSha256": "30bd30e72c48a16e4bdbd010f2d1c85fab657c6fae3cc85389399aab10f9cb5f",
+  "matrixSha256AfterAccept": "b0175652a5dbb52126aa22e018098194d6b9891abdc00aa00ac1ebd147ba7e18",
+  "matrixNote": "snapshot内旧矩阵evidence hash为DEV/INT版本，保持不改；本hash为ACC更新ACCEPT区域后的新矩阵hash。",
+  "environment": {
+    "os": "macOS arm64 (darwin 25.6.0)",
+    "node": "/opt/homebrew/bin/node v26.7.0",
+    "npm": "/opt/homebrew/bin/npm 11.19.0",
+    "java": "OpenJDK 21.0.12 via bash scripts/env.sh",
+    "maven": "3.9.16",
+    "playwright": "1.65.0 Chromium",
+    "ports": "E2E与探针均18096/15196，串行；结束后无监听",
+    "databases": "仅系统临时SQLite；本轮3个自有临时库已清理；开发库/WAL/SHM/bak未触碰"
+  },
+  "independentCommands": [
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run lint", "exit": 0, "log": "acceptance/logs/acc-lint.log", "stats": "ESLint通过；28模块边界测试 pass 28 fail 0" },
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run typecheck", "exit": 0, "log": "acceptance/logs/acc-typecheck.log", "stats": "tsc --noEmit 通过" },
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run test", "exit": 0, "log": "acceptance/logs/acc-test.log", "stats": "410 passed / 41 files；含linearTheme 13用例" },
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run build", "exit": 0, "log": "acceptance/logs/acc-build.log", "stats": "构建成功；既存>500kB chunk告警保留" },
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run e2e", "exit": 0, "log": "acceptance/logs/acc-e2e.log", "stats": "33 passed (3.9m)；20视觉+13原业务" },
+    { "command": "frontend/node_modules/.bin/playwright test --config docs/verification/linear-restyle/acceptance/scripts/acc.playwright.config.ts", "exit": 1, "log": "acceptance/logs/acc-probe-round1.log", "stats": "18用例：16 passed / 2 failed（ACC-04/06，探针脚本定位错误，非产品缺陷）" },
+    { "command": "同上 --grep \"ACC-04|ACC-06\"", "exit": 0, "log": "acceptance/logs/acc-probe-r2.log", "stats": "2 passed（修正探针定位后针对性重跑）" }
+  ],
+  "probeCoverage": {
+    "groups": 103,
+    "textSamples": 4757,
+    "contrastFailures": 0,
+    "disabledExclusions": 9,
+    "minEnabledRatio": 4.699901244313427,
+    "minRatioLocation": "acc-admin-01 :: 新建图书（白字 on primary #5e6ad2）",
+    "horizontalOverflows": 0,
+    "viewports": [1440, 1024, 390],
+    "roles": ["anonymous", "ADMIN（真实UI登录）", "READER（reader2与fixture读者真实UI登录）"],
+    "mockStates": 19,
+    "mockNote": "六feature只读接口loading/empty/503共18组+auth/me仅延迟透传1组；均mock=true明标；重试恢复走真实后端",
+    "componentFixtureGroups": 13,
+    "fixtureNote": "明标『独立验收测试夹具，非业务页面』；仅用于warning/error焦点与disabledDate，不作业务/身份证明",
+    "screenshotsReadByAcc": ["acc-login-default", "acc-login-hover", "acc-admin-00", "acc-reader-overdue-notification", "acc-stats-fit-390", "acc-stats-calendar-390-second-panel", "acc-dunning-open", "acc-danger-popconfirm", "acc-catalog-503", "acc-reader-real-403", "acc-reader-404", "acc-catalog-empty"]
+  },
+  "acMatrix": [
+    { "id": "AC-1", "result": "PASS", "evidence": "acceptance/computed/design-provenance.json" },
+    { "id": "AC-2", "result": "PASS", "evidence": "acceptance/logs/acc-test.log；computed/summary.json；screenshots登录/portal" },
+    { "id": "AC-3", "result": "FAIL", "defect": "ACC-D01", "evidence": "computed/defect-ACC-D01.json；screenshots/acc-reader-real-403.png、acc-reader-404.png；其余对比度/响应式证据PASS" },
+    { "id": "AC-4", "result": "PASS", "evidence": "computed/acc-notification-*、acc-dunning-*、acc-danger-popconfirm.json" },
+    { "id": "AC-5", "result": "PASS", "evidence": "computed/scope-check.json（0渐变/0旧色）；截图；403/404插画按AC-3归责" },
+    { "id": "AC-6", "result": "PASS", "evidence": "computed/scope-check.json；acc-e2e.log；acc-frontend-exit-codes.txt" }
+  ],
+  "dodMatrix": [
+    { "id": "DoD-1", "result": "PASS", "executor": "ACC", "evidence": "acceptance/logs/acc-lint/typecheck/test/build.log + exit codes" },
+    { "id": "DoD-2", "result": "PASS", "executor": "ACC", "evidence": "acceptance/logs/acc-e2e.log（33/33 exit0）" },
+    { "id": "DoD-3", "result": "PASS", "executor": "DEV实跑/ACC交叉核对", "evidence": "DEV L1/J1/P1/U3 hash绑定S1；ACC 103组独立实测" },
+    { "id": "DoD-4", "result": "PASS", "executor": "ACC", "evidence": "source-digest-pre/post.json一致；本results与矩阵ACCEPT区域出具独立结论NEEDS_WORK" },
+    { "id": "DoD-5", "result": "PASS", "executor": "ACC", "evidence": "矩阵ACCEPT区域+本文件+report.md；DEV/INT历史未改；新矩阵hash b0175652…" },
+    { "id": "DoD-6", "result": "PASS", "executor": "DEV实跑/ACC交叉核对", "evidence": "DEV test-all.log 617/410/33 exit0，hash ec3e5923…绑定S1；按交接不新增独立后端重跑" }
+  ],
+  "defects": [
+    {
+      "id": "ACC-D01",
+      "severity": "medium",
+      "ac": "AC-3",
+      "design": "§4.5 F11/F12",
+      "summary": "403/404渲染antd存量彩色插画；icon prop被antd 6.7.1 Result的Exception status早退分支忽略，中性LockOutlined/SearchOutlined未渲染",
+      "detail": "acceptance/computed/defect-ACC-D01.json",
+      "functionalImpact": "无（路由/文案/按钮行为正常）",
+      "fixOwner": "原开发环节；修复后重新冻结候选并重验"
+    }
+  ],
+  "notRunOrLimited": [
+    "独立后端verify重跑未执行（DoD-6为DEV到期门禁，已交叉核对日志与hash）",
+    "跨浏览器/真实设备/屏幕阅读器认证未执行（非本次固定视觉增量范围）",
+    "Table行选择NOT_APPLICABLE（现有feature无rowSelection交互）",
+    "1024宽度仅统计页补测（§8.3建议项）",
+    "ACC-10几何断言round1执行并通过，但原始几何JSON被同名capture JSON覆盖；视觉fit由三宽度截图实际读取确认",
+    "首轮探针2失败的test-failed截图被Playwright outputDir清理清除；错误全文保留于acc-probe-round1.log"
+  ],
+  "cleanup": {
+    "tempDbsRemoved": ["library-e2e-1795255062110.db(+shm/wal)", "library-e2e-1795255470752.db(+shm/wal)", "library-e2e-1795255726295.db(+shm/wal)"],
+    "devTempDbsUntouched": true,
+    "fixtureRowsRemoved": "仅本轮自有催还/通知fixture行（临时库内，严格归属校验）",
+    "portsFree": true,
+    "sourceModified": false,
+    "commitsOrDeploys": false
+  },
+  "skillsUsed": ["按交接以现有Playwright依赖与helpers执行只读验证/报告；未安装新Skill；frontend-design-review内置Skill本runtime未作为独立工具暴露，依系统提示直接以真实浏览器截图+computed证据执行"],
+  "boundaryStatement": "本结论仅覆盖linear-restyle视觉增量本次到期必需项；不代表整个系统历史质量/安全/审计门禁通过，不构成生产发布授权；独立评审未启用/跳过，不计PASS。",
+  "suggestedNext": "主会话将ACC-D01交原开发smodel会话返工（使403/404中性图标在antd 6.7.1实际渲染），保留失败证据；修复后重新冻结候选并重验403/404视觉与受影响回归，再派独立验收复验。"
+}

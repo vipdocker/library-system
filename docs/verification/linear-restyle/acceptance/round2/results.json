@@ -1,0 +1,99 @@
+{
+  "taskId": "linear-design-restyle-20261121",
+  "subtaskId": "LDR-ACC",
+  "stage": "acceptance-verifier",
+  "planVersion": "linear-restyle-plan-v1.1",
+  "dispatchRound": 2,
+  "definitionVersion": "linear-restyle-ac-dod-v1",
+  "designVersion": "linear-restyle-design-v1-R1",
+  "status": "PASS",
+  "statusScope": "仅本次 Linear 暗色视觉增量 C2 的全部到期必需 AC-1–6 / DoD-1–6；不是整个系统历史质量/安全/审计门禁或生产发布通过；独立评审未启用/跳过，不计 PASS。",
+  "authorization": "主会话 round2 交接包沿用原用户授权（selectionId 3ad760f3-f0d6-4897-b592-559abededf2e confirmed 及后续批准）；只验收不修产品；写入仅 acceptance/round2/ 与矩阵顶部 C2 ACCEPT 区域。",
+  "workspace": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10",
+  "candidateId": "linear-restyle-20261121-c2-288c7b59c108",
+  "previousCandidateId": "linear-restyle-20261121-5c7c5b33b27d",
+  "sourceDigestPre": "288c7b59c108feff7d910dd8239c5d289c9f6029c18e598f3dfc777f3df857e8",
+  "sourceDigestPost": "288c7b59c108feff7d910dd8239c5d289c9f6029c18e598f3dfc777f3df857e8",
+  "sourceFileCount": 339,
+  "sourceDrift": false,
+  "c1ToC2ChangedFiles": ["frontend/src/components/ForbiddenPage.tsx", "frontend/src/components/NotFoundPage.tsx", "frontend/e2e/linear-theme.spec.ts"],
+  "c1ToC2UnchangedCount": 336,
+  "snapshotSha256": "57303c616957ad9b433f19d1bd671054ee8a020f1160fb16fe7fe1404528425b",
+  "designSha256": "551d621d4b78fc6d056a35f89efbb4e91c72862c5b2f7f1a8380d1822b2ed455",
+  "rootDesignSha256": "70ca40c5a5dadee01eb368135ad71d1bce1ab102fa9f95183277f6e7d1b2d8f5",
+  "recoveredUpstreamSha256": "30bd30e72c48a16e4bdbd010f2d1c85fab657c6fae3cc85389399aab10f9cb5f",
+  "matrixSha256AfterAcceptRound2": "132e77e4107a3319dcb79a92e023dcd4662e788d7c80d7011c71c827c502a5bc",
+  "c1HistoryPreserved": {
+    "c1SnapshotSha": "d18a53921fb75b4c53b4ea8af0048adecf42ff08fa04c1f0c8b70570eee0fcd4",
+    "c1MatrixWithAccSha": "b0175652a5dbb52126aa22e018098194d6b9891abdc00aa00ac1ebd147ba7e18",
+    "c1IntResultsSha": "6c9ad2feb946f301e5e0ab6f5824e31b9049ecbd7b8f71fcb41297642c7fbbd9",
+    "verifiedIntact": true,
+    "note": "C1 原 ACC report/results 与历史矩阵字节未改；C1 的 NEEDS_WORK/AC-3 FAIL 保留为历史失败。"
+  },
+  "dod4Correction": {
+    "issue": "C1 round1 将 DoD-4 标 PASS（仅以『出具独立结论』为满足），属语义误标。",
+    "fixedDefinition": "DoD-4 = 独立验收复核并满足所有到期必需 AC/DoD 给出通过结论。",
+    "correctC1Value": "FAIL（C1 当时 AC-3 FAIL/ACC-D01，整体验收未通过）",
+    "c2Value": "PASS（C2 全部到期必需项实际通过）",
+    "historyHandling": "C1 原文件字节保留不改写；纠正记录于 round2/report.md 与矩阵 C2 ACCEPT 区域。"
+  },
+  "environment": {
+    "node": "v26.7.0", "npm": "11.19.0", "java": "OpenJDK 21.0.12 via bash scripts/env.sh", "maven": "3.9.16",
+    "playwright": "1.65.0 Chromium", "ports": "18096/15196 串行单组；结束无监听",
+    "databases": "仅系统临时 SQLite；round2 三个自有临时库已清理；开发库/WAL/SHM/bak 未触碰"
+  },
+  "independentCommands": [
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run lint", "exit": 0, "log": "round2/logs/acc-r2-lint.log", "stats": "28 边界测试 pass" },
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run typecheck", "exit": 0, "log": "round2/logs/acc-r2-typecheck.log" },
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run test", "exit": 0, "log": "round2/logs/acc-r2-test.log", "stats": "410/410，41 文件" },
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run build", "exit": 0, "log": "round2/logs/acc-r2-build.log", "stats": "成功；>500kB 告警保留" },
+    { "command": "/opt/homebrew/bin/npm --prefix frontend run e2e", "exit": 0, "log": "round2/logs/acc-r2-e2e.log", "stats": "37/37 (4.1m)" },
+    { "command": "playwright test --config round2/scripts/acc.playwright.config.ts", "exit": 1, "log": "round2/logs/acc-probe-run1.log", "stats": "22 用例 21 过 1 失败（ACC-04 瞬态 opacity 帧假失败，探针测量问题）" },
+    { "command": "同上 --grep ACC-04 --output round2/runs/run-2", "exit": 0, "log": "round2/logs/acc-probe-run2.log", "stats": "1/1（补祖先 opacity settled 等待后）" }
+  ],
+  "probeCoverage": {
+    "groups": 107, "textSamples": 4793, "contrastFailures": 0, "disabledExclusions": 9,
+    "minEnabledRatio": 4.699901244313427, "horizontalOverflows": 0,
+    "viewports": [1440, 1024, 390],
+    "graphicsFacts": "round2/computed/graphics/acc-d01-{403,404}-{1440,390}.json：data-icon=lock/search、aria-hidden=true、iconColor 与全部 path fill=rgb(138,143,152)、imageCount=0、svgCount=1；真实 READER 登录+/api/auth/me role 校验；返回首页真实导航 /books",
+    "geometryPermanent": "round2/computed/geometry/acc-stats-geometry-{1440,1024,390}.json 与 acc-calendar-bounds-{1440,1024,390}.json（唯一路径，含 expected/actual/assertions，不被 run 清理或同名覆盖）",
+    "mockStates": 19, "componentFixtureGroups": 13,
+    "screenshotsReadByAcc": ["acc-d01-403-1440", "acc-d01-403-390", "acc-d01-404-1440", "acc-d01-404-390", "acc-stats-fit-390"]
+  },
+  "acMatrix": [
+    { "id": "AC-1", "result": "PASS" }, { "id": "AC-2", "result": "PASS" },
+    { "id": "AC-3", "result": "PASS", "note": "ACC-D01 关闭：图形+导航独立复验通过" },
+    { "id": "AC-4", "result": "PASS" }, { "id": "AC-5", "result": "PASS" }, { "id": "AC-6", "result": "PASS" }
+  ],
+  "dodMatrix": [
+    { "id": "DoD-1", "result": "PASS", "executor": "ACC" },
+    { "id": "DoD-2", "result": "PASS", "executor": "ACC" },
+    { "id": "DoD-3", "result": "PASS", "executor": "DEV 实跑/ACC 交叉核对" },
+    { "id": "DoD-4", "result": "PASS", "executor": "ACC", "note": "C1 误标纠正见 dod4Correction" },
+    { "id": "DoD-5", "result": "PASS", "executor": "ACC" },
+    { "id": "DoD-6", "result": "PASS", "executor": "DEV 实跑/ACC 交叉核对（617/410/37 exit0，hash 绑定 S2）" }
+  ],
+  "defects": [],
+  "closedDefects": [{ "id": "ACC-D01", "closedIn": "C2", "verification": "独立图形事实 JSON 四份 + 四张截图实际读取 + 返回导航断言 + 标准 E2E 新增 4 用例绿" }],
+  "probeIssuesDisclosed": [
+    "run-1 ACC-04 在 Popconfirm 入场动画瞬态帧（祖先 opacity≈0.54）采样产生假对比度失败；稳定态颜色断言先已通过；修正为祖先 opacity settled 等待后针对性重跑通过；失败产物保留 runs/run-1 与 acc-probe-run1.log；未降阈值、未改产品。",
+    "round1 遗留几何 JSON 重名覆盖问题已在 round2 以 computed/geometry/ 永久唯一路径修复。"
+  ],
+  "notRunOrLimited": [
+    "无独立后端 verify 重跑（DoD-6 DEV 门禁交叉核对）",
+    "无跨浏览器/真机/屏幕阅读器（非本次范围）",
+    "Table 行选择 NOT_APPLICABLE",
+    "1024 仅统计页补测（建议项）"
+  ],
+  "cleanup": {
+    "tempDbsRemoved": ["library-e2e-1795259289542(+shm/wal)", "library-e2e-1795259565216(+shm/wal)", "library-e2e-1795259892063(+shm/wal)"],
+    "devTempDbsUntouched": true, "fixtureRowsRemoved": "仅本轮自有行", "portsFree": true,
+    "sourceModified": false, "commitsOrDeploys": false
+  },
+  "writesThisRound": [
+    "docs/verification/linear-restyle/acceptance/round2/**（report.md、results.json、logs/、computed/含geometry与graphics、screenshots/、scripts/、runs/run-1与run-2）",
+    "docs/verification/linear-restyle/ac-dod-matrix.md 顶部 C2 ACCEPT 区域替换（C1 历史 suffix 逐字保留）"
+  ],
+  "knownWarnings": ["前端构建既存 >500kB chunk 告警保留，未隐藏"],
+  "suggestedNext": "主会话向用户展示 C2 独立验收 PASS；交付终点为本机视觉增量实现+独立验收，不含提交/发布/部署；如后续上线需另行授权与门禁。"
+}

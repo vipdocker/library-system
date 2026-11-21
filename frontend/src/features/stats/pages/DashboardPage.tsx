@@ -31,7 +31,7 @@ interface DashCardProps {
   label: string;
   value: number;
   icon: ReactNode;
-  tone: 'green' | 'blue' | 'amber' | 'red';
+  tone: 'neutral';
 }
 
 function DashCard({ label, value, icon, tone }: DashCardProps) {
@@ -75,7 +75,7 @@ export default function DashboardPage() {
             <Button icon={<LineChartOutlined />}>借阅统计</Button>
           </Link>
           <Link to="/admin/reports/overdue">
-            <Button danger icon={<AlertOutlined />}>
+            <Button icon={<AlertOutlined />}>
               逾期报表
             </Button>
           </Link>
@@ -91,18 +91,18 @@ export default function DashboardPage() {
       ) : overview ? (
         <>
           <div className="dash-grid" role="list" aria-label="馆藏概览">
-            <DashCard label="图书种类" value={overview.totalBooks} icon={<BookOutlined />} tone="green" />
-            <DashCard label="副本总数" value={overview.totalCopies} icon={<InboxOutlined />} tone="green" />
-            <DashCard label="可借副本" value={overview.availableCopies} icon={<CheckCircleOutlined />} tone="green" />
-            <DashCard label="借出副本" value={overview.borrowedCopies} icon={<ReadOutlined />} tone="blue" />
-            <DashCard label="不可用副本" value={overview.unavailableCopies} icon={<StopOutlined />} tone="amber" />
+            <DashCard label="图书种类" value={overview.totalBooks} icon={<BookOutlined />} tone="neutral" />
+            <DashCard label="副本总数" value={overview.totalCopies} icon={<InboxOutlined />} tone="neutral" />
+            <DashCard label="可借副本" value={overview.availableCopies} icon={<CheckCircleOutlined />} tone="neutral" />
+            <DashCard label="借出副本" value={overview.borrowedCopies} icon={<ReadOutlined />} tone="neutral" />
+            <DashCard label="不可用副本" value={overview.unavailableCopies} icon={<StopOutlined />} tone="neutral" />
           </div>
           <div className="dash-grid" role="list" aria-label="读者与流通概览">
-            <DashCard label="读者总数" value={overview.totalReaders} icon={<TeamOutlined />} tone="blue" />
-            <DashCard label="活跃读者" value={overview.activeReaders} icon={<UserOutlined />} tone="blue" />
-            <DashCard label="当前在借" value={overview.activeLoans} icon={<SwapOutlined />} tone="blue" />
+            <DashCard label="读者总数" value={overview.totalReaders} icon={<TeamOutlined />} tone="neutral" />
+            <DashCard label="活跃读者" value={overview.activeReaders} icon={<UserOutlined />} tone="neutral" />
+            <DashCard label="当前在借" value={overview.activeLoans} icon={<SwapOutlined />} tone="neutral" />
             <Link to="/admin/reports/overdue" className="dash-card-link" aria-label="查看逾期报表">
-              <div className="dash-card dash-card--red">
+              <div className="dash-card dash-card--neutral">
                 <span className="dash-card-label">
                   <AlertOutlined />
                   逾期未还
@@ -113,8 +113,8 @@ export default function DashboardPage() {
                 </span>
               </div>
             </Link>
-            <DashCard label="今日借出" value={overview.borrowsToday} icon={<ReadOutlined />} tone="green" />
-            <DashCard label="今日归还" value={overview.returnsToday} icon={<CheckCircleOutlined />} tone="green" />
+            <DashCard label="今日借出" value={overview.borrowsToday} icon={<ReadOutlined />} tone="neutral" />
+            <DashCard label="今日归还" value={overview.returnsToday} icon={<CheckCircleOutlined />} tone="neutral" />
           </div>
         </>
       ) : null}

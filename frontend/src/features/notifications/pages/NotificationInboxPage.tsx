@@ -72,10 +72,10 @@ export default function NotificationInboxPage() {
                 <article key={notice.id} className={`notification-item${notice.readAt === null ? ' notification-unread' : ''}`}>
                   <div className="notification-item-heading">
                     <Typography.Title level={4} style={{ margin: 0 }}>{notice.book.title}</Typography.Title>
-                    <Space size="small" wrap><Tag color={notice.readAt === null ? 'blue' : 'default'}>{notice.readAt === null ? '未读' : '已读'}</Tag><Tag>{typeLabels[notice.type]}</Tag></Space>
+                    <Space size="small" wrap><Tag color={notice.readAt === null ? 'processing' : 'default'}>{notice.readAt === null ? '未读' : '已读'}</Tag><Tag>{typeLabels[notice.type]}</Tag></Space>
                   </div>
                   <div className="notification-current-state">
-                    <Tag color={notice.loanState.status === 'RETURNED' ? 'green' : notice.loanState.status === 'OVERDUE' ? 'red' : 'blue'}>当前状态：{statusLabels[notice.loanState.status]}</Tag>
+                    <Tag color={notice.loanState.status === 'RETURNED' ? 'success' : notice.loanState.status === 'OVERDUE' ? 'error' : 'processing'}>当前状态：{statusLabels[notice.loanState.status]}</Tag>
                     <Typography.Text strong>当前应还日：{notice.loanState.currentDueDate}</Typography.Text>
                   </div>
                   {notice.loanState.status === 'RETURNED' ? <Alert type="success" showIcon title="该借阅已归还，无需再还书；以下为历史通知。" /> : notice.dueDate !== notice.loanState.currentDueDate ? <Alert type="info" showIcon title="应还日已调整，请以当前应还日为准；以下为历史通知。" /> : null}

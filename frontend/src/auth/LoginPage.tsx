@@ -44,9 +44,6 @@ export default function LoginPage() {
   return (
     <div className="login-shell">
       <aside className="login-brand" aria-hidden="true">
-        <div className="login-brand-spines">
-          <span /><span /><span /><span /><span /><span /><span />
-        </div>
         <div className="login-brand-copy">
           <BookOutlined className="login-brand-mark" />
           <h1>图书馆管理系统</h1>
@@ -59,7 +56,7 @@ export default function LoginPage() {
         </div>
       </aside>
       <main className="login-main">
-        <Card className="login-card" variant="borderless">
+        <Card className="login-card" variant="outlined">
           <Typography.Title level={3} className="login-title">
             欢迎回来
           </Typography.Title>

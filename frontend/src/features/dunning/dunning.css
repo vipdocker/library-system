@@ -1,23 +1,23 @@
-.dunning-page { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; color: var(--lib-ink); }
-.dunning-heading, .dunning-case-head, .dunning-record-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.dunning-page { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--linear-space-lg); color: var(--linear-ink); }
+.dunning-heading, .dunning-case-head, .dunning-record-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--linear-space-sm); }
 .dunning-heading h3, .dunning-case h4 { margin: 0; }
-.dunning-help { color: rgba(34, 48, 42, .65); font-size: 13px; line-height: 1.7; }
-.dunning-cases { display: grid; gap: 14px; }
-.dunning-case { min-width: 0; padding: 20px 22px; border: 1px solid rgba(30, 107, 82, .16); border-left: 4px solid var(--lib-green); border-radius: 12px; background: var(--lib-card); box-shadow: 0 6px 22px rgba(21, 46, 38, .05); overflow-wrap: anywhere; }
-.dunning-case h4 { font-size: 17px; }
-.dunning-case-meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-block: 12px; font-size: 13px; }
-.dunning-case code, .dunning-loan-summary code { font-family: ui-monospace, monospace; }
+.dunning-help { color: var(--linear-ink-subtle); font-size: var(--linear-eyebrow-size); line-height: 1.7; }
+.dunning-cases { display: grid; gap: var(--linear-space-md); }
+.dunning-case { min-width: 0; padding: var(--linear-space-lg); border: 1px solid var(--linear-hairline); border-radius: var(--linear-radius-lg); background: var(--linear-surface-1); overflow-wrap: anywhere; }
+.dunning-case h4 { font-size: var(--linear-body-lg-size); }
+.dunning-case-meta { display: flex; flex-wrap: wrap; gap: var(--linear-space-xs) var(--linear-space-lg); margin-block: var(--linear-space-sm); font-size: var(--linear-eyebrow-size); }
+.dunning-case code, .dunning-loan-summary code { font-family: var(--linear-font-mono); }
 .dunning-modal { max-width: calc(100vw - 24px); }
-.dunning-loan-summary { display: grid; gap: 4px; padding: 14px 16px; margin-bottom: 16px; border-radius: 8px; border: 1px solid rgba(30, 107, 82, .16); background: var(--lib-card); overflow-wrap: anywhere; }
-.dunning-form { margin-top: 20px; }
-.dunning-actions { margin-top: 16px; }
-.dunning-history-state { display: flex; flex-wrap: wrap; gap: 12px; padding-block: 18px; }
-.dunning-history-records { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.dunning-history-records li { padding: 16px; border: 1px solid rgba(30, 107, 82, .16); border-left: 3px solid var(--lib-green); border-radius: 8px; }
-.dunning-record-head { margin-bottom: 10px; font-size: 13px; }
-.dunning-note { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 10px; }
+.dunning-loan-summary { display: grid; gap: var(--linear-space-xxs); padding: var(--linear-space-md); margin-bottom: var(--linear-space-md); border-radius: var(--linear-radius-md); border: 1px solid var(--linear-hairline); background: var(--linear-surface-2); overflow-wrap: anywhere; }
+.dunning-form { margin-top: var(--linear-space-lg); }
+.dunning-actions { margin-top: var(--linear-space-md); }
+.dunning-history-state { display: flex; flex-wrap: wrap; gap: var(--linear-space-sm); padding-block: var(--linear-space-md); }
+.dunning-history-records { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--linear-space-sm); }
+.dunning-history-records li { padding: var(--linear-space-md); border: 1px solid var(--linear-hairline); border-radius: var(--linear-radius-md); background: var(--linear-surface-2); }
+.dunning-record-head { margin-bottom: var(--linear-space-sm); font-size: var(--linear-eyebrow-size); }
+.dunning-note { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: var(--linear-space-sm); }
 @media (max-width: 600px) {
-  .dunning-case { padding: 16px; }
-  .dunning-page .ant-radio-group, .dunning-form .ant-radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
-  .dunning-page .ant-pagination { display: flex; flex-wrap: wrap; gap: 8px 0; }
+  .dunning-case { padding: var(--linear-space-md); }
+  .dunning-page .ant-radio-group, .dunning-form .ant-radio-group { display: flex; flex-wrap: wrap; gap: var(--linear-space-xs); }
+  .dunning-page .ant-pagination { display: flex; flex-wrap: wrap; gap: var(--linear-space-xs) 0; }
 }
