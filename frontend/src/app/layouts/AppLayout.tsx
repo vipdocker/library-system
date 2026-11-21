@@ -1,12 +1,27 @@
 // 应用布局：侧边菜单按角色渲染（AC-AUTH-09 / AC-UI-05），顶栏显示当前用户与登出。
 import { createElement, useMemo, useState } from 'react';
-import { Avatar, Button, Layout, Menu, Space, Tag, Typography, theme } from 'antd';
-import { BookOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Button, Layout, Menu, Space, Tag, Typography, theme } from 'antd';
+import { BellOutlined, BookOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { useAuth } from '../../auth/AuthContext';
 import { menuForRole, selectedMenuKey } from '../menu';
+import { useUnreadNotifications } from '../../features/notifications/useUnreadNotifications';
 
 const { Header, Sider, Content } = Layout;
+
+/** 仅在读者菜单挂载查询，管理员布局不订阅读者数据。 */
+function NotificationMenuIcon({ className }: { className?: string }) {
+  const unread = useUnreadNotifications(true);
+  if (unread.isError) {
+    return <Button className={className} type="text" size="small" aria-label="未读数加载失败，重试" style={{ color: 'inherit', padding: 0 }} disabled={unread.isFetching} onClick={(event) => { event.stopPropagation(); void unread.refetch(); }}>?</Button>;
+  }
+  return (
+    <span className={className} style={{ display: 'inline-flex', verticalAlign: 'middle', lineHeight: 1 }} aria-label={unread.isPending ? '未读数加载中' : `未读提醒 ${unread.data.unreadCount} 条`}>
+      {/* Menu 的40px行高不能传入 Badge，否则计数会定位到菜单项上缘并被裁剪。 */}
+      <Badge count={unread.data?.unreadCount} size="small" offset={[4, -2]} style={{ lineHeight: 1 }}><BellOutlined style={{ lineHeight: 1 }} /></Badge>
+    </span>
+  );
+}
 
 export function AppLayout() {
   const { user, logout } = useAuth();
@@ -20,7 +35,8 @@ export function AppLayout() {
 
   const menuItems = entries.map((entry) => ({
     key: entry.key,
-    icon: createElement(entry.icon),
+    // 角标放在侧栏图标，折叠后仍可见；顶栏保持原布局，避免390px回归。
+    icon: entry.key === '/my/notifications' ? <NotificationMenuIcon /> : createElement(entry.icon),
     label: entry.label,
   }));
 

@@ -11,6 +11,9 @@ spring:
     locations: classpath:db/migration
 
 lib:
+  reminder:
+    enabled: false
+    scan-on-startup: false
   seed:
     demo: false
   admin:

@@ -100,6 +100,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/categories", "/api/books", "/api/books/{id}")
                         .authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/readers/me", "/api/loans/me").hasRole("READER")
+                        .requestMatchers("/api/notifications/me", "/api/notifications/me/**").hasRole("READER")
                         .requestMatchers(HttpMethod.POST, "/api/loans/{id}/renew").access(renewRule)
                         // 其余 /api/**（写操作、副本、读者、借阅、统计、报表）仅 ADMIN
                         .requestMatchers("/api/**").hasRole("ADMIN")

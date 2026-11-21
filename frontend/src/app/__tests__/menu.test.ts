@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { menuForRole, selectedMenuKey } from '../menu';
 
 describe('AC-AUTH-09 / AC-UI-05 角色菜单', () => {
-  it('READER 菜单只有检索、我的借阅、我的资料、修改口令', () => {
+  it('AC-UI-05 v1.1：保留读者菜单并增加我的提醒', () => {
     const keys = menuForRole('READER').map((entry) => entry.key);
-    expect(keys).toEqual(['/books', '/my/loans', '/my/profile', '/account/password']);
+    expect(keys).toEqual(['/books', '/my/loans', '/my/notifications', '/my/profile', '/account/password']);
   });
 
   it('READER 菜单不含任何 /admin/* 入口', () => {
@@ -22,6 +22,7 @@ describe('AC-AUTH-09 / AC-UI-05 角色菜单', () => {
       '/admin/circulation',
       '/admin/loans',
       '/admin/reports/overdue',
+      '/admin/dunning',
       '/admin/stats',
       '/account/password',
     ]) {

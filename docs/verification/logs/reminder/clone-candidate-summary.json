@@ -1,0 +1,33 @@
+{
+  "taskId": "lib-borrow-reminder-p1",
+  "subtaskId": "REM-INT",
+  "operation": "integrate",
+  "planVersion": "reminder-plan-v1.5",
+  "dispatchRound": 3,
+  "candidateRoot": "/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-real-clone-gycbm2sk/candidate",
+  "cloneCommand": ["git", "clone", "--no-hardlinks", "--", "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10", "/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-real-clone-gycbm2sk/candidate"],
+  "HEAD": "6c7943278686e3e99a3d7dc3b497e1879b049587",
+  "gitDirectoryPresent": true,
+  "initialGitStatusClean": true,
+  "overlayMethod": "Local baseline Git clone followed by exact329 current uncommitted candidate allowlist inputs; uncommitted feature files are not claimed to exist naturally in HEAD",
+  "overlayInputCount": 329,
+  "overlayInputAggregateSha256": "64cf10ecb380cd313957180463b0b1d14434c05ecf7ec1821ec091a369b284a1",
+  "overlayInputManifest": "/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-real-clone-gycbm2sk/clone-overlay-inputs.json",
+  "overlayInputManifestSha256": "34bf94d64d3084805d369017b8b8a84634f5f988c62d59f960113b8d973dabb1",
+  "allInputsMatchedWorkspaceBeforeAndAfter": true,
+  "onlyExpectedOverlayPaths": true,
+  "initialNodeModulesTargetDistDataAbsent": true,
+  "overlayGitStatusEvidence": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/clone-candidate-execution.log",
+  "overlayGitStatusEvidenceSha256": "9c337b2f59172e17b417516ef748547c64cfe0588e79713f039e558988631667",
+  "notOverlaid": ["Final verification matrix/snapshot/logs; not build inputs", "node_modules", "backend/target", "backend/data", "frontend/dist", "frontend/test-results", "frontend/playwright-report", ".vite", "docs/hongkong-*", "unrelated scripts", "stray acceptance jar", "other user untracked files"],
+  "commands": [
+    {"phase": "npm-ci", "command": ["/opt/homebrew/bin/npm", "--prefix", "frontend", "ci"], "exitCode": 0, "seconds": 3.906, "installedPackages": 316, "auditedPackages": 317, "vulnerabilities": 0, "log": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/clone-candidate-npm-ci.log", "sha256": "48acd2053c7f44080d1fb4d543e85649835842e17ded715b7e922cc02dd69274"},
+    {"phase": "backend-verify", "command": ["/bin/bash", "-c", "source scripts/env.sh && mvn -f backend/pom.xml verify"], "exitCode": 0, "seconds": 173.35, "tests": 611, "failures": 0, "errors": 0, "skipped": 0, "actualSurefireTotalsVerified": true, "log": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/clone-candidate-backend-verify.log", "sha256": "84403a5508027e6e6f7cf9bf08ba6e1f0ec5d2db959ddf393c13f9e0c698aae3"},
+    {"phase": "frontend-build", "command": ["/opt/homebrew/bin/npm", "--prefix", "frontend", "run", "build"], "exitCode": 0, "seconds": 6.732, "log": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/clone-candidate-frontend-build.log", "sha256": "355a27f3acd2c9010bf9e1d40aaf0556176452086c3c9824d3c8d1914e67240a"}
+  ],
+  "configurationOrDependencyChange": false,
+  "stageOrCommitOrPush": false,
+  "warnings": ["Dev eslint9.39.5 deprecation", "npm unapproved esbuild/fsevents installation scripts warning retained; no approve or gate change", "927.80kB production chunk warning"],
+  "retainedTemporaryClone": true,
+  "result": "PASS"
+}

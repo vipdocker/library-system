@@ -1,0 +1,1422 @@
+{
+  "format": "reminder-candidate-snapshot-v1",
+  "taskId": "lib-borrow-reminder-p1",
+  "subtaskId": "REM-INT",
+  "operation": "integrate",
+  "planVersion": "reminder-plan-v1.5",
+  "dispatchRound": 3,
+  "candidateId": "REM-INT-v1.5-r3",
+  "status": "READY_FOR_CHECKS",
+  "assembledAt": "2026-11-20T03:09:42Z",
+  "workspaceRoot": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10",
+  "HEAD": "6c7943278686e3e99a3d7dc3b497e1879b049587",
+  "branch": "main",
+  "uncommitted": true,
+  "definitionVersion": "Increment AC/DoD v1.1; base AC/DoD v1; design-v0.1-R1",
+  "tools": {"java": "Homebrew21.0.12", "maven": "3.9.16", "node": "Homebrew26.7.0", "npm": "11.19.0", "playwright": "1.65.0 chromium headless", "architecture": "arm64", "mavenReportedOS": "macOS26.6.2", "hostOSReminder": "25.6.0"},
+  "candidateInputCount": 330,
+  "candidateAggregateSha256": "49aaedaa81fe65bbd25b95b37e1ebf931d5a1ee594a404ebde2e3ec98e8e9124",
+  "aggregateAlgorithm": "SHA256 of sorted sourceFiles by relative path, concatenating sha256 + two spaces + path + newline. Evidence/metadata/snapshot itself excluded from source aggregate; snapshot file hash is reported externally.",
+  "cleanCandidate": {"root": "/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-clean-candidate-s6gdo_j7", "inputCount": 329, "inputAggregateSha256": "64cf10ecb380cd313957180463b0b1d14434c05ecf7ec1821ec091a369b284a1", "isGitClone": false, "inputsMatchedBeforeAndAfter": true, "initialNodeModulesTargetDistGitDataAbsent": true},
+  "realCloneCandidate": {"root": "/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-real-clone-gycbm2sk/candidate", "cloneCommand": "git clone --no-hardlinks -- <local workspace> <system temporary directory>/candidate", "HEAD": "6c7943278686e3e99a3d7dc3b497e1879b049587", "gitDirectoryPresent": true, "initialGitStatusClean": true, "overlayInputCount": 329, "overlayInputAggregateSha256": "64cf10ecb380cd313957180463b0b1d14434c05ecf7ec1821ec091a369b284a1", "overlayInputsMatchedWorkspaceBeforeAndAfter": true, "onlyExpectedOverlayPaths": true, "initialDependenciesTargetDistDataAbsent": true, "finalVerificationDocsNotOverlaidAsNonBuildInputs": true, "retained": true},
+  "excludedPatterns": [".git/**", "**/node_modules/**", "backend/data/**", "backend/target/** from source aggregate", "frontend/dist/** from source aggregate", "frontend/test-results/** from source aggregate", "frontend/playwright-report/** from source aggregate", ".vite/**", "docs/hongkong-*", "scripts/build_hongkong_graph.py", "scripts/collect_hongkong_topology.py", "scripts/__pycache__/**", "docs/verification/acceptance/logs/acc-admin.jar.stray-from-workspace-root", "other unrelated user files and historical reports"],
+  "verification": {"B": "611/0failure/0error/0skipped", "F": "lint/typecheck/build exit0;40files397passed", "P": "13expected/0unexpected/0flaky/0skipped;12screenshots;5empty pageerror attachments", "N": "production audit found0;default registry;strictSSL true", "T": "96/0/0/0 in each of3 runs", "U": "real README smoke/restart/390px and separated mocked503/held submission;0pageerror", "C": "actual PTY ETX;ready6.946s;devExit130;18098/15198free", "K": "initial empty dependencies;real npm ci316packages;fresh611backend verify;frontend build exit0", "X": "JDK8 actual Maven exit1 with enforcer RequireJavaVersion failure (expected)", "K2": "Actual local git clone --no-hardlinks;HEAD6c794327;initial .git present and clean;exact329 uncommitted candidate overlay;initial dependencies/build outputs absent;ci316packages exit0;611backend tests0/0/0 and frontend build exit0", "DOD01": "PASS actual baseline git clone plus current uncommitted candidate allowlist overlay;fixed requirement preserved", "DOD11": "NOT_DUE", "DOD12": "NOT_DUE"},
+  "sourceFiles": [
+  {
+    "path": ".gitignore",
+    "sha256": "ab1d5f99f76fc92da7740cf49be9c34ca6eeb05bd4a9fd9f7470466c929a680e"
+  },
+  {
+    "path": "README.md",
+    "sha256": "a496ad1db12bc6007b65d46270918311510d01844a9135029ced323e4496db53"
+  },
+  {
+    "path": "backend/pom.xml",
+    "sha256": "a5ff22a7c6dadafe86f8e9298ae156e19d9fd1bd5c1d98abe64f2415758d2d81"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/LibraryApplication.java",
+    "sha256": "c7c53343a9d4693b02229619cf4bcebe4e25c24f269320709e72aa02bb1563ce"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/auth/AuthController.java",
+    "sha256": "243cb5ae8e215af2120fecab64d63fd7345f532e23bf7b443f478355d7b9a615"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/auth/ChangePasswordService.java",
+    "sha256": "7cebc43cdc743b533dd1545501117960378d8d0ef123b2fc52266c3c7ab4e5f5"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/auth/dto/ChangePasswordRequest.java",
+    "sha256": "55216cc2af92dba2ff706b67ca2a89b5f009eb6939a9806c26806835fdc75aca"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/auth/dto/LoginRequest.java",
+    "sha256": "9dc3db8fb767aa32eaefb336934dfb90ccaf26c87d88bd803f54f0b8dd475078"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/auth/dto/UserInfo.java",
+    "sha256": "10f5957dbd757b9fc57cf994f22b20a29c54ba229e1df616a7507763dd3e1c37"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/BookController.java",
+    "sha256": "0271746b855743fe87bc6a5282aaba2c71a1de0fa8a61e327f2cb59f40d9c210"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/BookService.java",
+    "sha256": "e815ab8477678a42ee73f26e61c347157b33aeda91d7455aa64e66595aea6b9b"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/CategoryController.java",
+    "sha256": "00549b1b9abfa27f7be01d9d27080111e2a87127deae7169ca2fafaf97ec0130"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/CategoryService.java",
+    "sha256": "1403cc292a4d30a1e9d65a9ed9eef941c0a4bdca9573fad48b58bd3172baecae"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/CopyController.java",
+    "sha256": "8ae8b1f465444ae2ab12df5b620137fbf3d8f2a986d057618ef1bd4429306dce"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/CopyService.java",
+    "sha256": "a45d3b22f7662a2e25dc45a8cf63b88ae8594de7eea24590765d0b6cd0d7181a"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/BookCreateRequest.java",
+    "sha256": "92b4353bc02489fb236106bab95a9b8a092eaee899118ec9f7e7571da769c554"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/BookDetailResponse.java",
+    "sha256": "fb7308542198ae78fb50c9ca99dd4d7a2b515cc4e3fe6c0d9c3f900e4f1bf056"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/BookSummaryResponse.java",
+    "sha256": "4fb0b3dd4629514299a13bb20962a1d6d7c35929dc430ea589cb50ed1d4d19ee"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/BookUpdateRequest.java",
+    "sha256": "cb72cb59caea5a01fa7a1f5d86faefaa9a14e8b462ea7c0ff6a81079b376b20c"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/CategoryRef.java",
+    "sha256": "228c71d3d553a7e5836f5b8e24519120b678b274b746ee916f0010481f35d993"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/CategoryRequest.java",
+    "sha256": "f9038ff977d00e2c6cf7c41b64a8b9a849850c4c190bc67e1b9eb672c01ab3b5"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/CategoryResponse.java",
+    "sha256": "ecc385798074b2eb281b72e23d80f65b4083ef3fb5263d38ba3af7999d7573ad"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/CopyBatchRequest.java",
+    "sha256": "001a6f147e2b730a5d1fffc4e323115aebc16c73cae11fcb3cabae9a3f35e511"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/CopyResponse.java",
+    "sha256": "6339290ef8803fe48efb8e655c0788610d7b0fbcd829ac4bee83642a3c268138"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/dto/CopyStatusRequest.java",
+    "sha256": "c6b84731beb9f1babcad9725d13573f7aea3bf57c799fd5a6b612cdfcb09e344"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/catalog/package-info.java",
+    "sha256": "bff2015a4c7976bdd93a47afaeed8664a29016ade11c87f456681fd6075ee2ce"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/config/ClockConfig.java",
+    "sha256": "39960f0f22c38ae7b4f154a2e28deaa389389071d05ac71afec911859424a2ab"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/config/DatabaseDirectoryInitializer.java",
+    "sha256": "0d96d83ff7b57da5548dbd5de2685181207e66cd02f38753e21db1d5124e211c"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/config/LibraryProperties.java",
+    "sha256": "bb9d1c792cc3b6336c4a73763980a8fa2cd19e5bf4c79b621ed4016ad333ea81"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/config/LibrarySQLiteDialect.java",
+    "sha256": "268f66b944885902b0be233b2002da91f8da098b85fb573ce2ce25a7c298a592"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/config/WebConfig.java",
+    "sha256": "8d130ee5e5a513f041931afc8b635a5d4ef28c1b54822c4120706675ab293a3c"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/error/ApiException.java",
+    "sha256": "2fbf978ab27dc6ffe44ff3bdbe5abb197cc37ba806046876add340f8e3a3f123"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/error/ErrorCode.java",
+    "sha256": "488b64939e027706641202ec324b5b344734fca9c2e1ec4dadfa1794f1ef5776"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/error/ErrorResponse.java",
+    "sha256": "5b000350cd4d40920e304fceb1a3d4c035a99735524aabb4c4275e69ff0c33c5"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/error/GlobalExceptionHandler.java",
+    "sha256": "1da05eb3029bca60a1cfa4542f0e4a781a2d9529f6965938a1f039d5331f7a74"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/util/IsbnUtils.java",
+    "sha256": "d96f952d4c64b54f169e95ed1b65b4955a89362e2a94ca3c36f0e86d76f68252"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/util/LikeEscaper.java",
+    "sha256": "29737250448a6cdd687c3caa4bce691dba3473c20d4efd28ef4a50f7a0e0bfd6"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/util/Texts.java",
+    "sha256": "d8fd4f177d292df35f75c68e997bd9eb886be88add9a99813d23089a9d09179c"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/web/PageRequestParams.java",
+    "sha256": "9a65a69ad50938acf0bc7c7bee4893ea830b83e14d15fd0b3eb0b2ac9ad67a0d"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/common/web/PageResponse.java",
+    "sha256": "7804dac2e95f066f18390ee5c2428aa96dc1b798b9b6b06d9a6e377121076e3e"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/converter/EpochMillisInstantConverter.java",
+    "sha256": "3d6229c165c79a7aa111b6d5bc69499d23acba904ea6e4aa2be228526560961b"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/converter/IsoLocalDateConverter.java",
+    "sha256": "fd020d0256bdfdbe598a76726030346eb1112e4e57cb004ed30fdc682ad0c187"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/entity/AppUser.java",
+    "sha256": "2b48f051451d15311119191ce7f02166dee7b261c892009ba8aec90771aa44b0"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/entity/Book.java",
+    "sha256": "50515ee9baf2040f1a79953bb586ae8f1b049437ded8721f9a9d0b69a4cabc8b"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/entity/BookCopy.java",
+    "sha256": "03d477f2205dadb0ea7956086e1256fe676b3b4839ee7492cd9abcb3c9b5e397"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/entity/Category.java",
+    "sha256": "92f5789049135332f7a35c57d294cb3268efbc7602fcc9082e3b40b937f519cb"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/entity/DunningRecord.java",
+    "sha256": "585c9afcd796c42928c544747a62c50085de3299fa749c5b4db054ea157f0006"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/entity/Loan.java",
+    "sha256": "2cf505e760389899f802be946eaeedafdaeba022aac3cdbed6c9fb7fb9dcd042"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/entity/Notification.java",
+    "sha256": "31064523beb407f1526249fdd7b562acc771bede65bbb1180b9b91aa617de0f5"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/entity/Reader.java",
+    "sha256": "79d219da92f9fb31ceb21e8f4c7cc90334a24b6c0cb5b9c965dd9efddb873a94"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/enums/CopyStatus.java",
+    "sha256": "2a45bb1fc06a5583677aeed1d20ba223c8ba698f880ec262cadc7bab18187641"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/enums/DunningMethod.java",
+    "sha256": "e56d95af3445f96f5203884d04225e022b068612f4b775fc9d4f4a658e318766"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/enums/LoanStatus.java",
+    "sha256": "e9e884670b3430678eef9c5a7a0b73a351cbbf0fe9c4ac38f1322c897282a610"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/enums/NotificationType.java",
+    "sha256": "e6665af9d9cdcc5f8bc89e047cd1969f6899726bb754d8f0ff7f0fbd636f5ee5"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/enums/ReaderStatus.java",
+    "sha256": "0fcd9b0fe70042bf3f0c55b5f236b4bea361fb826cf70e91854cbd315384a6eb"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/enums/Role.java",
+    "sha256": "6e590228b1abc6f51e4d1da050369f3eaae59f4693670a4c04bb0e3bbdf2f129"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/repository/AppUserRepository.java",
+    "sha256": "b8e459a5b4777afef3eecae1a3a38a3721e58216020343dbc4217babdb4af94a"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/repository/BookCopyRepository.java",
+    "sha256": "86ebbba57a2b4444817c9aac4dc0edf459eed73dfdd1c3b64d18bba157adb90f"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/repository/BookRepository.java",
+    "sha256": "c9b953d2a33006f9dadad1eeec3a3243fe7c2252af9af330fc813377fcc495f7"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/repository/CategoryRepository.java",
+    "sha256": "298c2f8560df2296d922ba5506197835406050f491c0fbbc2a3520f8d0fa1970"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/repository/DunningRecordRepository.java",
+    "sha256": "9540dce4b8f886e21c1fd414c7dd834551615cef69753d8f69e9808684c34b45"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/repository/LoanRepository.java",
+    "sha256": "f9d54c4f5eab4cadd78ff131689441f34c181e1481ed7d488cd80f89c3d3b0ff"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/repository/NotificationRepository.java",
+    "sha256": "b901b2fc79b8a72eefd736e3ac6b953dbf1432eee82da6271fcd417a7b01ec4c"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/domain/repository/ReaderRepository.java",
+    "sha256": "9b1c8f9b9042fa95ab2b1ded822b9c48234312e441bdb3ff1b1b4b805008860d"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/dunning/DunningCaseResponse.java",
+    "sha256": "40221932773a81562fa49ab24b93647743748f0336aca99e1409ef31fd2d7f93"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/dunning/DunningCaseSummary.java",
+    "sha256": "17d29f97dfce8703096690b597e701bd101b7ee5d0b4f7dc581bdb8a1dfb99ff"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/dunning/DunningController.java",
+    "sha256": "c9224a351b19cbdef7710a90fcde0ff7bd577683a6efff32ec49563a822c6522"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/dunning/DunningRecordResponse.java",
+    "sha256": "a779edf71632d96adda27ad9e070b7ae963894a492387a9914e1438826fe4c0e"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/dunning/DunningRequest.java",
+    "sha256": "30b5e37c77ce51a48429fd78493cc9eaca1fc1ece6093100152c888dfbb46a5d"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/dunning/DunningService.java",
+    "sha256": "5b7e84f7749c292be09dc0be78755fd53060499b722587ff51675851eac1e5a7"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/loan/LoanController.java",
+    "sha256": "64568ba8c9432dd0c9afee1b269ec69e5cde8cb381358768a6c37f3ff0cfeb1d"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/loan/LoanPolicy.java",
+    "sha256": "6bb126d6f73cdad42eab3f397bdd4d85465f66e9bc4b28932cf20ae0d7d2de86"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/loan/LoanService.java",
+    "sha256": "9d68232eb4a0dbadf5e9b9e84426944b4630eca2a6b9a18d9962b2a678be23b2"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/loan/LoanViewMapper.java",
+    "sha256": "1473b265cce4480bb60816d73ddaf5179928818a0a5e84a57962ec4c3088c81f"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/loan/dto/BorrowRequest.java",
+    "sha256": "f0e08d19d75e24c35866576bc9da653f1e2f448af7532a394a368e282488163f"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/loan/dto/LoanResponse.java",
+    "sha256": "bb65983eac29b45493a38a142863611192c817c4ab0c1f1078edb665d58649c1"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/loan/dto/ReturnByBarcodeRequest.java",
+    "sha256": "c038364de2fc0eec70fefd3214ee19a40b2a104d7cf36e532f1300dfe46871ac"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/loan/package-info.java",
+    "sha256": "4ef270e11bb947582b0ea1159f81e3e4164e6e3c53cabc1b8c01dd1f841fbe9e"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reader/ReaderController.java",
+    "sha256": "5619e807c880242207d3dc8d6d01a604c038029d5149c44781d697b14d0728c8"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reader/ReaderService.java",
+    "sha256": "bac6fc29fc9ab8594fca3d2cfe21cb8a3bb2f1916f1c90d60e91155647544948"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reader/dto/ReaderCreateRequest.java",
+    "sha256": "c26b322216979deb111775e0206f33a860d33039dbcc50a61fa5d6f18b324e7a"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reader/dto/ReaderPasswordResetRequest.java",
+    "sha256": "ea0b1f231b439b1d95300df1d7531749226c71e51153ff1267f5fbb5c2c13f59"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reader/dto/ReaderResponse.java",
+    "sha256": "511f5d27008d55a76a24c6bad8bcbe5aab14c4fd802dcf06a8733776c325ebb7"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reader/dto/ReaderUpdateRequest.java",
+    "sha256": "ec644daa3a26978a1ddf0af1b260c7ac1bfce008f70b2110e174673aa9ee6a8b"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reader/package-info.java",
+    "sha256": "df221a08704071696e7fada0ad2f39acf30d2e7058dce32edc71794408ed765c"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reminder/NotificationController.java",
+    "sha256": "772e0f7f20e880bf08b981e554b1791148e2c4000a02c357eea04132f1268993"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reminder/NotificationResponse.java",
+    "sha256": "d403ecc2aecc855c438c1138a9516d18d2bf96369efcabe94692ee1b0b8b8775"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reminder/NotificationService.java",
+    "sha256": "3806bcf3e61bf30e78380569e52955b99da28a491902ff0e1009a7e3e22e604b"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reminder/ReminderConfiguration.java",
+    "sha256": "cf842e4372c1e41803325ab370383de964fc3d76a346b4a03d5a0c62aff299e3"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reminder/ReminderProperties.java",
+    "sha256": "201e917229df2649bb94318b713b561c4056bbd51ea960c834b46551f6b11334"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reminder/ReminderScanner.java",
+    "sha256": "67315663b38dc1200fb57d53031565f4cc6d0a0a56836b7a4cca266dad6aa6b0"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reminder/ReminderScheduler.java",
+    "sha256": "4f08017099bf3991a38330c26df761351c065364733e0cff0e046899735b379a"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/reminder/ReminderWriter.java",
+    "sha256": "dca64004ae5ab0fdbeb04903e96032b786044b84f99870db5e69de41d31ba49a"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/AdminBootstrap.java",
+    "sha256": "096a0626fbe63cb4d0ca9a9eb8f110f3e455c3c13ba2a226451abd877924f239"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/CurrentUser.java",
+    "sha256": "56fa4e4ca0544709ae69fdcdd2efe481f5e2f65acabd1deb4b8f157911e07995"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/CurrentUserArgumentResolver.java",
+    "sha256": "34ea6670a5f4a0408e2a2304299c7ecfece4c4148db2378f44692420416cb911"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/JsonAccessDeniedHandler.java",
+    "sha256": "f0ffb4aea5847ad82e2adefdaed99f693368901b2b425037234e1371e873cd66"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/JsonAuthenticationEntryPoint.java",
+    "sha256": "76a3ed9105a98f878012b0b6d835371d8d950f5695cfca4907ba79cf09226dd1"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/LibraryUserDetailsService.java",
+    "sha256": "d9eebfca388ada7f1ec429301c7f2bb409f38f1334562e150cefcef440c1a7ca"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/LibraryUserPrincipal.java",
+    "sha256": "97e72a8b502d8b9a5a314a6759b9163ef87440ac1c1f62805f0963ece816ea01"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/PasswordPolicy.java",
+    "sha256": "163ed3a37d56b133b8dd5aded8e808cc2ee9c035fd4b83ca597234cdf54bd6b9"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/PasswordPolicyValidator.java",
+    "sha256": "f27b946c6f1b847df1900c1bbb3daabeeb4415f5d8fbb50beb6b2a9c3137c2ea"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/SecurityConfig.java",
+    "sha256": "192199a88dcd0060318b5280c88d58f6b3b1c768cd2eb3e43efc2b4714d99fda"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/security/ValidPassword.java",
+    "sha256": "bd8f2fef64d18fca00d26ee37bdb574f1b21130411cbe7a9dec59f9d99d27610"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/seed/DemoDataLoader.java",
+    "sha256": "d4e84e19975f7db7e03ecedf1d7b08f00f51cf3f6e9eb2208f19ba7ea882af9c"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/stats/StatsController.java",
+    "sha256": "563110c75fcad7e0c46d27ac9b1591ef6667e303b2bfe150e897bfd5dada1aa9"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/stats/StatsGranularity.java",
+    "sha256": "a376ff3a2e4f7aa7ba4bb3014b7797e949f4cad850ebdce976afbe1df55be095"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/stats/StatsQueryRepository.java",
+    "sha256": "8b2a0b2c680244e2a43245d395bdde5c44a12c19c098eaa33a260892292e09e6"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/stats/StatsService.java",
+    "sha256": "9f778a639d817fd348052d6d8533e2365f02733a24e95b7818b9bdd645db6d30"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/stats/dto/LoanSeriesPoint.java",
+    "sha256": "827ae44c3a941a4dbd285200218bf98039b26e8e488b40ee3bf4e88a09177836"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/stats/dto/OverdueItem.java",
+    "sha256": "bca2f3a88e45c297a83446f75e35e765e8b69bee541c761dcd46c9f1339e1422"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/stats/dto/StatsOverview.java",
+    "sha256": "18ba0d8ec8791b4533d455317e8e63bd7d49b9fc37802326ca5590c40f258567"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/stats/dto/TopBook.java",
+    "sha256": "c611693ab872a71154ae737d0ea3c9deea431a40539ccab1036b42d36351bb8f"
+  },
+  {
+    "path": "backend/src/main/java/com/example/library/stats/package-info.java",
+    "sha256": "e3fc9a26347450d61bc1a5c2aa49bff902fcd332a912cd60d0efb5366407cc45"
+  },
+  {
+    "path": "backend/src/main/resources/application-dev.yml",
+    "sha256": "84c871d4faf70260f5d3eb4cfb52fbd92192c5195bc227a27aee23dcb492add3"
+  },
+  {
+    "path": "backend/src/main/resources/application.yml",
+    "sha256": "926da648499bb3a779f9f66e609daeef71ca6f033b1ca53325087dd26b12ed59"
+  },
+  {
+    "path": "backend/src/main/resources/db/migration/V1__init_schema.sql",
+    "sha256": "878e242b447834a20f5ca665fb4c9ef971d73da39b33203a614d87a61c5b0ee6"
+  },
+  {
+    "path": "backend/src/main/resources/db/migration/V2__reminders_dunning.sql",
+    "sha256": "c4758f8516b07003b7b3bceb0d5129a32a780318d1a53959432efa8fe79f6d52"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/auth/AdminBootstrapTest.java",
+    "sha256": "84773e467a50cabbd3d30696e65cc78c0ecd1451eeb12286fee60611551db71b"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/auth/AuthControllerTest.java",
+    "sha256": "4bcae4526df06c7b6862bdd270aa1445ad22fd8e9b936a3f58edc8ca6a229ce2"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/auth/ChangePasswordTest.java",
+    "sha256": "3f2010a91bc8cbd713d540b91ad60702cf8dd77a50c9f7d7727dddde576b6051"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/auth/SessionCookieTest.java",
+    "sha256": "c8480eaf300b9b06eaffd63bbca96ff004f7c8086f81c427f9646b47e0f34786"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/catalog/BookApiTest.java",
+    "sha256": "5b1bf23d5fc70ac4014ad275a2530decf94e2106443bc3c14fb6657eaa0bc51b"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/catalog/BookSearchTest.java",
+    "sha256": "2b3d9df21f63ceb6bee128e6ee345baa184e23c435728a0372637cfc346e6a51"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/catalog/CatalogAuthorizationTest.java",
+    "sha256": "f38d15f4e818014eecbf0df8323cafd0b02794b92e462c0e278b1fcc2c3b7082"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/catalog/CatalogTestBase.java",
+    "sha256": "0ac7823adb0412bc7e2fda0663de96356f6ea6a7e9a5bcb1170593f2e58ae107"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/catalog/CategoryApiTest.java",
+    "sha256": "c07748cea3cab022f281acda55ff460f924c1b74141807aad049d796f851bc2c"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/catalog/CopyApiTest.java",
+    "sha256": "22df66e2f715d828e9e8d7ba2a88aff68fe31e6bea34a70e7bfa90731d28a00c"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/common/GlobalExceptionHandlerTest.java",
+    "sha256": "1fab41776433c6f5c30fedd4de5c4f9e865847afa1de6b138c80348821398725"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/common/IsbnUtilsTest.java",
+    "sha256": "5d2ae6cd80e676efb92ff1ccedbd947b9ccbe7d56d11cfc7ab7168c8b6611f26"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/common/LikeEscaperTest.java",
+    "sha256": "21d3a0532d0b737e9c81ba3fc65bd80c32d27e651be79ebd75fc31ffabefe6ef"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/common/PageRequestParamsTest.java",
+    "sha256": "49f22be6cf45fa2d352abf4d5fe45826f3cba00b369a812e82d5859bd56a86d7"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/domain/RepositorySmokeTest.java",
+    "sha256": "94e07529933686f063e1aee6804eaba0c1a791ea16d840eae840daea049e8cd3"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/dunning/DunningApiTest.java",
+    "sha256": "9916c84e3063ca9071bb0c18ad869b4ed05cacbf1c9aa54141adaa9aa379c090"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/dunning/DunningTransactionTest.java",
+    "sha256": "2f7375330ed8dfdf44c427f49afb6e8b1e6ae6375f5799520b62cbcaf532e5fc"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/BorrowApiTest.java",
+    "sha256": "cd2f4355e3169c7d8e634787a75de096e1c1309d6d7611c3642979b21646334a"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/LoanAuthorizationTest.java",
+    "sha256": "2fb06f8a08d3fa49ded8d717626c03769a7fc04e92be8664d9d18e438fba972c"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/LoanConcurrencyTest.java",
+    "sha256": "bdf3ab30c5772b97306a616a677299f3960c185261deb4f85ee100edb6be3910"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/LoanEventLogTest.java",
+    "sha256": "35326240f4971329aaef4c0f7926e4e7c1bc92a2be6d92009b4eb0ddf8c9158c"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/LoanListApiTest.java",
+    "sha256": "15bfe5468545883a06ed902e764232289750b8cf1446dd57eda3c3aa482a06ed"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/LoanPolicyTest.java",
+    "sha256": "43d0f775594d8b36564e11da5b1278073c7837471a78ed88f223471d491fae19"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/LoanTestBase.java",
+    "sha256": "8982a8c2554d1f23b64033025eb1ec6d497325095f98ae74b9b62bcd74eb0c7a"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/MyLoansSelfRenewTest.java",
+    "sha256": "c8c4457bbcf21a3a7eb40793b928b38b5d93bf0cc93da7fd2e8c8fbdd5703dda"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/RenewApiTest.java",
+    "sha256": "c4703bc7e9e1f48c3f8fc2805512c905ce794df35134f1eab0130535ffde3923"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/RenewSelfServiceTest.java",
+    "sha256": "e7f310aaca0d50cd1f9043f8a6d0681dd833843cfe273124d0bd01020cc40453"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/loan/ReturnApiTest.java",
+    "sha256": "f9272ead229a6a329557a562e96fbe6115f0fb58a8dfd363eaf8b5070652df75"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reader/ReaderAuthorizationTest.java",
+    "sha256": "c66050a50552dcb3bab2a6a2f65949aebc4c94c9d40cc6e247cae3927cf8b218"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reader/ReaderCreateTest.java",
+    "sha256": "2cfd5306402548ad65560e0988e8e83e03d7c1683a2e0cf2be0efd1137ecfca4"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reader/ReaderDeleteTest.java",
+    "sha256": "1507ea969f2a5f990300faf3a28bc44cdc354392db5f472e89bb3de7f5c4bf03"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reader/ReaderMeTest.java",
+    "sha256": "11aaf61062f9244bfd612c577bd6534ba28bbcd3ed59ff402c74b9f73c6ee24b"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reader/ReaderPasswordResetTest.java",
+    "sha256": "1ded0ceeac12291105a61f2b06ce5ecf359cdc55ba9c4371a5bcdda7655737a2"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reader/ReaderSearchTest.java",
+    "sha256": "0533f6ff27ce35d428ae5c6a2ba4a96bed2ea7e30f31433bf188757105405caa"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reader/ReaderStatusTest.java",
+    "sha256": "48745c1fbbfba9e77a6da6c7ef8ba84a3dc277cc0712fc3e883cb431ef05e1e1"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reader/ReaderTestBase.java",
+    "sha256": "0fe831f1f9687f6e4fa6a4b4b1732cafb341f969b18b0318a25f4f08749e381b"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reminder/DunningNotificationTest.java",
+    "sha256": "b8decaddfad555e44ee8fd92b22c40a04d2ba53046035de17961dba7a2eb24ed"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reminder/ReminderApiTest.java",
+    "sha256": "f95833b7f55ff0da34c71563ab5a3f99d5490e2a0dacb0902a9679b67be6b63c"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reminder/ReminderConcurrencyTest.java",
+    "sha256": "43c169f6ea0b322c45377af4cbaab92cec766db76043f9c6b7a448e1853fb105"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reminder/ReminderConfigurationTest.java",
+    "sha256": "fc10b7eca7697964ca4d4263c6fc2a010dc498cacba428d5c7b8e8e2802e144c"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reminder/ReminderMigrationTest.java",
+    "sha256": "f6923918d9775499452f6628d596f42007b234c6b9d40446afd19461c4ee253b"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reminder/ReminderSchedulerTest.java",
+    "sha256": "1c5b26f0ace1c9135bfc7211fcd0a06b99d9b58ac936e7ab436bcaecdca09df4"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/reminder/ReminderStartupTest.java",
+    "sha256": "b1761039d87b1a00f6e5b7fa5035b73f5c27cf261a11969e02fd91e151e1d7b5"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/security/AuthorizationMatrixD2Test.java",
+    "sha256": "4547f0db4c7a3549afa8dd7479c2ae4594c43801d0b00da73a7aa923c106db36"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/security/AuthorizationMatrixTest.java",
+    "sha256": "29ff498c640bd3661ded099825ea78dd68532b2fbe3ff65e65d649410d85e1a8"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/security/MethodNotAllowedTest.java",
+    "sha256": "0aace4684f1cd8bb6fc30dc037370f19a2f80a43b19c20e2c61f0bf5434ef8d3"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/security/PasswordPolicyTest.java",
+    "sha256": "a7103e31835e8ad19bd76868d8d7e0fb4c3b0004f2ccf129c0b9ddfc7ad0f5ea"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/seed/DemoDataIsbnTest.java",
+    "sha256": "21b65c90bf91540ce33a3119cc3083269ce20d2a48c10ab657ca680c1d047857"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/seed/DemoDataLoaderTest.java",
+    "sha256": "38574000db54169afaab3c3d32aac2faf60b932bea2558a23497c304182f412e"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/seed/TestProfileNoSeedTest.java",
+    "sha256": "d7393d5996f8a4f75d66819fda9ac54000f0bcec1e77689e916c321f6d0e0231"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/stats/LoanSeriesApiTest.java",
+    "sha256": "d51e9db1257c03006f97982e8ffe07653cce7ff795a0a3ac0c4127a0bf799150"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/stats/OverdueReportApiTest.java",
+    "sha256": "da38fef2b0db57c3cffab31992c17116407a9983a9a4aca96c94d07a1bfb4b14"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/stats/StatsAuthorizationTest.java",
+    "sha256": "cac35636c34757012f311fab84231eee649fd53fbc9312ad003086f15d7767f5"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/stats/StatsOverviewApiTest.java",
+    "sha256": "ea5c8a48f365786002971861c7ae94ae4bdc9c4df79f22acf683488023829000"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/stats/StatsTestBase.java",
+    "sha256": "160dc145d2cc1bdc5252be36d9b4534e5f8ed4531ed4fde198fd2dc9deccafb9"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/stats/TopBooksApiTest.java",
+    "sha256": "adaef54899d74ed8ac8391b5989e099afb3780dcf8fbeb0105eba0e54535fe4b"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/support/AuthTestHelper.java",
+    "sha256": "8bd01868ca68cc47320ed6a67b6b19ae5cef83b9f6a5b530fe40ca272226d874"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/support/ContextLoadsTest.java",
+    "sha256": "806da833c06a7b10912fe28a24aa3c9524771f698fff0fe82d0ab03aee014347"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/support/IntegrationTestBase.java",
+    "sha256": "d9f7ae93d671799420d07289a5e3bee7246a26b4acfa1fe39f1db6440ff616fe"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/support/MutableClock.java",
+    "sha256": "cdeff272f0b78025c3353743e7b5a3bd241e1d095e186232443c17e07c610d07"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/support/TestDataFactory.java",
+    "sha256": "117a99cf81f0f663af65231730525d06cdf70ec05fa66c0b8625c3bb0b0ea2d8"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/support/TestDatabase.java",
+    "sha256": "04f416fc53c14299f5ab69a532a982525dd7e07a5990298f2baa315f63ce1ee6"
+  },
+  {
+    "path": "backend/src/test/java/com/example/library/support/TestSupportConfig.java",
+    "sha256": "ad07586b7d67e6c6d413e1d2bec615232bae4cf0a2065bd74fb42841c7b11db7"
+  },
+  {
+    "path": "backend/src/test/resources/application-test.yml",
+    "sha256": "e2bca16f3589852005d15ae5162fcc1a899ba5ec5da2a1d031fc3513cc4931a7"
+  },
+  {
+    "path": "docs/design/ac-dod.md",
+    "sha256": "51cb9de0ad05063cc625450a120610500cafba5066abdf55b081972d44826bfb"
+  },
+  {
+    "path": "docs/design/approval-record.md",
+    "sha256": "4b70c32ac2309969e1be5bdcc15433ceb582241f59c3fc330b69b25debb583cc"
+  },
+  {
+    "path": "docs/design/reminder-increment.md",
+    "sha256": "c0c38f35f3ca6e78f89294e4838f67538ef181293567855b2de00d9409ae1ede"
+  },
+  {
+    "path": "docs/design/solution-design.md",
+    "sha256": "f8439ccfd8449952df74a9b0dabd23a3b02b8ad5db7340b5613bb3e25062cbe1"
+  },
+  {
+    "path": "frontend/e2e/helpers.ts",
+    "sha256": "9f0f461cd82b2a72370baccdaafdb16c0951b92f17275c579aaa83a805094178"
+  },
+  {
+    "path": "frontend/e2e/login.spec.ts",
+    "sha256": "6d810de0780aab1ccc0e481a72fe7ae06102d4457d69b90d56b61682f980b149"
+  },
+  {
+    "path": "frontend/e2e/reminders.spec.ts",
+    "sha256": "addbe2056b58db2654efb9ac832bfb422d4e12124cb58f01cd9da97e4fa03387"
+  },
+  {
+    "path": "frontend/e2e/smoke.spec.ts",
+    "sha256": "93320ec33d01b469585ea8e72e76791d6b929c713bda3bc60698aa4fbab09ed2"
+  },
+  {
+    "path": "frontend/eslint.config.js",
+    "sha256": "7f9d5c0856cbbd9292943906a17d6eed650c1c49a296cf8afa51bfa64602e95d"
+  },
+  {
+    "path": "frontend/index.html",
+    "sha256": "d682d9d4ff9e583bf85e51703660bdecf0e1b3892d1bb954ba2e6524965efbb4"
+  },
+  {
+    "path": "frontend/package-lock.json",
+    "sha256": "8031aa6271dc7729d44e69eee7b3e45af986c9f56ededf26a8643fc1258365c7"
+  },
+  {
+    "path": "frontend/package.json",
+    "sha256": "a07b442b7077accb2b63d16338cd81e4ff13034fa2a339f7839642a553754002"
+  },
+  {
+    "path": "frontend/playwright.config.ts",
+    "sha256": "fbafda772caa51ac21bf9497179d167d3be7553003596f42983f123b18fa32dc"
+  },
+  {
+    "path": "frontend/src/App.tsx",
+    "sha256": "654eb0a66ad61ca51402cdfa7d21b8e423f67508523461143945c8f7255f28f0"
+  },
+  {
+    "path": "frontend/src/api/__tests__/__snapshots__/errors.test.ts.snap",
+    "sha256": "cba381ef96802a47cf46d839849bd69e5a80bbce7f2766063b23bd03a957508b"
+  },
+  {
+    "path": "frontend/src/api/__tests__/client.test.ts",
+    "sha256": "780e0fab617888a117cfe4d85d42e316cfd5a818530ab0855ef3552d8c32f904"
+  },
+  {
+    "path": "frontend/src/api/__tests__/errors.test.ts",
+    "sha256": "7b49feb35e13eacb50069221adb6600c32e61849105b2687b57b1ecf3165c555"
+  },
+  {
+    "path": "frontend/src/api/client.ts",
+    "sha256": "130e306ad9dce3fc5ab41e3f401ed05e5448fc90c136e650dd087aa176fa9ed8"
+  },
+  {
+    "path": "frontend/src/api/errors.ts",
+    "sha256": "2bf18af9b7cc61282526a13fdb73c7c9946e3f6012693b9fece91c8477424c16"
+  },
+  {
+    "path": "frontend/src/api/queryClient.ts",
+    "sha256": "9133cd16c329a7a78a364af242fb2a7542fb06d23e23d6bd8267bbe1f86bff49"
+  },
+  {
+    "path": "frontend/src/api/types.ts",
+    "sha256": "b69a238076ea9f854d829488bbfcd9df691522e49b404f1878c98508d44a5aa1"
+  },
+  {
+    "path": "frontend/src/app/RootRedirect.tsx",
+    "sha256": "30a44142e7cb928ade44e474c5ebb6d584e785da281439dc36a3f06aa01a1972"
+  },
+  {
+    "path": "frontend/src/app/__tests__/logout.test.tsx",
+    "sha256": "e09f0aaabab1044f65b46101efefa0c9ea8f2ea8bd4e11591ecc75e7236e36a1"
+  },
+  {
+    "path": "frontend/src/app/__tests__/menu.test.ts",
+    "sha256": "cce4817c05edd494b652c40300b6b3622aa3c4d9357620d4a37fb701843222c1"
+  },
+  {
+    "path": "frontend/src/app/__tests__/router.test.tsx",
+    "sha256": "3305aeda11a48a0144c2ac972717e0e5442ae3b91822d84b8e84b57a815b3d9a"
+  },
+  {
+    "path": "frontend/src/app/layouts/AppLayout.tsx",
+    "sha256": "f6e159d4be2705fba09e621b696029a39ede3657b3694d148e01fec92580e124"
+  },
+  {
+    "path": "frontend/src/app/layouts/__tests__/notifications.test.tsx",
+    "sha256": "3fc046f82aad0c044e1a97fad8db87243113b142546ccfa8919ca4a422789846"
+  },
+  {
+    "path": "frontend/src/app/menu.ts",
+    "sha256": "515aec78079fa07296b48eb4164a4075729ae19de75136f72bc6f38bdf30fcc2"
+  },
+  {
+    "path": "frontend/src/app/router.tsx",
+    "sha256": "487478e32e3039dd2ec5b0d670dcce1c3eddd052cd39c7dde138a9f0feb5a873"
+  },
+  {
+    "path": "frontend/src/auth/AuthContext.tsx",
+    "sha256": "6f93a006f294e23d2ab1b6169e2e5e6767df4a907d0e85ce0a190a9aa8b1b62f"
+  },
+  {
+    "path": "frontend/src/auth/LoginPage.tsx",
+    "sha256": "89b520720e6d796c5f0a6704454f0f296afb05475541c83963193dca7eab4ef8"
+  },
+  {
+    "path": "frontend/src/auth/RequireAuth.tsx",
+    "sha256": "6ff9fe8a031d47ca9cd9e9b23d6aa5bef2fbb668e2e82aa20c68090716e3489c"
+  },
+  {
+    "path": "frontend/src/auth/RequireRole.tsx",
+    "sha256": "11fa984ca65ca2e5360db431ffa03a9aa0f250ad6aada2a5003f81c5ad5c2d7f"
+  },
+  {
+    "path": "frontend/src/auth/SessionGuard.tsx",
+    "sha256": "a508ca71409ffed13ea40cdb2c3767153888d510f40915a46d009402470d5f68"
+  },
+  {
+    "path": "frontend/src/auth/__tests__/LoginPage.test.tsx",
+    "sha256": "12bca5bee19ce76ae529591c8e90ca7764291309a82e1095a05880d5f9df3493"
+  },
+  {
+    "path": "frontend/src/auth/__tests__/SessionGuard.test.tsx",
+    "sha256": "3db7210c15f5d79067bea78ee2fee986b90c7c46a8385aabf1387e6057d954cf"
+  },
+  {
+    "path": "frontend/src/auth/__tests__/guards.test.tsx",
+    "sha256": "38e70404cb4cf8d07ec45b9031781a7d51e7c03bfee2296d4e83a6af9fcc5da5"
+  },
+  {
+    "path": "frontend/src/auth/__tests__/redirect.test.ts",
+    "sha256": "ba2a5d715d9aa4912c7bb721f0a3bb5d3e9dce25556293e101fe8f6ed3cbfdbd"
+  },
+  {
+    "path": "frontend/src/auth/redirect.ts",
+    "sha256": "87bc3bfc7f73528c16e2ad7a0b81672b40827e55cac5e4291ca8129631d3d2ae"
+  },
+  {
+    "path": "frontend/src/components/EmptyState.tsx",
+    "sha256": "afdaa7b326570eba51ec143783896792956f83ba989b5c4ecaeafb70056ad603"
+  },
+  {
+    "path": "frontend/src/components/ForbiddenPage.tsx",
+    "sha256": "746021a86688e23b6ce655e2a42e14feb74da815d7ae4a42fe7ee01414de19d4"
+  },
+  {
+    "path": "frontend/src/components/NotFoundPage.tsx",
+    "sha256": "f293ce199b75227d5de6b17a9960c162842a8cbe3622274294502c7a19bb77e0"
+  },
+  {
+    "path": "frontend/src/components/PageError.tsx",
+    "sha256": "56159bdb56056dd9ea795fe45e6a6aba49be212894318234b366ef0a9af4917f"
+  },
+  {
+    "path": "frontend/src/components/PageLoading.tsx",
+    "sha256": "2f4b23a2ff57eabc57f70760ede4c4b8e0d5cf06429769516ad501beaa6fd5d9"
+  },
+  {
+    "path": "frontend/src/components/__tests__/states.test.tsx",
+    "sha256": "34231d23b2a090e26b8f6d2c7e7094adc97df62c5cf19705c5fac6a1facf9285"
+  },
+  {
+    "path": "frontend/src/components/pagination.ts",
+    "sha256": "c892759bd2c33f5644ba3fb62f4dc6ae957bee19cf97282ac942ac60184e7fd9"
+  },
+  {
+    "path": "frontend/src/features/account/__tests__/ChangePasswordPage.test.tsx",
+    "sha256": "a94c9df57c16700586c3dcc16e190cc73bf2de5022a91604d394628b9fd783d8"
+  },
+  {
+    "path": "frontend/src/features/account/__tests__/api.test.ts",
+    "sha256": "d6a70a37d6bd9d9e872b474111811dd963d3926bea46022edfc9d0160ad0f355"
+  },
+  {
+    "path": "frontend/src/features/account/api.ts",
+    "sha256": "12945cde0e4b44a5733c59db2e00cd1a9b86f7b568805cfe30e1ed2f7dde8968"
+  },
+  {
+    "path": "frontend/src/features/account/formErrors.ts",
+    "sha256": "b676e30f6d33e2d41c1b8db63f8850b6ae8b83e627f96b1aa47c3f1ea1ee71e3"
+  },
+  {
+    "path": "frontend/src/features/account/pages/ChangePasswordPage.tsx",
+    "sha256": "cf795e391b9fc27a0a050837be864d3ff0d29a3c9b901f6664f76cc6b229d508"
+  },
+  {
+    "path": "frontend/src/features/account/validation.ts",
+    "sha256": "fc5f3178a1b4b7195a686c5a970c16268fab47847781c9258f160b016e4df8d3"
+  },
+  {
+    "path": "frontend/src/features/catalog/__tests__/AdminBookListPage.test.tsx",
+    "sha256": "36c3f475ed55d15040699608dbc2e789dd3ddb01461f9528348d93dab3249f42"
+  },
+  {
+    "path": "frontend/src/features/catalog/__tests__/BookDetailPage.test.tsx",
+    "sha256": "51499d6834c025d6e27955a8afb54634cf88bd9461a3fdbad8973c44ea5852cb"
+  },
+  {
+    "path": "frontend/src/features/catalog/__tests__/BookFormPage.test.tsx",
+    "sha256": "f5395372a2535cc3b2ec6efe6392e9f1771f0d4039d14173d7862ddeaf396285"
+  },
+  {
+    "path": "frontend/src/features/catalog/__tests__/BookSearchPage.test.tsx",
+    "sha256": "b74218abe12a9e1747f1a925436f220b2c2c22a25e3aa69c654774518ffb0b41"
+  },
+  {
+    "path": "frontend/src/features/catalog/__tests__/CategoryPage.test.tsx",
+    "sha256": "e50e665dc30303ce17c81fcd73510872120a8173e19d0daea99695f743bffb70"
+  },
+  {
+    "path": "frontend/src/features/catalog/__tests__/api.test.ts",
+    "sha256": "94699dc9614b53ee4c6b0e43322af93ec665f411569e33fae1104d050fc64469"
+  },
+  {
+    "path": "frontend/src/features/catalog/__tests__/searchQuery.test.ts",
+    "sha256": "7b5a808bcfff1a743e38e4e4a4a1cd5ee73e3e7ad17378b9b7856e13f4b61dcf"
+  },
+  {
+    "path": "frontend/src/features/catalog/__tests__/testUtils.tsx",
+    "sha256": "1cdfbef70d1af6991a1ce13b8fd5cdb6e17ff995b0ed39c813b37f1a6b79e6f6"
+  },
+  {
+    "path": "frontend/src/features/catalog/__tests__/validation.test.ts",
+    "sha256": "fa00680423ae1a4f20969ac2eaf9ac874114bc6eae6c4ad9c81d4058a372b9fa"
+  },
+  {
+    "path": "frontend/src/features/catalog/api.ts",
+    "sha256": "e8bfec8ef499d83a23fb4566f65e0c63e8cef9c6439e9ee42a1e292aa19333e8"
+  },
+  {
+    "path": "frontend/src/features/catalog/components/AvailabilityBadge.tsx",
+    "sha256": "b104cf3bf9c43b17471da44150a82e6f4c01615a06f7526b55cca1be06e08267"
+  },
+  {
+    "path": "frontend/src/features/catalog/components/BookCover.tsx",
+    "sha256": "63a48639c5ca7bf8b08fa19bb9a2085ae6bac75afd2bcd2e68c65d8c23dd7837"
+  },
+  {
+    "path": "frontend/src/features/catalog/components/CopiesPanel.tsx",
+    "sha256": "8da29886168e606116251965ca0a96eafd3e09989b2bd29662618e574dd0e93e"
+  },
+  {
+    "path": "frontend/src/features/catalog/components/bookColumns.tsx",
+    "sha256": "ddd601efbb6189a6facba82a4fe906c78ad96761909419ad16b8fc2be15a7ad1"
+  },
+  {
+    "path": "frontend/src/features/catalog/formErrors.ts",
+    "sha256": "e88048a72a3f73b598819f3695b878c76d0c3400cbd47ec699a8e958cc470032"
+  },
+  {
+    "path": "frontend/src/features/catalog/pages/AdminBookListPage.tsx",
+    "sha256": "5521fd8119b75048a9c1fc55a6a9367a56f06ada3b30f0e6b1dbc02d2ac532fe"
+  },
+  {
+    "path": "frontend/src/features/catalog/pages/BookDetailPage.tsx",
+    "sha256": "9bd6b57273efb3d978c2d135a914fdf4bc8262309d768a0bf7003202adb1f314"
+  },
+  {
+    "path": "frontend/src/features/catalog/pages/BookFormPage.tsx",
+    "sha256": "6277ed80530ca4672d6b6d779174cd515c8bc4ef2e264d26f49b1fe6afaaee17"
+  },
+  {
+    "path": "frontend/src/features/catalog/pages/BookSearchPage.tsx",
+    "sha256": "12a4e676eb3427e68371cf93537b38b2f504ce5b946e2f928ed96eaf4e80cc74"
+  },
+  {
+    "path": "frontend/src/features/catalog/pages/CategoryPage.tsx",
+    "sha256": "22f2b5ecfc83f20741e6387695abc20b549a35e6a501e556144c7a501b19ced0"
+  },
+  {
+    "path": "frontend/src/features/catalog/searchQuery.ts",
+    "sha256": "371c5cfcb11ce06d3b54b2bca0e38497e75be5664859d7f7f99ac634caa520be"
+  },
+  {
+    "path": "frontend/src/features/catalog/validation.ts",
+    "sha256": "fad16d1e2269b156d04cfd3aaac1ab75177b6215c0e0255bf1c89a12b5cc3d4d"
+  },
+  {
+    "path": "frontend/src/features/circulation/__tests__/AdminLoanListPage.test.tsx",
+    "sha256": "3c90f56941dfe97754b5ae542c7e77538c2af9477ed9b9f20552da764f772cd2"
+  },
+  {
+    "path": "frontend/src/features/circulation/__tests__/CirculationDeskPage.test.tsx",
+    "sha256": "4703ceede5747165c4753c54f598774e93c8e5200a47e16a361b2a071472ad23"
+  },
+  {
+    "path": "frontend/src/features/circulation/__tests__/MyLoansPage.test.tsx",
+    "sha256": "52a518dc428e546285b7dfb171de9471812d56ddce7c72c1d05683d114150d5f"
+  },
+  {
+    "path": "frontend/src/features/circulation/__tests__/api.test.ts",
+    "sha256": "92426ce326a0bb91e1db6752ed191c3b4485a9631166917e949666cdb19aba03"
+  },
+  {
+    "path": "frontend/src/features/circulation/__tests__/catalogInvalidation.test.tsx",
+    "sha256": "b8f6b769400b3fc8edf43c4ede2f16e755b1c2bc239e4f560fb0924acb961f83"
+  },
+  {
+    "path": "frontend/src/features/circulation/__tests__/testUtils.tsx",
+    "sha256": "e0ad297eaf4c4fc6983bf1295ec898cf11b65f782b49e6491e6b3a0440bc1732"
+  },
+  {
+    "path": "frontend/src/features/circulation/api.ts",
+    "sha256": "1af1e96b6e26b9b0ae0be56b96a19055afaf1d5996d62e15f3d5ed3c9c08b23e"
+  },
+  {
+    "path": "frontend/src/features/circulation/circulation.css",
+    "sha256": "547c0683374ba57ba5fc82ef6b62b03d01d1950865e1f2817b08709d2b36b023"
+  },
+  {
+    "path": "frontend/src/features/circulation/components/DeskResultCard.tsx",
+    "sha256": "70d2a8044ff4b7f4e266160242e7c5079963402f497a63afd4f9ff7d136a8609"
+  },
+  {
+    "path": "frontend/src/features/circulation/components/LoanStatusTag.tsx",
+    "sha256": "78c49e60c39e62ffaa82fb5fff658873a5ae07feaa0b4761b502f94368ae103c"
+  },
+  {
+    "path": "frontend/src/features/circulation/loanErrorText.ts",
+    "sha256": "ebd051f0c762ee23edde5c9b98ffff87842068ecf0e25a411b29f79322a7cc15"
+  },
+  {
+    "path": "frontend/src/features/circulation/pages/AdminLoanListPage.tsx",
+    "sha256": "fbd4fa897e97320dff4c3f2e0888639a310c2cfe89e7c5d5674a7800402f6894"
+  },
+  {
+    "path": "frontend/src/features/circulation/pages/CirculationDeskPage.tsx",
+    "sha256": "87d05594d0608a366a8c0d7b8c68f7670743af083497fb187403e3e9534d18ba"
+  },
+  {
+    "path": "frontend/src/features/circulation/pages/MyLoansPage.tsx",
+    "sha256": "669ba2f4f2c675a07bd405e8419114b694ecd0de8f4dd0142da3651c313c9080"
+  },
+  {
+    "path": "frontend/src/features/circulation/renewal.ts",
+    "sha256": "0adc5c367f1bef44939e5691b615b8a1c0fe7a75417c11db756717464b93f863"
+  },
+  {
+    "path": "frontend/src/features/dunning/__tests__/DunningCaseListPage.test.tsx",
+    "sha256": "3b3f5ce3650948a2082d6dee1f206f9ba4b9164ca504615fadd4f6a4d94b5aec"
+  },
+  {
+    "path": "frontend/src/features/dunning/__tests__/api.test.ts",
+    "sha256": "b882bb4bc6677c73babe51fa50d75eb388509540ced47ab4a59d10068263d2ae"
+  },
+  {
+    "path": "frontend/src/features/dunning/__tests__/browser-selftest.py",
+    "sha256": "08737df066abe7ac03008d8640e463947c2ae89148a1093ef62c227e49a2dddf"
+  },
+  {
+    "path": "frontend/src/features/dunning/__tests__/fixtures.ts",
+    "sha256": "a6b588a222fe5f0c0d4f1377a27cf6ff936c8c3383853702aa96c67e7d0e19f1"
+  },
+  {
+    "path": "frontend/src/features/dunning/api.ts",
+    "sha256": "ebbaffd2f5be78105f9ff4fa25080fb53c3b7e507e8aaf5b56ecc310229ca4dd"
+  },
+  {
+    "path": "frontend/src/features/dunning/components/DunningHistoryModal.tsx",
+    "sha256": "694550cb64d1c286e8014b0e66c96044877f5774157c34b4ecf39a2d30b043ce"
+  },
+  {
+    "path": "frontend/src/features/dunning/components/DunningRegistrationModal.tsx",
+    "sha256": "198d626b327304ef39f856422c47f6786b9ad8e6f1501d57a34f8cb082285193"
+  },
+  {
+    "path": "frontend/src/features/dunning/dunning.css",
+    "sha256": "5b9d791f92bc55463cc7b30db6cc72d201b3d4d55fc5bcef5481f9e46afd5db4"
+  },
+  {
+    "path": "frontend/src/features/dunning/pages/DunningCaseListPage.tsx",
+    "sha256": "126ca32d561eb203dc59cb4e986d5d35a6e246de951d4d84026d36f35d844a9d"
+  },
+  {
+    "path": "frontend/src/features/dunning/presentation.ts",
+    "sha256": "4634a6e713645aeda36c472f1b6dfd30dc1b5e170cd103a60e28cf8e5146bce4"
+  },
+  {
+    "path": "frontend/src/features/notifications/__tests__/NotificationInboxPage.test.tsx",
+    "sha256": "de7a4a86db468b3f38abe00824aaa2b1503ff60361cf9f9e9d97d6e17bc78ab0"
+  },
+  {
+    "path": "frontend/src/features/notifications/__tests__/api.test.ts",
+    "sha256": "49d559dd7f2f10bb15a402f3f42d96e6aa94d1f741adeb269b0dcca1fa66f9f2"
+  },
+  {
+    "path": "frontend/src/features/notifications/__tests__/browser-selftest.mjs",
+    "sha256": "7351961ca2d2a97def9470dd61648917466288697223e9f493da59869255461b"
+  },
+  {
+    "path": "frontend/src/features/notifications/api.ts",
+    "sha256": "c8f9e72ec1e73cea508c6cbbc84daa10f918ef2391536921a287f200f9c66b90"
+  },
+  {
+    "path": "frontend/src/features/notifications/notifications.css",
+    "sha256": "ce7dab83af372271b57edbc18dbf6af9ecf0ca1a60d91e329e1e5b6b4e9241d8"
+  },
+  {
+    "path": "frontend/src/features/notifications/pages/NotificationInboxPage.tsx",
+    "sha256": "4c3a08b383014a08719d4232f314009415b4c1a1b556db6e8582651212845522"
+  },
+  {
+    "path": "frontend/src/features/notifications/useUnreadNotifications.ts",
+    "sha256": "a04d78e98582338d2f7fbb33798dd27b19ce2787d74991cc60fe1844bd43e5bb"
+  },
+  {
+    "path": "frontend/src/features/readers/__tests__/AdminReaderListPage.test.tsx",
+    "sha256": "bc6bd3fcbbc09d6c3ae53cd2e7836e7f95ca7b21b4ecb6a687ae3583dfdca457"
+  },
+  {
+    "path": "frontend/src/features/readers/__tests__/MyProfilePage.test.tsx",
+    "sha256": "c1886ddb2887ef690917924d0d50444791490549e504a4adccb1d942bb9e4ad7"
+  },
+  {
+    "path": "frontend/src/features/readers/__tests__/ReaderDetailPage.test.tsx",
+    "sha256": "cd420c68b82f4cbc192c847cd52f34fa31eaa67b58c269205118295e880e9a02"
+  },
+  {
+    "path": "frontend/src/features/readers/__tests__/api.test.ts",
+    "sha256": "f2b871275d1a1e2aab99cd46a9349094c215441562330a27ef0332c1a832d447"
+  },
+  {
+    "path": "frontend/src/features/readers/__tests__/helpers.tsx",
+    "sha256": "ddd41b0a711a000601d761be0becac13eb77a3cfbb8a93657e9080f48597f46e"
+  },
+  {
+    "path": "frontend/src/features/readers/api.ts",
+    "sha256": "19b288e709de302babf1b8a970ea097f7ab3280dee7127c3aae3604920960008"
+  },
+  {
+    "path": "frontend/src/features/readers/components/ReaderCreateModal.tsx",
+    "sha256": "c2bc1f73448f9e5110514d32854b8341d41778a5e69b75a51beedcf012fe1a28"
+  },
+  {
+    "path": "frontend/src/features/readers/components/ReaderLoansPanel.tsx",
+    "sha256": "6aacc9ce98a4266acc3adde8a154c11c1783e322a70d3102fa3ba14f7c0b5500"
+  },
+  {
+    "path": "frontend/src/features/readers/components/ReaderStatusAction.tsx",
+    "sha256": "8d644347e4efcc59b8f9998f8aceb462744dc15274a87b2f0ddf4183c6e67530"
+  },
+  {
+    "path": "frontend/src/features/readers/components/ReaderStatusTag.tsx",
+    "sha256": "08ac2f9acf18e840ea7ad09beec8fe4db5b1e3ba49de9034c54a2b993b5b1df3"
+  },
+  {
+    "path": "frontend/src/features/readers/components/ResetPasswordModal.tsx",
+    "sha256": "06090240ca0d0f3af4e866cf9a81ff57b300fa5f191e8f7b7050e16571acb379"
+  },
+  {
+    "path": "frontend/src/features/readers/formErrors.ts",
+    "sha256": "70d16aa798a0263bf99f2d55a0773c9218a6491642b01fd4ba0aea66ba14babd"
+  },
+  {
+    "path": "frontend/src/features/readers/pages/AdminReaderListPage.tsx",
+    "sha256": "9f290c641a217947209693eae2f07165de9accaead6d4ddfb160cef0bd4054e9"
+  },
+  {
+    "path": "frontend/src/features/readers/pages/MyProfilePage.tsx",
+    "sha256": "9cbf6a6b64e674531b31fdc27161d9ead8fa0555cd6522af7f3d57888d4b0a1d"
+  },
+  {
+    "path": "frontend/src/features/readers/pages/ReaderDetailPage.tsx",
+    "sha256": "ec05c1f0a79abf2258b3b8b7198f92a473e82dd0648c03d119f398c8b58ac44a"
+  },
+  {
+    "path": "frontend/src/features/readers/validation.ts",
+    "sha256": "fa57cfebebca73999c3a0943e8e65c70a4dc7359f8faeaf12989b4087c57ab2b"
+  },
+  {
+    "path": "frontend/src/features/stats/__tests__/DashboardPage.test.tsx",
+    "sha256": "8e94d3dc372ea0e14207a667398bad3f35d279655d692c1fbb7c0bc821ac2648"
+  },
+  {
+    "path": "frontend/src/features/stats/__tests__/OverdueDunning.test.tsx",
+    "sha256": "d8ae61b07e115052906657de20644bb0eb5e05cd021a8f48dd83bb60e02d548c"
+  },
+  {
+    "path": "frontend/src/features/stats/__tests__/OverdueReportPage.test.tsx",
+    "sha256": "b168ff4cf3852c6921221c678c775d700d9dce833804d16199ae00e5961b5c48"
+  },
+  {
+    "path": "frontend/src/features/stats/__tests__/StatsPage.test.tsx",
+    "sha256": "5673ddcab1c607f07a997f92974bef0e80d7e77665307d52d348f33fc3f051b4"
+  },
+  {
+    "path": "frontend/src/features/stats/__tests__/api.test.ts",
+    "sha256": "5be62c54e934a448214f59c717be3dda6b5fbe82579e6915db423149f3febae1"
+  },
+  {
+    "path": "frontend/src/features/stats/__tests__/fixtures.ts",
+    "sha256": "55ce3fe0bdf08d4247df6553a7f010dba78a914e5d73196502c44c4297cc72ad"
+  },
+  {
+    "path": "frontend/src/features/stats/__tests__/range.test.ts",
+    "sha256": "6ae5eed70ec6c9e34f576e4eb7047c28324514a7830a9ee7330cd99218cd15f2"
+  },
+  {
+    "path": "frontend/src/features/stats/__tests__/testUtils.tsx",
+    "sha256": "badf934ce587b36b0cb228809cf79b577bcf18d5690e5df6843aacd894f5dfc1"
+  },
+  {
+    "path": "frontend/src/features/stats/api.ts",
+    "sha256": "55f23c57e8f8e482e9f9c5744ae05663fe44898b26e6f078a7394d639836f065"
+  },
+  {
+    "path": "frontend/src/features/stats/components/TopBooksList.tsx",
+    "sha256": "c3a663b93b021dc14adc8f3c185f1a74223ccf2cf56a51771f41c2be58127ee6"
+  },
+  {
+    "path": "frontend/src/features/stats/components/TrendChart.tsx",
+    "sha256": "8469d75c7f0f9422f541e95fae1b3d63e9f40eaca4e9cf96320e4ab3436ce029"
+  },
+  {
+    "path": "frontend/src/features/stats/pages/DashboardPage.tsx",
+    "sha256": "4d1bf63d5135370493de2e405cb073342e39dd8381e4080c088c59df6d507011"
+  },
+  {
+    "path": "frontend/src/features/stats/pages/OverdueReportPage.tsx",
+    "sha256": "797a6f15281476b97b457b31fc664938cd4b0f6f23e0e51fd2d9f1dcf4a71b3a"
+  },
+  {
+    "path": "frontend/src/features/stats/pages/StatsPage.tsx",
+    "sha256": "1db9cf88d8c4431bebd5a5332784326dfee1bb86a8d02b2a082bd503b8d9d660"
+  },
+  {
+    "path": "frontend/src/features/stats/range.ts",
+    "sha256": "af89e274e599eea4fd0c57b051de6d0d8e34041359d5088c6eb256d0d3e13d84"
+  },
+  {
+    "path": "frontend/src/features/stats/stats.css",
+    "sha256": "36e0b08a0788b663b650206a3e43af9245ebabf758c51511997144d4b9f9310f"
+  },
+  {
+    "path": "frontend/src/main.tsx",
+    "sha256": "249f10a0e7228aeb9b357d6e46e8f4ce0e6040cf0296b598f8122cb74951596d"
+  },
+  {
+    "path": "frontend/src/styles/global.css",
+    "sha256": "c24c4d443a4ee61dd171f586113bd4f8406c95fc47c1685c7ee8fdd1cafb9ac7"
+  },
+  {
+    "path": "frontend/tsconfig.json",
+    "sha256": "10be72792adf444c2429748fc9246a493be4ec8c253d89d60a9922ae39c37a9e"
+  },
+  {
+    "path": "frontend/vite.config.ts",
+    "sha256": "73c35695428ec99873f694ca884707d4a2202fd6b15a90eef59f7fa05a85dd79"
+  },
+  {
+    "path": "frontend/vitest.setup.ts",
+    "sha256": "f02cea1e2aa7849b202f7432c57fd2532dbf27d85731c0afedc2de9858293219"
+  },
+  {
+    "path": "scripts/dev.sh",
+    "sha256": "d7da309e0c8531aceb23da2ae419c90a0ed6325f4d79640cd13f255f6e4b56f3"
+  },
+  {
+    "path": "scripts/env.sh",
+    "sha256": "d5cb47b8e7cab3d7e69f6ea7604a7e12ae31d78623dcd5ed30737decb874ed23"
+  },
+  {
+    "path": "scripts/reset-db.sh",
+    "sha256": "afdb9434a560b696995b97c462330a153285bcfa83d2088a3fc1e6b520b41015"
+  },
+  {
+    "path": "scripts/test-all.sh",
+    "sha256": "61e3ee455cbabaa494ef53213864729ec228b13e0a9b64768d9ffd033a09eebc"
+  },
+    {"path": "docs/verification/reminder-ac-dod-matrix.md", "sha256": "dd507e9ab1525308050da434d5d990622cd162f13e23dc0f9145d1440b6ba4be"}
+  ],
+  "evidenceFiles": [
+    {"path":"docs/verification/logs/reminder/clone-candidate-backend-verify.log","sha256":"84403a5508027e6e6f7cf9bf08ba6e1f0ec5d2db959ddf393c13f9e0c698aae3"},
+    {"path":"docs/verification/logs/reminder/clone-candidate-execution.log","sha256":"9c337b2f59172e17b417516ef748547c64cfe0588e79713f039e558988631667"},
+    {"path":"docs/verification/logs/reminder/clone-candidate-frontend-build.log","sha256":"355a27f3acd2c9010bf9e1d40aaf0556176452086c3c9824d3c8d1914e67240a"},
+    {"path":"docs/verification/logs/reminder/clone-candidate-npm-ci.log","sha256":"48acd2053c7f44080d1fb4d543e85649835842e17ded715b7e922cc02dd69274"},
+    {"path":"docs/verification/logs/reminder/clone-candidate-summary.json","sha256":"b8c79cff115ec4b41cff9a7338a5861dd7d9d687fa725da3a7c6a260ffcf2b3e"},
+    {"path":"/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-real-clone-gycbm2sk/clone-overlay-inputs.json","sha256":"34bf94d64d3084805d369017b8b8a84634f5f988c62d59f960113b8d973dabb1"},
+    {"path":"/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-real-clone-gycbm2sk/candidate/backend/target/library-backend-0.1.0-SNAPSHOT.jar","sha256":"3069b63bc7d094d54e5380311fcb0fdf0ac2a527af92a0b01cc38e87320ed921"},
+    {"path":"/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-real-clone-gycbm2sk/candidate/backend/target/site/jacoco/index.html","sha256":"cb9261d85d098b3d242378cf57d97f19bac1f1ede1bb21be6a39a47291e811fe"},
+    {"path":"/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-real-clone-gycbm2sk/candidate/frontend/dist/index.html","sha256":"59a391e8d5f78613cdbfa002f03b5d151680bd3ad9af65707d828a279d085d13"},
+    {"path":"backend/target/library-backend-0.1.0-SNAPSHOT.jar","sha256":"ae4666f6266c584a5d945f333cc6eeef2a149f6f26ec0aeaabfe2a88cfc7e58c"},
+    {"path":"backend/target/rem-be-dunning-source-snapshot.txt","sha256":"35af5902b9a4cf62aa94fcdce6749cdfbc4f4dd40e2f93b9ccc1259d5ec455a4"},
+    {"path":"backend/target/site/jacoco/index.html","sha256":"a968fdc67616fa14e9b4c41afe8ed0ada4853403eeb9042ca10e1f858430b3cd"},
+    {"path":"docs/verification/logs/reminder/backend-report-summary.log","sha256":"66683e78dae711c8ae175e1fc00ba32ed29131c7a610310e27e19e70522e03e7"},
+    {"path":"docs/verification/logs/reminder/backend-verify.log","sha256":"0cafebd4c270861764100f92f243e86bd0b75e1647be401d16734db888ee2a09"},
+    {"path":"docs/verification/logs/reminder/clean-candidate-backend-verify.log","sha256":"0f4db553603bf24ee9dd79462889db3feca302753f60c23e072f398cd955e566"},
+    {"path":"docs/verification/logs/reminder/clean-candidate-execution.log","sha256":"942c7d58c1fa61d13f6756e3393c96902a675058a603d36bfbbd323a9c5263bf"},
+    {"path":"docs/verification/logs/reminder/clean-candidate-frontend-build.log","sha256":"afa9504a9eecc066ce3e64b478459257ea1351e7d6af2f7df6189bebd55f1d37"},
+    {"path":"docs/verification/logs/reminder/clean-candidate-npm-ci.log","sha256":"b04ec22aef48de6f28a117c750e353fc1f9050611e04848d3988c45c11c66021"},
+    {"path":"docs/verification/logs/reminder/clean-candidate-summary.json","sha256":"94942aa584caa992b3e1211782ec7404a77a8716c90e3a502d067626c92f3116"},
+    {"path":"docs/verification/logs/reminder/clean-candidate-verify.py","sha256":"ba315e2509778fc8f9315d0dbb0048f6bcc907a6bc3c00869d9c69f62f0f8a05"},
+    {"path":"docs/verification/logs/reminder/ctrlc-smoke.log","sha256":"84db8ce333806a893bbbd532cd2f50cc49df7b8357309a535a7981c495b80290"},
+    {"path":"docs/verification/logs/reminder/ctrlc-smoke.py","sha256":"ad97e793ebaf3f831d80232ce7034667c19d9d99be21fb0d1addcdd8c3310a4e"},
+    {"path":"docs/verification/logs/reminder/e2e-report-summary-corrected.log","sha256":"462df834e9bb6b26ee4b2f15738d8fb65685e135d031cdebe05afcf5ac4de29d"},
+    {"path":"docs/verification/logs/reminder/e2e-report-summary.log","sha256":"a3d4696ffa19e69e7714f9de56b6601a09cc31b2f6be271b7bcfba22aec6f8ba"},
+    {"path":"docs/verification/logs/reminder/environment-confirmed.log","sha256":"e679912956b5f7c8dc2794570b77d955bce39c0770b033bbd789043846032a3c"},
+    {"path":"docs/verification/logs/reminder/environment.log","sha256":"ff69520d689e84b3b18aec06d075dd6ae82a42bc0b893269c9e11f9e026fac61"},
+    {"path":"docs/verification/logs/reminder/frontend-build.log","sha256":"3c5f1697524e04725d3d87c3b956713b09984e177308b51ad68126ba47b710d6"},
+    {"path":"docs/verification/logs/reminder/frontend-lint.log","sha256":"2d2e1e98c4ae073c2c99c2655a74d8aab92be395aafc6e0d149e19b5229f7374"},
+    {"path":"docs/verification/logs/reminder/frontend-test.log","sha256":"ab74993e52be24823563a31184bbfee526fb8bce5940c27e422c4e711da64a58"},
+    {"path":"docs/verification/logs/reminder/frontend-typecheck.log","sha256":"e2fc638d5112404ef98ba1dd60b705cb4f2acad5a8ec165be88fc1fa66c300cf"},
+    {"path":"docs/verification/logs/reminder/high-risk-run1.log","sha256":"a3dd7eab809bd1a4278cb9ca794de799c722304e3344f064ce25352e4431dafd"},
+    {"path":"docs/verification/logs/reminder/high-risk-run2.log","sha256":"af1fbc45a1d37c069cef5a1a61df3ba1fe4f93a9add16a798f448ddbaafcce6b"},
+    {"path":"docs/verification/logs/reminder/high-risk-run3.log","sha256":"78c4e11b202879f21222441936c978bb89a749f349838e7719bdffdb9d74f2c7"},
+    {"path":"docs/verification/logs/reminder/input-static-check.log","sha256":"8d0ebb5735fedcb930831b8620711ecc076f33fd2c15806069fb204d745de4b9"},
+    {"path":"docs/verification/logs/reminder/java8-negative-confirmed.log","sha256":"97a747dce20d89d457c25d898b0a9a9e32f6e0105039151edfbe64e89f37186d"},
+    {"path":"docs/verification/logs/reminder/java8-negative.log","sha256":"4b87428c376bf6365e775ee55fc3ef224055e99fd13dae35254c7265d4d87cf9"},
+    {"path":"docs/verification/logs/reminder/npm-audit.log","sha256":"6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3"},
+    {"path":"docs/verification/logs/reminder/readme-smoke-run1.log","sha256":"25a90d6290b04130a7c2ce09bff1eae71a4772212f627c8982a9f92c44583b7c"},
+    {"path":"docs/verification/logs/reminder/readme-smoke-run2.log","sha256":"330568a9ad6e5839020696959819a6fa84dc26a93c38a571a3d18f4e77b8c49f"},
+    {"path":"docs/verification/logs/reminder/readme-smoke.mjs","sha256":"a8e2d53b5a00be5b608963906dac76a608f294558414a1d4b83db21f3f520857"},
+    {"path":"docs/verification/logs/reminder/standard-e2e.log","sha256":"4f528f8e31abac75b9dec39587941ab00a7668ea5f72589a7f4450a039530ac2"},
+    {"path":"docs/verification/logs/reminder/static-check-corrected.log","sha256":"9de028b2e6f0544cb77ee6572e1c989ead4f380ed53568aad277b1bbd6c850d4"},
+    {"path":"docs/verification/screenshots/reminder/mock-registration-503-retained-input.png","sha256":"2656f8aeb1ae783a3e2f9a2c9a84d264940c35d103af8d07d2586f8308874393"},
+    {"path":"docs/verification/screenshots/reminder/readme-cases-390px.png","sha256":"c9b0c9141bfa9f43f00235aec4a30483602977f40ad51dbbb5ab27aad350b57f"},
+    {"path":"docs/verification/screenshots/reminder/readme-closed-case.png","sha256":"6c391dee3c4dba8d54d2858da3251696e1408aa7a81fa1b6d9992ff458fa0f8b"},
+    {"path":"docs/verification/screenshots/reminder/readme-empty-cases.png","sha256":"d80975a5f56c08b11c1b8c736c3d77dc77109fdfff4af7cbf3d20fae1741e0f1"},
+    {"path":"docs/verification/screenshots/reminder/readme-history-390px.png","sha256":"2ef004bfbaac1e122b0e4e4c58c12f2bd59e44f3d96ab7bbc16c5e2d8e2a05bd"},
+    {"path":"docs/verification/screenshots/reminder/readme-reader-390px.png","sha256":"6a1e85e34051155399fa486d61623ade977caf25bca8479b10770a290130e9ed"},
+    {"path":"docs/verification/screenshots/reminder/readme-returned-inbox.png","sha256":"ad43f6f70d052bd382fb4b4c672d1e3474ec34bd726f246bca354d6cf37005ef"},
+    {"path":"frontend/dist/index.html","sha256":"59a391e8d5f78613cdbfa002f03b5d151680bd3ad9af65707d828a279d085d13"},
+    {"path":"frontend/playwright-report/index.html","sha256":"d7dc373831ae3dd3dbb8e2f12973729c6be277173697d1ed769f8ceebdec0c14"},
+    {"path":"frontend/test-results/e2e/reminders-AC-DUN-01-AC-DUN-00ba8-四种催还经办记录、私密备注不外泄、收件箱分页与已读角标-chromium/admin-dunning-private-history.png","sha256":"61fc6a2dcdd375fa1a9f7e4f50746510d8e5003a2da0d7076edae15adb2f1c5f"},
+    {"path":"frontend/test-results/e2e/reminders-AC-DUN-01-AC-DUN-00ba8-四种催还经办记录、私密备注不外泄、收件箱分页与已读角标-chromium/reader-all-read-retained.png","sha256":"9c9aa46b3a4b06f718fc58d57e7ba4c850639129675f3cca0eff711307f5a716"},
+    {"path":"frontend/test-results/e2e/reminders-AC-DUN-01-AC-DUN-00ba8-四种催还经办记录、私密备注不外泄、收件箱分页与已读角标-chromium/reader-inbox-page-two.png","sha256":"b5c85991743b7779b048c1ac2602aa998db2dddeba85ca3b16e2e065db776e9d"},
+    {"path":"frontend/test-results/e2e/reminders-AC-DUN-03-AC-DUN-65a15-归还自动结案，历史保留、OPEN-CLOSED分页稳定-chromium/case-page-two.png","sha256":"e3038cfc5a710ad92f8e825935066c5c02d486b11d1354a33d16b0e555b6fadd"},
+    {"path":"frontend/test-results/e2e/reminders-AC-DUN-03-AC-DUN-65a15-归还自动结案，历史保留、OPEN-CLOSED分页稳定-chromium/closed-history-by-loan-id.png","sha256":"ea80a613147d94220b9f64185bf2cccdee6a65783b6cfc40bad43cda48c7bbd3"},
+    {"path":"frontend/test-results/e2e/reminders-AC-DUN-03-AC-DUN-65a15-归还自动结案，历史保留、OPEN-CLOSED分页稳定-chromium/closed-reader-21.png","sha256":"6d59f00c0ec4319e62e573682da98dd03278d22b5667159d0afafd2ccc33b868"},
+    {"path":"frontend/test-results/e2e/reminders-AC-DUN-03-AC-DUN-65a15-归还自动结案，历史保留、OPEN-CLOSED分页稳定-chromium/closed-reader-22.png","sha256":"120fe93bb6d771c07b03a326379e0790a430f3aea69705d11a22f109fbba54e1"},
+    {"path":"frontend/test-results/e2e/reminders-AC-NTF-02-AC-DUN-02-身份隔离、CSRF、未逾期与非法登记均无副作用-chromium/admin-inbox-forbidden.png","sha256":"920b6083d6119ef79392560a2ad1e1ee2885121fcb1fd8dcc09d487cb01918ad"},
+    {"path":"frontend/test-results/e2e/reminders-AC-REM-01-AC-REM-13c40-D-3及停机D-2补发；续借保留未读历史、归还停止扫描-chromium/due-soon.png","sha256":"6d5073ce0c0707076b17ffc5a00ccdd4f082e2ba3ef45ebe5bb202a165074a1d"},
+    {"path":"frontend/test-results/e2e/reminders-AC-REM-01-AC-REM-13c40-D-3及停机D-2补发；续借保留未读历史、归还停止扫描-chromium/renewed-historical-notice.png","sha256":"1525b24cae848b91126e7670fc7135165027f426f54781dea344c2bf1f32f3d5"},
+    {"path":"frontend/test-results/e2e/reminders-AC-REM-01-AC-REM-13c40-D-3及停机D-2补发；续借保留未读历史、归还停止扫描-chromium/returned-historical-notice.png","sha256":"49f2a759b42422d42fda28528f020cf28edf483b31274a956a49df5df14423cc"},
+    {"path":"frontend/test-results/e2e/reminders-AC-REM-01-AC-REM-72a47-8-15天与恢复第10天只生成当前周期且重复扫描不重复-chromium/overdue-current-period-only.png","sha256":"de51835c9bdf0f5e07ebd787351cb95fe0a8362f24524ee24f187984996c425d"},
+    {"path":"frontend/test-results/rem-fe-dunning/browser-report.json","sha256":"d4de03d0d64d5a1c95606cfad22b3535aaa492ca1d25fb1c018aaaab98ee79bf"},
+    {"path":"frontend/test-results/rem-fe-dunning/candidate-snapshot.json","sha256":"9ae8a290fd11a66130af167d55d298c09082277baecf5c7b9ebfe8a619faf8da"},
+    {"path":"frontend/test-results/rem-fe-inbox/audit-r3-verification-snapshot.json","sha256":"e20ec55b2aec1b2460b12520db6e0ed10aae74080d11529a462db2b85849c843"},
+    {"path":"/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-clean-candidate-s6gdo_j7/verification-inputs.json","sha256":"34bf94d64d3084805d369017b8b8a84634f5f988c62d59f960113b8d973dabb1"}
+  ],
+  "gitStatusAtAssembly": {
+    "trackedModified": ["README.md","backend/src/main/java/com/example/library/common/error/ErrorCode.java","backend/src/main/java/com/example/library/security/SecurityConfig.java","backend/src/test/java/com/example/library/support/ContextLoadsTest.java","backend/src/test/java/com/example/library/support/TestDatabase.java","backend/src/test/resources/application-test.yml","docs/design/ac-dod.md","docs/design/approval-record.md","frontend/e2e/helpers.ts","frontend/playwright.config.ts","frontend/src/api/__tests__/__snapshots__/errors.test.ts.snap","frontend/src/api/__tests__/errors.test.ts","frontend/src/api/errors.ts","frontend/src/api/types.ts","frontend/src/app/__tests__/menu.test.ts","frontend/src/app/__tests__/router.test.tsx","frontend/src/app/layouts/AppLayout.tsx","frontend/src/app/menu.ts","frontend/src/app/router.tsx","frontend/src/features/stats/pages/OverdueReportPage.tsx"],
+    "candidateUntracked": ["backend/src/main/java/com/example/library/domain/entity/DunningRecord.java","backend/src/main/java/com/example/library/domain/entity/Notification.java","backend/src/main/java/com/example/library/domain/enums/DunningMethod.java","backend/src/main/java/com/example/library/domain/enums/NotificationType.java","backend/src/main/java/com/example/library/domain/repository/DunningRecordRepository.java","backend/src/main/java/com/example/library/domain/repository/NotificationRepository.java","backend/src/main/java/com/example/library/dunning/","backend/src/main/java/com/example/library/reminder/","backend/src/main/resources/db/migration/V2__reminders_dunning.sql","backend/src/test/java/com/example/library/dunning/","backend/src/test/java/com/example/library/reminder/","docs/design/reminder-increment.md","docs/verification/reminder-ac-dod-matrix.md","docs/verification/reminder-candidate-snapshot.txt","docs/verification/logs/reminder/","docs/verification/screenshots/reminder/","frontend/e2e/reminders.spec.ts","frontend/src/app/layouts/__tests__/","frontend/src/features/dunning/","frontend/src/features/notifications/","frontend/src/features/stats/__tests__/OverdueDunning.test.tsx"],
+    "unrelatedUntrackedPresentButExcluded": [".vite/","docs/hongkong-*","scripts/build_hongkong_graph.py","scripts/collect_hongkong_topology.py","scripts/__pycache__/","docs/verification/acceptance/logs/acc-admin.jar.stray-from-workspace-root"],
+    "nothingStagedByThisTask": true,
+    "noCommitPushDeployment": true
+  },
+  "history": {"roundTwoStatus": "NEEDS_WORK", "roundTwoCandidateAggregateSha256": "05beaa5197936d95614c8408296de05a28ed1fbd98f1f4db174ec13322224064", "roundTwoSnapshotSha256": "72a2925ccfe7bd07568bd18db37069da56acb982bf619c6a1cc912b8e95c7a0b", "roundThreeMethod": "Authorized actual local git clone --no-hardlinks plus exact329 uncommitted candidate allowlist overlay; fixed DOD-01 preserved"},
+  "remainingGate": null,
+  "readiness": "All mandatory development/integration items due at this stage have valid evidence;round-two DOD01 gap closed by actual K2 clone verification;independent DOD-R3/DOD10/DOD11/DOD12 remain NOT_DUE. Not independent acceptance or release authorization."
+}

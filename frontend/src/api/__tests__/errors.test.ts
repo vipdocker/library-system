@@ -40,6 +40,9 @@ const DESIGN_ERROR_CODES = [
   'DB_BUSY',
   'METHOD_NOT_ALLOWED',
   'INTERNAL_ERROR',
+  // reminder-increment.md v1.1 §3：追加，不删减 R1 清单。
+  'NOTIFICATION_NOT_FOUND',
+  'LOAN_NOT_OVERDUE',
 ] as const;
 
 describe('AC-UI-03 errors.ts 错误码完整性', () => {

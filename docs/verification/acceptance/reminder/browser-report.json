@@ -1,0 +1,113 @@
+{
+  "engine": "Python Playwright chromium 145.0.7632.6 headless (real browser)",
+  "baseUrl": "http://localhost:15199",
+  "screenshots": [
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/a01-admin-dashboard.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/a02-overdue-report-synthetic.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/a03-logout-guard.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b01-reader-a-inbox-badge.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b02-reader-a-inbox-list.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b03-reader-a-all-read.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b04-reader-403-page.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b05-disabled-reader-reenabled-inbox.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b06-inbox-390px.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b07-reader-b-inbox.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b08-reader-b-single-read.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b09-my-loans-no-renew.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b10-dunning-empty.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b11-note-501-validation.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b12-dunning-phone-success.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b13-dunning-other-success.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b14-dunning-cases-open.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b15-dunning-history-modal.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b16-reader-b-dunning-notices.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b17-renew-success.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b18-renewed-historical-notice.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b19-return-barcode-success.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b20-reader-c-returned-notices.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b21-closed-cases.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b22-closed-case-history.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b23-case-list-db-busy-error.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b23-case-list-error-simulated.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b24-dunning-503-retained-input.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b25-dunning-explicit-retry-success.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b26-case-list-recovered.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b27-overdue-390px.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b28-dunning-390px.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b29-reader1-search.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b30-reader1-my-loans.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b31-admin-dashboard.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b32-admin-stats.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b33-overdue-seed-reader2.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b34-regression-borrow.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b35-regression-return.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b36-submit-lock-pending.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/debug-circ.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/debug-error-state.png",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/debug-reader-b.png"
+  ],
+  "pageerrors": "all recorded contexts 0 (see observations)",
+  "observationWindows": {
+    "noBadgePolling": "25s idle, 0 notification requests",
+    "defaultScanInterval": "~5min, startup scan only (PT1H)",
+    "postReturnNoNew": "8s (~8 scans), counts unchanged",
+    "noAutoRetryAfter503": "6s, no new POST"
+  },
+  "simulatedOnly": [
+    "case-list GET error state via disclosed network abort (real DB_BUSY proven separately via real write lock on POST)"
+  ],
+  "phases": {
+    "A": {
+      "observations": 9,
+      "results": {
+        "PASS": 9
+      }
+    },
+    "B": {
+      "observations": 2,
+      "results": {
+        "PASS": 2
+      }
+    },
+    "B1": {
+      "observations": 24,
+      "results": {
+        "NOT_APPLICABLE": 2,
+        "PASS": 20,
+        "FAIL": 2
+      }
+    },
+    "B2": {
+      "observations": 12,
+      "results": {
+        "PASS": 12
+      }
+    },
+    "B3": {
+      "observations": 11,
+      "results": {
+        "PASS": 11
+      }
+    },
+    "B4": {
+      "observations": 15,
+      "results": {
+        "NOT_APPLICABLE": 3,
+        "PASS": 9,
+        "FAIL": 3
+      }
+    },
+    "B5": {
+      "observations": 10,
+      "results": {
+        "PASS": 10
+      }
+    },
+    "ACC": {
+      "observations": 1,
+      "results": {
+        "PASS": 1
+      }
+    }
+  }
+}

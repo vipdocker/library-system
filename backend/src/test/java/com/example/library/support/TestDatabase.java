@@ -38,6 +38,8 @@ public final class TestDatabase {
 
     /** 每个测试前清表（按外键依赖顺序），并重置自增序列。 */
     public static void cleanAllTables(JdbcTemplate jdbcTemplate) {
+        jdbcTemplate.execute("DELETE FROM dunning_record");
+        jdbcTemplate.execute("DELETE FROM notification");
         jdbcTemplate.execute("DELETE FROM loan");
         jdbcTemplate.execute("DELETE FROM book_copy");
         jdbcTemplate.execute("DELETE FROM reader");

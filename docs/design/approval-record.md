@@ -57,3 +57,35 @@ plan-v1 第 4 节建议使用独立工作副本。用户选择了共享工作区
 | I-07 | T05 | 读者被停用后，已登录的会话仍能访问 `/api/auth/me` 以外的接口（满足方案的最低要求，即重新登录会被拒绝）；由评审裁量是否需要加强 |
 | I-08 | T14 | `frontend/src/app/__tests__/router.test.tsx`（T02 共享文件）仍断言“建设中”占位页，且缺少 QueryClientProvider/antd App 包装，全量 vitest 19 失败（17 个早已存在，2 个因 `/account/password` 已实现）。用户 2026-11-18 决定由 T13 修复：改为断言真实页面或路由守卫行为，全量 `npm test` 须为 0 失败 |
 | I-09 | T12（E-01） | 管理员在 `/admin/readers` 登出后，`RequireAuth` 与 `AppLayout.onLogout` 的 `navigate('/login')` 竞态，URL 留下 `?redirect=%2Fadmin%2Freaders`；换读者登录被带回该页并显示 403。用户决定由 T13 修复（见 §1.1）；修复后 E2E 步骤①中读者登录前的显式 `goto('/login')` 可保留 |
+
+## 4. 首期借阅提醒增量（2026-11-19）
+
+任务 lib-borrow-reminder-p1。selectionId=ec0966d6-228e-4349-a00a-4da3b5ff92c3，由主会话读取实际选择记录核验 confirmed；不是从回调或默认预选推定。
+
+| 项 | 用户决定及来源 |
+|---|---|
+| 环节与模型 | 用户选择卡片：方案设计跳过；开发实现 ultimate；独立评审与独立验收 qmodel_latest |
+| 首组业务问答 | 主会话 AskUserQuestion：提前3天一次；持久化收件箱与角标；逾期首日及之后每7天；管理员登记并发站内通知 |
+| 补充业务问答 | 主会话 AskUserQuestion：D-2至D补到期前一次；逾期固定周期只补当前；催还仅逾期未还；备注仅管理员可见 |
+| 最小实现与验收 | 主会话展示并经 AskUserQuestion 确认：保留旧通知并显示当前借阅状态；停用读者仍生成；独立催还历史页；角标不后台轮询；批准增量AC/DoD v1.1，定义见 reminder-increment.md |
+| 文件授权 | 主会话 AskUserQuestion 明确允许新增V2、必要共享源码/测试修改、README与AC/批准记录更新、本功能契约和核验矩阵新增；V1不改，不新增依赖 |
+| 数据与操作边界 | 只在临时库验证，不对现有开发库迁移；不提交、不推送、不发布，不改权限设置或全局环境 |
+| 会话预算边界 | 允许后续6个开发会话，最多2个并行；评审与验收各1个会话。最终费用未知，额外扩项、模型改变或增会话先确认 |
+| 计划版本v1.1 | 在拆解v1上补足前端催还对后端催还的接口依赖；仍为6个开发任务，不扩大功能 |
+| 测试范围追加与计划v1.2 | 主会话AskUserQuestion明确允许原后端任务修订support/ContextLoadsTest.java：精确检查V1/V2成功，保留原六表及无种子检查、追加新表检查，再运行全量verify。REM-BE-NOTIFY在原会话返工轮次2；依赖、业务及AC/DoD定义不变，不新增会话；当前范围与图见reminder-increment.md |
+
+### 4.1 审计阻塞下的排期修订v1.3
+
+主会话AskUserQuestion对“npm审计网络仍不可用，后续开发如何安排？”的真实用户回答为“继续开发，保留审计（推荐）”。默认registry的TLS诊断失败证据保留，审计状态仍BLOCKED，不改源/代理/TLS、不豁免。
+
+允许REM-FE-DUNNING消费已核验收件箱源码与已完成后端催还DTO，随后REM-E2E可消费全部业务源码。REM-FE-INBOX的剩余审计继续在原会话跟踪，保持IMPL必需门禁，未通过前阻断REM-INT整体验证完成及最终交付；不将剩余审计改为NOT_DUE或已通过。仅调整依赖排期，不扩功能、不改模型或AC/DoD、不增加6个开发会话或并发上限2。当前图及范围见reminder-increment.md。
+
+### 4.2 既有授权范围内的测试责任调整v1.4
+
+REM-FE-DUNNING首次交接Q-DUN-01指出router.test.tsx新增占位断言会与正式页面冲突。主会话核对第230–234行，依据第4节已获用户批准的共享路由/必要测试变更范围，转交此新增用例与必要案件API mock给原催还前端会话；保留管理员不得请求读者通知接口等隔离断言，不修改生产router，不删除旧用例。原共享文件写入会话已停止，无并发写入，不扩功能或模型、会话数、AC/DoD。此项为主会话范围内责任调整，不记录为新的用户问答授权。
+
+### 4.3 标准E2E入口修订v1.5
+
+主会话AskUserQuestion对“是否允许仅在Playwright的后端E2E启动环境中固定一秒扫描，使标准E2E命令无需手工参数？”的真实回答为“允许测试配置修改（推荐）”。仅授权REM-E2E在frontend/playwright.config.ts后端webServer.env添加LIB_REMINDER_SCANINTERVAL=PT1S；原会话轮次2修改并用标准命令全量重验。生产默认PT1H、业务、依赖、等待断言、6个开发会话与并发上限2均不变；审计仍BLOCKED，不豁免。记录为计划v1.5，AC/DoD v1.1不变。
+
+原任务的批准与证据保持原版本；历史PASS不能沿用为本次候选通过。

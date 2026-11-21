@@ -3,15 +3,17 @@
 // 页面状态遵循 10.2 节：首次加载 Spin；翻页/排序保留旧数据并显示表格 loading；
 // 空态 Empty；错误 Alert + 重试（503 显示“系统繁忙”，403 显示“无权限执行该操作”）。
 import { useState } from 'react';
-import { Table, Tag } from 'antd';
+import { Button, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { OverdueItem } from '../../../api/types';
 import { EmptyState } from '../../../components/EmptyState';
 import { PageError } from '../../../components/PageError';
 import { PageLoading } from '../../../components/PageLoading';
 import { tablePagination } from '../../../components/pagination';
 import { fetchOverdueReport } from '../api';
+import { DunningRegistrationModal } from '../../dunning/components/DunningRegistrationModal';
+import { dunningKeys, dunningQueryOptions } from '../../dunning/api';
 import '../stats.css';
 
 type SortField = 'overdueDays' | 'dueDate';
@@ -28,11 +30,14 @@ function isSortField(value: unknown): value is SortField {
 }
 
 export default function OverdueReportPage() {
+  const client = useQueryClient();
+  const [selected, setSelected] = useState<OverdueItem | null>(null);
   const [pagination, setPagination] = useState({ page: 0, size: 20 });
   const [sort, setSort] = useState<SortState>(DEFAULT_SORT);
   const sortParam = `${sort.field},${sort.order}`;
 
   const reportQuery = useQuery({
+    ...dunningQueryOptions,
     queryKey: ['reports', 'overdue', pagination.page, pagination.size, sortParam],
     queryFn: ({ signal }) =>
       fetchOverdueReport({ page: pagination.page, size: pagination.size, sort: sortParam }, signal),
@@ -40,6 +45,11 @@ export default function OverdueReportPage() {
   });
 
   const data = reportQuery.data;
+  const refresh = () => {
+    setSelected(null);
+    void client.invalidateQueries({ queryKey: dunningKeys.all });
+    void reportQuery.refetch();
+  };
 
   const columns: TableProps<OverdueItem>['columns'] = [
     {
@@ -93,6 +103,10 @@ export default function OverdueReportPage() {
         </Tag>
       ),
     },
+    {
+      title: '操作', key: 'dunning',
+      render: (_value, item) => <Button size="small" disabled={reportQuery.isFetching || reportQuery.isError} onClick={() => setSelected(item)} aria-label="登记催还">登记催还</Button>,
+    },
   ];
 
   // 排序变化时回到第一页；翻页/改页大小由 tablePagination 的 onChange 处理。
@@ -112,11 +126,10 @@ export default function OverdueReportPage() {
           <h3>逾期报表</h3>
           <div className="stats-page-sub">未还且已过应还日的借阅，默认按逾期天数降序</div>
         </div>
-        {data && data.totalItems > 0 && (
-          <Tag color="error" className="overdue-days-tag">
-            共 {data.totalItems} 条逾期
-          </Tag>
-        )}
+        <Space wrap>
+          {data && data.totalItems > 0 && <Tag color="error" className="overdue-days-tag">共 {data.totalItems} 条逾期</Tag>}
+          <Button onClick={refresh} disabled={reportQuery.isFetching} aria-label="刷新逾期报表">刷新逾期报表</Button>
+        </Space>
       </header>
 
       {reportQuery.isError && (
@@ -143,10 +156,11 @@ export default function OverdueReportPage() {
                 <EmptyState description="当前没有逾期未还的借阅，所有借阅都在应还日期内" />
               ),
             }}
-            scroll={{ x: 860 }}
+            scroll={{ x: 960 }}
           />
         </div>
       )}
+      {selected && <DunningRegistrationModal item={selected} onClose={() => setSelected(null)} onRefresh={refresh} />}
     </section>
   );
 }

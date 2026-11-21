@@ -220,3 +220,77 @@ export type BookSearchField = 'all' | 'title' | 'author' | 'isbn';
 /** CURRENT = ACTIVE + OVERDUE */
 export type LoanStatusFilter = LoanStatus | 'CURRENT';
 export type StatsGranularity = 'DAY' | 'MONTH';
+
+// ---------- 通知（reminder-increment.md / v1.1 冻结协议） ----------
+export type NotificationType = 'DUE_SOON' | 'OVERDUE' | 'DUNNING';
+
+export interface Notification {
+  id: number;
+  type: NotificationType;
+  title: string;
+  content: string;
+  loanId: number;
+  book: { id: number; title: string };
+  copyBarcode: string;
+  /** 通知生成时的应还日快照，不是当前应还日。 */
+  dueDate: string;
+  overdueDays: number | null;
+  seq: number | null;
+  createdAt: string;
+  readAt: string | null;
+  loanState: { status: LoanStatus; currentDueDate: string };
+}
+
+export interface NotificationQuery {
+  unreadOnly: boolean;
+  page: number;
+  size: number;
+}
+
+export interface UnreadNotificationCount { unreadCount: number }
+export interface MarkAllNotificationsReadResult { updated: number }
+
+export type DunningMethod = 'PHONE' | 'IN_PERSON' | 'IN_APP' | 'OTHER';
+export type DunningStatus = 'OPEN' | 'CLOSED';
+
+export interface DunningInput {
+  method: DunningMethod;
+  note?: string | null;
+}
+
+export interface DunningRecord {
+  id: number;
+  loanId: number;
+  method: DunningMethod;
+  note: string | null;
+  operator: { id: number; username: string };
+  createdAt: string;
+  notificationId: number;
+}
+
+export interface DunningCase {
+  loanId: number;
+  status: DunningStatus;
+  closedAt: string | null;
+  closeReason: 'RETURNED' | null;
+  records: DunningRecord[];
+}
+
+export interface DunningCaseSummary {
+  loanId: number;
+  reader: { id: number; cardNo: string; name: string };
+  book: { id: number; title: string };
+  copyBarcode: string;
+  dueDate: string;
+  status: DunningStatus;
+  closedAt: string | null;
+  closeReason: 'RETURNED' | null;
+  recordCount: number;
+  lastRecordedAt: string;
+}
+
+export interface DunningQuery {
+  status?: DunningStatus;
+  page: number;
+  size: number;
+}

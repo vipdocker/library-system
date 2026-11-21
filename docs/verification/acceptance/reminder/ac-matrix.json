@@ -1,0 +1,301 @@
+{
+  "taskId": "lib-borrow-reminder-p1",
+  "acceptanceTaskId": "REM-ACC",
+  "definition": "增量AC/DoD v1.1(reminder-increment.md SHA c0c38f35…)＋基础AC/DoD v1(ac-dod.md)＋approval-record §4–4.3(SHA 4b70c32a…)",
+  "candidateId": "REM-INT-v1.5-r3",
+  "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+  "rows": [
+    {
+      "id": "AC-REM-01",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV/ACC",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "默认PT1H实例造数→改期→PT1S重启补扫；活体将D-4借阅移入D-3观察连续扫描",
+      "expected": "D-3恰1条含书名/条码/应还日；D-4及更早不生成；D-2..D补1条；D+1不补到期前提醒",
+      "actual": "[PASS] 停机恢复补扫矩阵(AC-REM-01/02核心): loan11无通知;12/13/14/15=DUE_SOON;16=seq1;17/19=seq2;18=seq3;20/21/22=seq1(reader8停用);后续20+次扫描inserted=0; [PASS] AC-REM-01 活体D-4→D-3扫描: before=0; after4s=[DUE_SOON|2026-11-23|0]; after10s_count=1",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/notifications-after-catchup.txt",
+        "dev-pt1s.log",
+        "sqlite own DB + dev-pt1s.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": ""
+    },
+    {
+      "id": "AC-REM-02",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "补扫后核对D0/D+1/D+8/D+10/D+15通知seq；归还后8s观察",
+      "expected": "D当天无逾期；D+1/8/15新周期每期最多1条；停机只补当前；归还后不再生成",
+      "actual": "[PASS] 停机恢复补扫矩阵(AC-REM-01/02核心): loan11无通知;12/13/14/15=DUE_SOON;16=seq1;17/19=seq2;18=seq3;20/21/22=seq1(reader8停用);后续20+次扫描inserted=0; [PASS] AC-REM-05/规则6 归还后不新增(有界8s): pre=[20|2 | 21|2] post=[20|2 | 21|2]",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/notifications-after-catchup.txt",
+        "dev-pt1s.log",
+        "sqlite + dev-pt1s.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "ACC补充独立验证；UTC16:00边界与100天周期由同候选集成T(ReminderApiTest.dateBoundary/overdueCycle)及评审静态推导覆盖，本轮未重跑该单元测试"
+    },
+    {
+      "id": "AC-REM-03",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "PT1S连续扫描计数；重启补扫；外部BEGIN IMMEDIATE真实写锁制造DB_BUSY",
+      "expected": "重复/重启不重复；busy可观察记录并后续重试；不破坏正常接口",
+      "actual": "[PASS] 停机恢复补扫矩阵(AC-REM-01/02核心): loan11无通知;12/13/14/15=DUE_SOON;16=seq1;17/19=seq2;18=seq3;20/21/22=seq1(reader8停用);后续20+次扫描inserted=0; [PASS] AC-REM-03 扫描DB_BUSY可观察: busy_log_lines=3; [PASS] AC-REM-03 后续扫描恢复: last_scan=reminder.scan date=2026-11-20 candidates=11 inserted=0",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/notifications-after-catchup.txt",
+        "dev-pt1s.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dev-pt1s.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "ACC补充独立验证(真实锁)；8独立连接并发×3由同候选T证据覆盖；WAL读不受写锁影响为正确行为(首测FAIL系脚本预期错误,已更正)"
+    },
+    {
+      "id": "AC-REM-04",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/ACC",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "ADMIN流通柜台UI续借RENEW借阅→核对旧通知id/readAt/当前应还日→改期进入新D-2窗口→读者UI查看历史提示",
+      "expected": "续借+30重算；旧通知保留不自动已读；显示当前状态/应还日；原AC-LOAN-05不变",
+      "actual": "[PASS] AC-REM-04/LOAN-05 ADMIN续借+30: msg=续借成功：《验收图书RENEW-qwnwy4》应还日顺延至 2026-12-23; dueDate=2026-12-23; renewCount=1; [PASS] AC-REM-04 旧通知保留/不自动已读/当前应还日: db_before=[6|1795145985792|2026-11-23] after=[6|1795145985792|2026-11-23]; api_currentDue=['2026-12-23']; readAt=[True]; [PASS] AC-REM-04 历史通知提示(UI): 调整提示=True; 当前应还日=True; [PASS] AC-REM-04 续借后按新应还日重算: notifications=[2026-11-23|0 | 2026-11-22|0]",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b17-renew-success.png",
+        "sqlite + API",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b18-renewed-historical-notice.png",
+        "sqlite + dev-pt1s.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": ""
+    },
+    {
+      "id": "AC-REM-05",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "API按ID归还+UI按条码归还后8秒(约8次扫描)通知计数对比",
+      "expected": "归还提交后不再新增；不死锁；原AC-LOAN-04不变",
+      "actual": "[PASS] AC-DUN-03 按借阅号归还→结案: return=200; status=CLOSED; closedAt=2026-11-20T03:51:23.113Z; db_returned_at=1795146683113; equal=True; reason=RETURNED; records_kept=1; [PASS] AC-DUN-03/LOAN-04 条码归还(UI)→结案: ui归还反馈=True; status=CLOSED; closedAt=2026-11-20T03:51:24.477Z; db=1795146684477; equal=True; reason=RETURNED; [PASS] AC-REM-05/规则6 归还后不新增(有界8s): pre=[20|2 | 21|2] post=[20|2 | 21|2]",
+      "result": "PASS",
+      "evidence": [
+        "API + sqlite own DB",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b19-return-barcode-success.png",
+        "sqlite + dev-pt1s.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "ACC补充独立验证；returnWins/scanWins两种提交顺序并发由同候选T证据覆盖"
+    },
+    {
+      "id": "AC-REM-06",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "默认实例5分钟有界观察仅启动补扫1次；源码默认PT1H；启动日志seed先于scan；停用读者d通知生成+启用后可见",
+      "expected": "默认true/3/7/PT1H/true；非法值启动失败；test不扫描；启动补扫在种子后",
+      "actual": "[PASS] 生产默认扫描间隔观察(有界): scan_lines=1; ['reminder.scan date=2026-11-20 candidates=1 inserted=1']; 窗口=2026-11-20T11:29:57+08至2026-11-20T03:35:03.042551+00:00(约5min); [PASS] 停用读者登录拒绝: 401:{\"code\":\"AUTH_ACCOUNT_DISABLED\",\"message\":\"账号已停用\",\"status\":401,\"path\":\"/api/auth/login\",\"timestamp\":; [PASS] 规则6 停用期间生成+启用后可见: 书名可见=True",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dev-default.log",
+        "API",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b05-disabled-reader-reenabled-inbox.png"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "ACC补充独立验证默认值/启动顺序/停用读者；8种非法配置启动失败由同候选T(ReminderConfigurationTest)覆盖，本轮未重跑"
+    },
+    {
+      "id": "AC-NTF-01",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/ACC",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "读者a/b真实UI收件箱：角标、仅未读、单条已读+API幂等、全部已读、切页刷新、空闲25s网络观察",
+      "expected": "本人隔离分页降序；未读数准确；单条幂等/全部已读；角标事件刷新无后台轮询",
+      "actual": "[PASS] AC-NTF-01 收件箱内容/角标: badge=未读提醒 5 条; 书名/条码/应还日可见=True; 当前应还日字样=True; 状态字样=False; [PASS] AC-NTF-01 全部已读: read-all=200:{\"updated\":0}; badge=未读提醒 0 条; unread={'unreadCount': 0}; [PASS] AC-NTF-01 无后台轮询(有界25s): notification_requests=0 urls=[]; [PASS] AC-NTF-01/REM-02 收件箱字段(读者b): badge=未读提醒 4 条; 书名=True; 条码=True; 当前应还日=True; 当前状态逾期未还=True; [PASS] AC-NTF-01 单条已读+幂等(重测): btns=4; badge_after=未读提醒 3 条; repeat=204; readAt 1795146101940->1795146101940; [PASS] AC-NTF-01 仅未读过滤+分页形状: totalItems=3; keys=['items', 'page', 'size', 'totalItems', 'totalPages']; [PASS] AC-NTF-01 切换页面刷新角标: reqs=1",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b01-reader-a-inbox-badge.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b02-reader-a-inbox-list.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b03-reader-a-all-read.png",
+        "network observation 25s",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b07-reader-b-inbox.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b08-reader-b-single-read.png",
+        "API",
+        "network"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "首测单条已读FAIL为脚本子串定位误点全部已读，非产品缺陷，exact定位重测通过"
+    },
+    {
+      "id": "AC-NTF-02",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "b读a通知、readerId参数、ADMIN GET、匿名GET/POST(有效CSRF)、缺/错CSRF POST",
+      "expected": "IDOR404数据不变；readerId不越权；ADMIN403匿名401；缺错CSRF403无变化",
+      "actual": "[PASS] AC-NTF-02 IDOR(b读a通知): 404:NOTIFICATION_NOT_FOUND; read_at 1795145985792->1795145985792; [PASS] AC-NTF-02 readerId不越权: ids=[10, 9, 8, 7]; own=10,9,8,7; [PASS] AC-NTF-02 缺/错CSRF: 403:CSRF_INVALID / 403:CSRF_INVALID; [FAIL] AC-NTF-02 ADMIN403/匿名401: admin=403; anon_get=401; anon_post=403; [PASS] AC-NTF-02 匿名401(有效CSRF重测): post=401:AUTH_REQUIRED; get=401:AUTH_REQUIRED",
+      "result": "PASS",
+      "evidence": [
+        "API+sqlite",
+        "API"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "ACC补充独立验证；匿名带错token先403 CSRF_INVALID符合契约优先级(首测预期错误已更正)"
+    },
+    {
+      "id": "AC-NTF-03",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV/ACC",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "读者收件箱/登记弹窗文案检查；README§6.1核对；读者侧通知内容核对无备注",
+      "expected": "页面与README说明登录触达；已读非离线送达；无外发；电话仅记录",
+      "actual": "[PASS] AC-DUN-01 备注边界/隔离: null=True; len500=500; trim=带空白备注-应去首尾; 通知无备注=True; 通知样例=您借阅的《验收图书O1-qwnwy4》（条码：C00000030），应还日为 2026-11-19，图书馆提醒您及时归还。; [PASS] AC-DUN-01/NTF-03 读者侧固定催还通知: badge=未读提醒 8 条; 催还=True; 私密泄漏=False; 500字泄漏=False; [PASS] AC-NTF-03 登录触达说明(页面): 送达/触达字样=True",
+      "result": "PASS",
+      "evidence": [
+        "sqlite own DB",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b16-reader-b-dunning-notices.png"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "无外发服务/依赖由同候选评审DOD-R3结论+集成Q静态检查覆盖"
+    },
+    {
+      "id": "AC-DUN-01",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV/ACC",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "ADMIN逾期报表UI四方式登记(空备注/500字/去空白/私密备注)；501字前端拦截；API非法method/501字；真实写锁503+显式重试；读者侧核对固定通知",
+      "expected": "四方式201记录经办人；≤500备注仅管理员；同事务固定通知无备注；非法400；无外发",
+      "actual": "[PASS] AC-DUN-01/UI-07 501字前端校验: 校验提示=True; posts=0; [PASS] AC-DUN-01 四方式UI登记201: success=[True, True, True, True]; records=16|PHONE|<NULL>|1|6201\n17|IN_PERSON|验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验验; [PASS] AC-DUN-01 备注边界/隔离: null=True; len500=500; trim=带空白备注-应去首尾; 通知无备注=True; 通知样例=您借阅的《验收图书O1-qwnwy4》（条码：C00000030），应还日为 2026-11-19，图书馆提醒您及时归还。; [PASS] AC-DUN-01/NTF-03 读者侧固定催还通知: badge=未读提醒 8 条; 催还=True; 私密泄漏=False; 500字泄漏=False; [PASS] AC-DUN-01/02 非法/未逾期/不存在: SMS=400:VALIDATION_FAILED; 501=400:VALIDATION_FAILED; 未逾期=409:LOAN_NOT_OVERDUE; 不存在=404:LOAN_NOT_FOUND; count=5; [PASS] AC-DUN-01 催还CSRF/匿名: missing=403:CSRF_INVALID; wrong=403:CSRF_INVALID; anon=401:AUTH_REQUIRED; count=5; [PASS] AC-UI-07/DUN-01 真实DB_BUSY 503: 503_responses=[(503, 'http://localhost:15199/api/loans/19/dunning-records')]; alert=True; 繁忙=True; note_retained=True; count=7; [PASS] AC-UI-07 失败不自动重试(有界6s): posts_before=1 after=1; [PASS] AC-DUN-01/UI-07 释放后显式重试201: success=True; count 7->8",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b11-note-501-validation.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b12-dunning-phone-success.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b13-dunning-other-success.png",
+        "sqlite",
+        "sqlite own DB",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b16-reader-b-dunning-notices.png",
+        "API+sqlite",
+        "API",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b24-dunning-503-retained-input.png",
+        "network observation",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b25-dunning-explicit-retry-success.png"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": ""
+    },
+    {
+      "id": "AC-DUN-02",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "API不存在99999/未逾期loan12/已还loan20,21/READER调用/匿名",
+      "expected": "404/409/409/403；失败无记录通知；读者403",
+      "actual": "[PASS] AC-DUN-02 读者催还403: 403:FORBIDDEN; count=0; [PASS] AC-DUN-01/02 非法/未逾期/不存在: SMS=400:VALIDATION_FAILED; 501=400:VALIDATION_FAILED; 未逾期=409:LOAN_NOT_OVERDUE; 不存在=404:LOAN_NOT_FOUND; count=5; [PASS] AC-DUN-03 结案后登记409: id=409:LOAN_ALREADY_RETURNED; barcode=409:LOAN_ALREADY_RETURNED; count=7",
+      "result": "PASS",
+      "evidence": [
+        "API",
+        "API+sqlite"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "ACC补充独立验证"
+    },
+    {
+      "id": "AC-DUN-03",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV/ACC",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "先对RETID/RETBAR真实登记→API按ID归还+UI按条码归还→案件/DB严格时间对比→结案后登记",
+      "expected": "两路径CLOSED；closedAt==returnedAt；RETURNED；结案后409；并发无漂移",
+      "actual": "[PASS] AC-DUN-03 按借阅号归还→结案: return=200; status=CLOSED; closedAt=2026-11-20T03:51:23.113Z; db_returned_at=1795146683113; equal=True; reason=RETURNED; records_kept=1; [PASS] AC-DUN-03/LOAN-04 条码归还(UI)→结案: ui归还反馈=True; status=CLOSED; closedAt=2026-11-20T03:51:24.477Z; db=1795146684477; equal=True; reason=RETURNED; [PASS] AC-DUN-03 结案后登记409: id=409:LOAN_ALREADY_RETURNED; barcode=409:LOAN_ALREADY_RETURNED; count=7; [PASS] AC-DUN-04 已结案筛选/历史保留(UI): closed_cases=2; 结案时间=True; 原因已归还=True",
+      "result": "PASS",
+      "evidence": [
+        "API + sqlite own DB",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b19-return-barcode-success.png",
+        "API",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b21-closed-cases.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b22-closed-case-history.png"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "并发锁顺序无漂移由同候选T(DunningTransactionTest)覆盖，本轮未重跑并发单元测试"
+    },
+    {
+      "id": "AC-DUN-04",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/ACC",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "UI案件列表OPEN/CLOSED筛选、历史弹窗、API size2分页与排序、同案件二次登记ASC",
+      "expected": "单案件时间ASC历史；列表OPEN/CLOSED过滤分页",
+      "actual": "[PASS] AC-DUN-04 案件列表/历史UI: open_cases=4; 历史含备注仅管理员=True; 含私密备注=True; [PASS] AC-DUN-04 历史时间ASC: records=2; times=['2026-11-20T03:44:44.052Z', '2026-11-20T03:45:00.856Z']; status=OPEN; [PASS] AC-DUN-04 案件分页/排序: totalItems=4; totalPages=2; sort_desc=True; [PASS] AC-DUN-04 已结案筛选/历史保留(UI): closed_cases=2; 结案时间=True; 原因已归还=True",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b14-dunning-cases-open.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b15-dunning-history-modal.png",
+        "API",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b21-closed-cases.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b22-closed-case-history.png"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": ""
+    },
+    {
+      "id": "AC-UI-07",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV/ACC",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "空态/有数据/加载/错误重试(披露网络层模拟)/真实503中文/提交锁/501校验/390px三页",
+      "expected": "四态覆盖；503系统繁忙；禁重复提交；校验与中文错误码契约一致",
+      "actual": "[PASS] AC-UI-07 390px收件箱无横向溢出: scrollWidth=390; [PASS] AC-UI-07 催还页空态: 空态=True; [PASS] AC-DUN-01/UI-07 501字前端校验: 校验提示=True; posts=0; [PASS] AC-UI-07/DUN-01 真实DB_BUSY 503: 503_responses=[(503, 'http://localhost:15199/api/loans/19/dunning-records')]; alert=True; 繁忙=True; note_retained=True; count=7; [FAIL] AC-UI-07 列表错误态+重试(网络层模拟,披露): 错误文案=True; retry=0; [FAIL] AC-UI-07 列表错误态+重试(网络层模拟,披露): 错误文案=True; retry=0; [PASS] AC-UI-07 列表错误态+重试(网络层模拟,披露): 错误文案=True; retry=1; [PASS] AC-UI-07 错误态重试恢复: cases=6; [PASS] AC-UI-07 390px管理页无横向溢出: {'/admin/reports/overdue': 390, '/admin/dunning': 390}; [PASS] AC-UI-07 提交锁(挂起禁重复): confirm_disabled=True; cancel_disabled=True; [PASS] 提交锁后无重复记录: count=3",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b06-inbox-390px.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b10-dunning-empty.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b11-note-501-validation.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b24-dunning-503-retained-input.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b23-case-list-error-simulated.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b26-case-list-recovered.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b27*,b28*",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b36-submit-lock-pending.png",
+        "sqlite"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "列表GET错误态用披露的网络层模拟(真实写锁不阻塞WAL读)；真实DB_BUSY 503由真实SQLite写锁POST证明；加载态在真实慢查询/锁窗口可见"
+    },
+    {
+      "id": "AC-UI-05增量",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/ACC",
+      "preconditionsData": "本轮合成读者acc_a/b/c/d_qwnwy4+12本验收图书+12条借阅(loan11-22)；sqlite3仅改本轮新建借阅due_date/borrow_date制造D-4/D-3/D-2/D/D+1/8/10/15前置；未改种子reader2(loan2全程未还)",
+      "steps": "ADMIN/READER真实登录菜单核对；读者访问/admin/dunning；我的借阅无续借按钮",
+      "expected": "原菜单保留+我的提醒/催还记录；不开放其他角色菜单或自助续借",
+      "actual": "[PASS] ADMIN UI登录+菜单: url=http://localhost:15199/admin/dashboard; menu='仪表盘\\n图书检索\\n图书管理\\n分类管理\\n读者管理\\n流通柜台\\n借阅记录\\n逾期报表\\n催还记录\\n借阅统计\\n修改口令'; [PASS] ADMIN UI登录+菜单: url=http://localhost:15199/admin/dashboard; menu='仪表盘\\n图书检索\\n图书管理\\n分类管理\\n读者管理\\n流通柜台\\n借阅记录\\n逾期报表\\n催还记录\\n借阅统计\\n修改口令'; [PASS] AC-UI-05增量 读者菜单: menu='图书检索\\n我的借阅\\n5\\n我的提醒\\n我的资料\\n修改口令'; [PASS] AC-UI-05增量 读者访问管理路由403页: url=http://localhost:15199/403; [PASS] AC-UI-05增量 读者无自助续借: 续借按钮数=0",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/a01-admin-dashboard.png",
+        "menu text",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b04-reader-403-page.png",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder/b09-my-loans-no-renew.png"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "ADMIN布局不请求读者通知API由同候选F layout测试+评审覆盖"
+    }
+  ]
+}

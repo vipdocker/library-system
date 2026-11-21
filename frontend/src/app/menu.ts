@@ -3,6 +3,7 @@
 import type { ComponentType } from 'react';
 import {
   BarChartOutlined,
+  BellOutlined,
   BookOutlined,
   DashboardOutlined,
   FileTextOutlined,
@@ -27,6 +28,7 @@ export interface MenuEntry {
 const READER_MENU: MenuEntry[] = [
   { key: '/books', label: '图书检索', icon: SearchOutlined },
   { key: '/my/loans', label: '我的借阅', icon: ReadOutlined },
+  { key: '/my/notifications', label: '我的提醒', icon: BellOutlined },
   { key: '/my/profile', label: '我的资料', icon: UserOutlined },
   { key: '/account/password', label: '修改口令', icon: KeyOutlined },
 ];
@@ -40,6 +42,7 @@ const ADMIN_MENU: MenuEntry[] = [
   { key: '/admin/circulation', label: '流通柜台', icon: SwapOutlined },
   { key: '/admin/loans', label: '借阅记录', icon: FileTextOutlined },
   { key: '/admin/reports/overdue', label: '逾期报表', icon: WarningOutlined },
+  { key: '/admin/dunning', label: '催还记录', icon: FileTextOutlined },
   { key: '/admin/stats', label: '借阅统计', icon: BarChartOutlined },
   { key: '/account/password', label: '修改口令', icon: KeyOutlined },
 ];

@@ -1,0 +1,17 @@
+.notification-inbox { display: grid; gap: 20px; min-width: 0; }
+.notification-heading, .notification-item-heading, .notification-filter { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.notification-items { display: grid; gap: 16px; }
+.notification-item { padding: 20px; border: 1px solid #e7e2da; border-radius: 10px; overflow-wrap: anywhere; }
+.notification-unread { border-inline-start: 4px solid #315d5a; background: #fbfcfa; }
+.notification-current-state { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-block: 16px; }
+.notification-history { border-block-start: 1px solid #e7e2da; margin-block: 16px; padding-block-start: 12px; }
+.notification-metadata { display: flex; gap: 8px 20px; flex-wrap: wrap; color: #666; font-size: 13px; }
+.notification-metadata code { color: #354845; }
+.notification-pagination { justify-self: end; }
+@media (max-width: 600px) {
+  .notification-inbox { gap: 16px; }
+  .notification-item { padding: 12px; }
+  .notification-item-heading { align-items: flex-start; }
+  .notification-metadata { flex-direction: column; }
+  .notification-pagination { justify-self: start; }
+}

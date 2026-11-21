@@ -1,11 +1,12 @@
 # 图书馆管理系统（本地开发版）
 
-单机本地运行的图书馆管理系统首版：分类 / 图书 / 副本管理、读者管理、借书 / 还书 / 续借、检索、借阅统计与逾期报表。两个角色：管理员（ADMIN）与读者（READER）。
+单机本地运行的图书馆管理系统首版：分类 / 图书 / 副本管理、读者管理、借书 / 还书 / 续借、检索、借阅统计与逾期报表，以及持久化站内借阅提醒与管理员催还记录。两个角色：管理员（ADMIN）与读者（READER）。
 
 - 后端：Spring Boot 4.1（Java 21）+ Spring Data JPA + Flyway + SQLite（文件数据库）
 - 前端：Vite + React 19 + TypeScript + Ant Design + TanStack Query
 - 契约文档：`docs/design/solution-design.md`（design-v0.1-R1）、`docs/design/ac-dod.md`（AC/DoD v1）
-- 核验矩阵：`docs/verification/ac-dod-matrix.md`
+- 基础核验矩阵：`docs/verification/ac-dod-matrix.md`（历史证据）
+- 借阅提醒增量契约：`docs/design/reminder-increment.md`（AC/DoD v1.1、reminder-plan-v1.5）；本次矩阵：`docs/verification/reminder-ac-dod-matrix.md`，未提交候选快照：`docs/verification/reminder-candidate-snapshot.txt`。开发自测不代表独立评审、验收或上线通过。
 
 > **非目标（首版不做）**：预约排队、罚金、部署 / 发布 / 运维、SSO 或第三方登录、邮件和短信、多馆 / 多租户、原生 App、读者自助注册、多管理员管理、CSV / Excel 导出、登录限流和验证码、HTTPS。系统只在本机运行。
 
@@ -80,7 +81,13 @@ mvn -f backend/pom.xml verify                 # 后端全部单元/集成/并发
 /opt/homebrew/bin/npm --prefix frontend run e2e      # Playwright chromium headless
 ```
 
-E2E 使用**独立端口 18096 / 15196 和临时数据库**（Playwright webServer 自动启动），不影响开发数据库；**不要与 `dev.sh` 同时运行**。测试一律使用临时数据库，不会写 `backend/data/library.db`。
+E2E 使用**独立端口 18096 / 15196 和系统临时目录数据库**（Playwright webServer 自动启动），不影响开发数据库；**不要与 `dev.sh` 同时运行**。测试一律使用临时数据库，不会写 `backend/data/library.db`。标准命令包含原冒烟与借阅提醒回归；Playwright **仅在后端 E2E 子进程**设置 `LIB_REMINDER_SCANINTERVAL=PT1S`，无需手工扫描参数，生产默认仍为 `PT1H`，test profile 禁用自动扫描。临时 E2E 库可能保留用于复现，不要把它当成开发库。
+
+生产依赖审计（不含开发依赖，不替代代码安全评审）：
+
+```bash
+/opt/homebrew/bin/npm --prefix frontend audit --omit=dev --audit-level=high
+```
 
 ## 5. 端口与环境变量
 
@@ -111,6 +118,27 @@ E2E 使用**独立端口 18096 / 15196 和临时数据库**（Playwright webServ
 
 修改环境变量后重启后端即生效（阈值必须 ≥ 1，`max-renewals` 可以为 0，非法配置会启动失败）。
 
+### 6.1 借阅提醒配置与规则
+
+| 配置键 | 默认值 | 环境变量（Spring relaxed binding） |
+|---|---|---|
+| `lib.reminder.enabled` | `true` | `LIB_REMINDER_ENABLED` |
+| `lib.reminder.due-soon-days` | `3` | `LIB_REMINDER_DUESOONDAYS` |
+| `lib.reminder.overdue-repeat-days` | `7` | `LIB_REMINDER_OVERDUEREPEATDAYS` |
+| `lib.reminder.scan-interval` | `PT1H`（一小时） | `LIB_REMINDER_SCANINTERVAL` |
+| `lib.reminder.scan-on-startup` | `true` | `LIB_REMINDER_SCANONSTARTUP` |
+
+天数必须 ≥ 1；扫描间隔为正数 ISO-8601 Duration，至少可表示为 1 毫秒，非法配置启动失败（即使禁用扫描也校验）。启动补扫在演示数据提交之后进行；test profile 关闭调度及启动补扫。
+
+- Asia/Shanghai 应还日 D 当天仍按期。默认 D-3 生成一次到期提醒；错过扫描时 D-2 到 D 首次补发一次，D+1 不补到期前提醒。
+- 逾期第 1 / 8 / 15 天进入新周期，每期最多一条；停机恢复只补当前周期，不补历史周期。重复扫描 / 重启使用数据库唯一键去重；数据库繁忙记录 `reminder.scan.busy`，后续扫描再尝试。
+- 续借按新应还日重算，旧通知及已读状态保留；通知显示生成时应还日、当前应还日与当前借阅状态。归还后停止新增自动提醒，已有通知保留。停用读者仍生成通知，重新启用并登录后可查看。
+- 读者“我的提醒”支持分页、仅看未读、单条 / 全部标已读；角标在打开 / 切换页面、标记已读时刷新，**没有后台角标轮询**。
+- 管理员从逾期报表“登记催还”记录电话 / 当面 / 站内 / 其他方式，备注可空、最多 500 字，仅管理员可见。登记在同一事务中生成固定站内通知，不包含备注。催还仅限逾期未还借阅；“催还记录”页查看历史与未结案 / 已结案案件。按借阅号或条码归还均自动结案，结案时间等于归还时间，历史保留。
+- **站内提醒仅能触达登录系统的读者**；已读仅表示读者在系统里标记过，不证明离线送达。系统不发送短信、邮件或电话；“电话”只是管理员记录已采用的人工方式，不代表系统已拨打电话。登记失败（包括 503）需用户显式重试，系统不自动重试催还提交。
+
+增量冒烟：使用下节临时库启动 → 管理员查看 reader2 的逾期报表并登记一次催还（可留空备注）→ “催还记录”查看未结案历史 → 退出后 reader2 登录“我的提醒”，确认逾期 / 催还通知与未读角标，标已读 → 管理员按该条码归还 → “催还记录”筛选已结案，读者旧通知显示已归还。此操作会改变所选库，**只在一次性临时库执行，不在现有开发库操作演示借阅**。
+
 ## 7. 默认账号（仅用于本地开发，勿用于任何真实环境）
 
 | 账号 | 口令 | 角色 / 状态 |
@@ -132,13 +160,22 @@ bash scripts/reset-db.sh          # 交互确认后删除
 bash scripts/reset-db.sh --yes    # 跳过确认
 ```
 
-下次启动会自动重建数据库、完成迁移并重新写入演示数据。也可以用 `LIB_DB_PATH=/tmp/xxx.db bash scripts/dev.sh` 在不动开发库的情况下开一个全新实例。
+下次启动会自动重建数据库、完成迁移并重新写入演示数据。也可以用下面的隔离启动方式在不动开发库的情况下开一个全新实例；先确认 18097 / 15197 空闲（若占用则选其它端口）。
+
+```bash
+# 系统临时目录，无联网安装；需先按安装节准备好既有依赖
+REMINDER_TMP=$(mktemp -d "${TMPDIR:-/tmp}/library-reminder.XXXXXX")
+LIB_DB_PATH="$REMINDER_TMP/library.db" SERVER_PORT=18097 FRONTEND_PORT=15197 bash scripts/dev.sh
+# 浏览器 http://localhost:15197；Ctrl-C 停止自己的服务，保留临时库用于复验
+```
+
+本功能仅追加 `V2__reminders_dunning.sql`（通知与催还记录），**V1 不修改**。空库自动依次迁移 V1 / V2；已有 V1 数据库启动时会自动应用 V2。升级任何需要保留的数据前先停服务并备份，优先在副本验证迁移；本轮开发验证只使用临时库，**不迁移、重置或删除现有开发库**。迁移不可用重跑旧 V1 或删除数据来代替。
 
 ## 9. 已知限制
 
 - **没有登录限流 / 验证码**：可能被暴力破解；首版只在本机运行，作为已接受的限制。
 - **没有 HTTPS**：仅本机 http 访问，不做部署。
-- **前端主 chunk 约 898KB**：构建时有体积告警（不是错误），首版不做代码分割优化（I-06）。
+- **前端主 chunk 约 928KB**（本次构建 927.80 kB）：仍有大于 500 kB 的体积告警（不是错误），本次不做无关代码分割优化（I-06）。
 - **读者被停用后，其已登录会话在过期前仍可访问部分接口**：重新登录会被拒绝、借书 / 续借会被拒绝（满足方案最低要求）；是否加强为即时踢出由评审裁量（I-07）。
 - **`formErrors.ts` 在 catalog 与 readers 两个 feature 中各有一份**：受任务写入范围限制形成的重复，属技术债务，待后续合并到共享层（I-04）。
 - **单连接数据库池**：SQLite 同一时间只允许一个写者，Hikari 池大小为 1，多人同时使用会排队；本地单机场景可接受。**不要**在不改用其他并发方案的情况下调大连接池。
@@ -147,7 +184,7 @@ bash scripts/reset-db.sh --yes    # 跳过确认
 ## 10. 目录速览
 
 ```
-backend/    Spring Boot 后端（Maven；src/main/resources/db/migration 为 Flyway 迁移，只有 V1）
+backend/    Spring Boot 后端（Maven；Flyway V1 基础表 / V2 站内提醒与催还表）
 frontend/   React 前端（Vite；e2e/ 为 Playwright 冒烟用例）
 scripts/    env.sh / dev.sh / test-all.sh / reset-db.sh（一律用 bash 运行）
 docs/design/        已批准的设计契约与 AC/DoD（只读）

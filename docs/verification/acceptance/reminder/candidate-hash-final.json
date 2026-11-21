@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-11-20T04:04:21.630070+00:00",
+  "phase": "final",
+  "candidateId": "REM-INT-v1.5-r3",
+  "total": 330,
+  "matched": 330,
+  "mismatches": [],
+  "aggregateSha256": "49aaedaa81fe65bbd25b95b37e1ebf931d5a1ee594a404ebde2e3ec98e8e9124",
+  "expectedAggregate": "49aaedaa81fe65bbd25b95b37e1ebf931d5a1ee594a404ebde2e3ec98e8e9124",
+  "aggregateMatch": true,
+  "snapshotFileSha256": "c5825024823dd72b27ef9b53fe0b92f8d25c58c705081033eb059373a72cf4fd"
+}

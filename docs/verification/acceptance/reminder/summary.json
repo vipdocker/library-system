@@ -1,0 +1,129 @@
+{
+  "taskId": "lib-borrow-reminder-p1",
+  "acceptanceTaskId": "REM-ACC",
+  "operation": "accept",
+  "planVersion": "reminder-plan-v1.5",
+  "dispatchRound": 1,
+  "status": "PASS",
+  "completedAt": "2026-11-20T04:04:07.293538+00:00",
+  "scope": "首期借阅提醒增量独立本机验收（AC/DoD v1.1到期必需项＋基础DoD独立判断项＋相邻回归）；终点不含发布",
+  "candidate": {
+    "candidateId": "REM-INT-v1.5-r3",
+    "HEAD": "6c7943278686e3e99a3d7dc3b497e1879b049587＋未提交候选",
+    "snapshotPath": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/reminder-candidate-snapshot.txt",
+    "snapshotSha256": "c5825024823dd72b27ef9b53fe0b92f8d25c58c705081033eb059373a72cf4fd",
+    "sourceFiles": 330,
+    "aggregateSha256": "49aaedaa81fe65bbd25b95b37e1ebf931d5a1ee594a404ebde2e3ec98e8e9124",
+    "preCheck": "330/330匹配",
+    "postCheck": "330/330匹配",
+    "drift": "无；验收写入仅在授权证据目录，不属于sourceFiles"
+  },
+  "definitions": {
+    "increment": "docs/design/reminder-increment.md v1.1 SHA c0c38f35f3ca6e78f89294e4838f67538ef181293567855b2de00d9409ae1ede",
+    "approval": "docs/design/approval-record.md §4–4.3 SHA 4b70c32ac2309969e1be5bdcc15433ceb582241f59c3fc330b69b25debb583cc",
+    "base": "docs/design/ac-dod.md v1＋§5菜单增量；design-v0.1-R1；README",
+    "integrationMatrix": "docs/verification/reminder-ac-dod-matrix.md SHA dd507e9ab1525308050da434d5d990622cd162f13e23dc0f9145d1440b6ba4be（未修改）"
+  },
+  "environment": {
+    "ports": {
+      "backend": 18099,
+      "frontend": 15199,
+      "e2e": "18096/15196(标准E2E自带)"
+    },
+    "tempDb": "/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db（保留作复验，含-wal/-shm）",
+    "scanInterval": "验收进程PT1S（授权的环境覆盖，已披露）；生产默认PT1H经源码ReminderProperties/@Scheduled＋默认实例约5分钟有界观察仅启动补扫1次核实",
+    "browser": "Python Playwright chromium 145.0.7632.6 headless（真实浏览器）；标准E2E为项目Playwright 1.65.0",
+    "timezone": "Asia/Shanghai（宿主+08:00）",
+    "devDb": "backend/data/library.db未触碰",
+    "accounts": "admin/reader1/reader2种子＋本轮合成acc_a/b/c/d_qwnwy4、acc_reg_*（口令不在报告披露）"
+  },
+  "execution": {
+    "phases": [
+      "A默认配置启动/造数/改期/登出守卫/端口占用拒绝",
+      "B1收件箱/角标/已读/无轮询/安全矩阵/停用读者/390px",
+      "B2四方式催还UI/备注边界/台账/固定通知无备注/错误矩阵",
+      "B3续借重算/ID与条码归还结案/归还后不新增",
+      "B4真实SQLite写锁DB_BUSY 503+显式重试/扫描busy恢复/提交锁/错误态(披露模拟)/390px管理页",
+      "B5相邻回归(reader1检索/我的借阅/仪表盘/统计/逾期种子/UI借还)+标准E2E 13/13独立重跑",
+      "真实PTY Ctrl-C清理，两端口释放，无残留进程"
+    ],
+    "dataPrep": "sqlite3仅按ID修改本轮新建借阅due_date/borrow_date；通知/催还/结案全部由真实服务生成；种子reader2 loan2全程未还未改"
+  },
+  "acMatrix": {
+    "file": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/ac-matrix.json",
+    "rows": 15,
+    "results": {
+      "PASS": 15
+    }
+  },
+  "dodMatrix": {
+    "file": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dod-matrix.json",
+    "rows": 18,
+    "results": {
+      "NOT_APPLICABLE": 1,
+      "PASS": 17
+    }
+  },
+  "defects": {
+    "product": 0,
+    "blocker": 0,
+    "critical": 0,
+    "major": 0,
+    "harnessErrorsDisclosed": [
+      "B1单条已读首测FAIL：get_by_label子串匹配误点全部已读→exact重测PASS",
+      "B1匿名POST首测403：带错token符合契约CSRF优先→有效CSRF重测401 PASS",
+      "B4列表错误态首测FAIL：写锁不阻塞WAL读属正确行为→披露网络层模拟+antd空格标签修正后PASS",
+      "UI登录一次瞬时未跳转(无错误响应捕获,重试成功)；ui_login已加断言；未确认为产品缺陷",
+      "dev.sh真实Ctrl-C后exit=1(监控循环与INT trap竞争)而非130；两进程退出/端口释放满足DoD文字，披露备查"
+    ],
+    "reviewMinorObserved": "M1启动非busy fail-fast(本轮启动正常未触发)；M2 E2E硬编码/opt/local/bin/sqlite3(本机存在,13/13通过,换机风险保留)；M3/M4理论边界未触发"
+  },
+  "notRunOrReferenced": [
+    "UTC16:00边界/100天周期/8连接并发/非法配置启动失败/returnWins-scanWins顺序：IMPL/REV责任，同候选B/T证据+评审覆盖，本轮未重跑单元测试（已披露于对应AC行note）",
+    "JDK17负向：历史未安装未测（JDK8预期拒绝已由集成X实测）",
+    "离线送达/外发：非目标，不测",
+    "全量后端/前端套件：按派发不重跑，引用同候选新鲜证据并核对计数611/397/13"
+  ],
+  "cleanup": {
+    "processes": "全部自有进程已停止(dev.sh两实例/pty runner/lock holders/E2E webServer)；18099/15199/18096/15196均释放",
+    "retained": [
+      "/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG（临时DB+证据复验用）",
+      "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder",
+      "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder",
+      "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/e2e（标准E2E正常产物）",
+      "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/playwright-report"
+    ],
+    "residue": "首次脚本失败遗留合成读者acc_a_8jbrpe(无借阅)保留于临时库；lock_holder探针表已随事务回滚",
+    "failures": "无"
+  },
+  "reviewReference": {
+    "session": "8de00986-f9b7-5c68-a1a8-dc049c2b4c52",
+    "turn": "7d2321d2-5183-5dfc-a805-fef78c22c94e",
+    "verifiedVia": "mcp builtin read_chat_session实际读取",
+    "verdict": "PASS，同候选330/330，Blocker0/Critical0/Major0/Minor4"
+  },
+  "evidenceDir": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder",
+  "screenshotsDir": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder",
+  "keyEvidence": [
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/candidate-hash-pre.json",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/candidate-hash-post.json",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/observations.jsonl",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/commands.log",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dev-default.log",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dev-pt1s.log",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/port-conflict.log",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/pty-runner.log",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/notifications-after-catchup.txt",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/counts-before-restart.txt",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/counts-after-restart.txt",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/standard-e2e-acceptance.log",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/data.json",
+    "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/browser-report.json"
+  ],
+  "skillsUsed": [
+    "webapp-testing（Playwright方法指引；实际用本机Python Playwright）"
+  ],
+  "newFilesPolicy": "全部新增文件仅在两个授权验收目录；不入候选source aggregate；未改源码/测试/产品配置/契约/README/集成矩阵/快照",
+  "nextResponsibility": "主会话（验收PASS不是发布许可；是否进入后续阶段由主会话与用户决定）",
+  "statement": "本PASS仅覆盖本次验收范围到期必需项；不构成整个任务完成声明或上线/发布授权"
+}

@@ -135,6 +135,8 @@ beforeEach(() => {
   vi.mocked(apiPatch).mockResolvedValue(undefined as never);
   vi.mocked(apiDelete).mockResolvedValue(undefined as never);
   vi.mocked(apiGet).mockImplementation(async (path: string) => {
+    if (path === '/api/notifications/me') return emptyPage as never;
+    if (path === '/api/notifications/me/unread-count') return { unreadCount: 0 } as never;
     if (path === '/api/categories') return [] as never;
     if (path === '/api/books') return emptyPage as never;
     const bookMatch = /^\/api\/books\/(\d+)$/.exec(path);
@@ -148,6 +150,7 @@ beforeEach(() => {
     if (path === '/api/stats/loans') return [] as never;
     if (path === '/api/stats/top-books') return [] as never;
     if (path === '/api/reports/overdue') return emptyPage as never;
+    if (path === '/api/dunning-cases') return emptyPage as never;
     throw new Error(`router.test: unexpected GET ${path}`);
   });
 });
@@ -200,6 +203,7 @@ describe('AC-AUTH-09 路由注册与守卫（设计 10.1 全表，真实页面�
     ['/books', '图书检索'],
     ['/books/5', '深入理解计算机系统'],
     ['/my/loans', '我的借阅'],
+    ['/my/notifications', '暂无提醒'],
     ['/my/profile', '我的资料'],
     ['/account/password', '修改口令'],
   ];
@@ -222,6 +226,33 @@ describe('AC-AUTH-09 路由注册与守卫（设计 10.1 全表，真实页面�
   it('ADMIN 访问 /my/loans → 403 页', async () => {
     renderRoute('/my/loans');
     expect(await screen.findByText('无权限访问该页面')).toBeInTheDocument();
+  });
+
+  it('AC-UI-05 v1.1：ADMIN 可达真实催还页并查询案件，不请求读者通知', async () => {
+    renderRoute('/admin/dunning');
+    expect(await screen.findByText('暂无催还案件')).toBeInTheDocument();
+    expect(apiGet).toHaveBeenCalledWith('/api/dunning-cases', { status: undefined, page: 0, size: 20 }, expect.objectContaining({ signal: expect.any(AbortSignal) }));
+    expect(apiGet).not.toHaveBeenCalledWith('/api/notifications/me', expect.anything(), expect.anything());
+    expect(vi.mocked(apiGet).mock.calls.some(([path]) => path.startsWith('/api/notifications'))).toBe(false);
+  });
+
+  it('AC-UI-05 v1.1：ADMIN 不可访问我的提醒，且不请求读者通知接口', async () => {
+    renderRoute('/my/notifications');
+    expect(await screen.findByText('无权限访问该页面')).toBeInTheDocument();
+    expect(vi.mocked(apiGet).mock.calls.some(([path]) => path.startsWith('/api/notifications'))).toBe(false);
+  });
+
+  it('AC-UI-05 v1.1：读者不可访问催还记录', async () => {
+    loginAs(reader);
+    renderRoute('/admin/dunning');
+    expect(await screen.findByText('无权限访问该页面')).toBeInTheDocument();
+  });
+
+  it('AC-NTF-01：未登录我的提醒跳转登录，不请求通知', async () => {
+    loginAs(null);
+    renderRoute('/my/notifications');
+    expect(await screen.findByText('欢迎回来')).toBeInTheDocument();
+    expect(vi.mocked(apiGet).mock.calls.some(([path]) => path.startsWith('/api/notifications'))).toBe(false);
   });
 
   it('未知路由 → 404 页', async () => {

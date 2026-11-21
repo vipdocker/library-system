@@ -137,3 +137,96 @@ export async function loginViaUi(page: Page, username: string, password: string)
   await page.goto('/login');
   await submitLogin(page, username, password);
 }
+
+// REM-E2E append-only helpers. No existing export or behavior is changed.
+import { execFileSync } from 'node:child_process';
+import { realpathSync } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
+export interface ReminderLoanFixture extends SeedBook, SeedReader {
+  loan: Loan;
+  dbPath: string;
+}
+const reminderFixtures = new Map<number, string>();
+
+/** Resolve only the DB actually opened by this run's dedicated backend listener.
+ * Never guess the newest tmp file: config is evaluated separately by workers.
+ * Fail closed if a dev DB or ambiguous listener is found.
+ */
+function liveReminderDatabase(): string {
+  const port = Number(process.env.E2E_BACKEND_PORT ?? 18096);
+  if (!Number.isSafeInteger(port) || port < 1 || port > 65535) throw new Error('Invalid E2E port');
+  const pids = execFileSync('/usr/sbin/lsof', ['-nP', `-iTCP:${port}`, '-sTCP:LISTEN', '-t'], { encoding: 'utf8' }).trim().split(/\s+/);
+  if (pids.length !== 1 || !/^\d+$/.test(pids[0])) throw new Error('Ambiguous E2E backend listener');
+  const files = execFileSync('/usr/sbin/lsof', ['-p', pids[0], '-Fn'], { encoding: 'utf8' }).split('\n');
+  const databases = [...new Set(files.filter(line => /^n.*\/library-e2e-\d+\.db$/.test(line)).map(line => realpathSync(line.slice(1))))];
+  if (databases.length !== 1 || path.dirname(databases[0]) !== realpathSync(os.tmpdir())) throw new Error('Refusing non-temporary E2E database');
+  return databases[0];
+}
+
+function fixtureSql(fixture: ReminderLoanFixture, sql: string): string {
+  if (reminderFixtures.get(fixture.loan.id) !== fixture.dbPath || liveReminderDatabase() !== fixture.dbPath) throw new Error('Refusing unowned fixture/database');
+  return execFileSync('/opt/local/bin/sqlite3', ['-batch', '-bail', '-cmd', '.timeout 5000', fixture.dbPath, sql], { encoding: 'utf8' }).trim();
+}
+
+/** Construct a new loan through real ADMIN APIs, then change ONLY its dates in
+ * the run's temp DB. Never return or alter reader2's seeded overdue borrowing.
+ * No notification/dunning row is inserted directly; the real scanner creates it.
+ */
+export async function seedReminderLoan(page: Page, dueInDays: number): Promise<ReminderLoanFixture> {
+  const book = await seedBook(page, 1);
+  const reader = await seedReader(page);
+  const loan = await seedLoan(page, reader.reader.cardNo, book.copies[0].barcode);
+  const fixture = { ...book, ...reader, loan, dbPath: liveReminderDatabase() };
+  reminderFixtures.set(loan.id, fixture.dbPath);
+  setReminderFixtureDueDate(fixture, addDays(shanghaiToday(), dueInDays));
+  return fixture;
+}
+
+export function setReminderFixtureDueDate(fixture: ReminderLoanFixture, dueDate: string): void {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dueDate) || addDays(dueDate, 0) !== dueDate) throw new Error('Invalid fixture date');
+  const borrowDate = addDays(dueDate, -30);
+  const borrowedAt = new Date(`${borrowDate}T00:00:00+08:00`).getTime();
+  // Only validated ISO dates/numeric IDs from owned API fixtures, never user input.
+  const changed = fixtureSql(fixture, `BEGIN IMMEDIATE;
+    UPDATE loan SET due_date='${dueDate}', borrow_date='${borrowDate}', borrowed_at=${borrowedAt}
+    WHERE id=${fixture.loan.id} AND reader_id=${fixture.reader.id} AND returned_at IS NULL;
+    SELECT changes(); COMMIT;`);
+  expect(changed, 'Only the new isolated loan may receive date fixture changes').toBe('1');
+  fixture.loan.dueDate = dueDate;
+  fixture.loan.borrowDate = borrowDate;
+}
+
+/** Read the persisted authoritative return instant, not a guessed UI timestamp. */
+export function reminderFixtureReturnedAt(fixture: ReminderLoanFixture): string {
+  const value = fixtureSql(fixture, `SELECT returned_at FROM loan WHERE id=${fixture.loan.id};`);
+  if (!/^\d+$/.test(value)) throw new Error('Fixture loan has not been returned');
+  return new Date(Number(value)).toISOString();
+}
+
+/** Raw POST for real permission/CSRF/validation assertions; never auto-retry writes. */
+export async function reminderPostResponse(page: Page, url: string, data?: unknown, csrf: 'valid' | 'missing' | 'wrong' = 'valid') {
+  const token = csrf === 'valid' ? await freshCsrfToken(page) : csrf === 'wrong' ? 'wrong-e2e-token' : undefined;
+  return page.request.post(url, { data, headers: token ? { 'X-XSRF-TOKEN': token } : {} });
+}
+
+/** Up to five DIFFERENT books for one new reader, respecting the approved loan
+ * limit. Borrow all at normal dates BEFORE making them overdue. This keeps the
+ * pagination fixtures small without crowding the original smoke reader list.
+ */
+export async function seedReminderLoanGroup(page: Page, count: number, dueInDays: number): Promise<ReminderLoanFixture[]> {
+  if (!Number.isInteger(count) || count < 1 || count > 5) throw new Error('Fixture group must respect the five-loan limit');
+  const reader = await seedReader(page);
+  const dbPath = liveReminderDatabase();
+  const fixtures: ReminderLoanFixture[] = [];
+  for (let index = 0; index < count; index += 1) {
+    const book = await seedBook(page, 1);
+    const loan = await seedLoan(page, reader.reader.cardNo, book.copies[0].barcode);
+    const fixture = { ...book, ...reader, loan, dbPath };
+    reminderFixtures.set(loan.id, dbPath);
+    fixtures.push(fixture);
+  }
+  for (const fixture of fixtures) setReminderFixtureDueDate(fixture, addDays(shanghaiToday(), dueInDays));
+  return fixtures;
+}

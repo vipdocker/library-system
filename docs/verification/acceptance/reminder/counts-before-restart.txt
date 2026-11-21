@@ -1,0 +1,5 @@
+books|24
+copies|36
+readers|8
+loans|22
+notifications|1

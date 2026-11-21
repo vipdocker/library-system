@@ -1,0 +1,296 @@
+{
+  "taskId": "lib-borrow-reminder-p1",
+  "acceptanceTaskId": "REM-ACC",
+  "definition": "增量AC/DoD v1.1(reminder-increment.md SHA c0c38f35…)＋基础AC/DoD v1(ac-dod.md)＋approval-record §4–4.3(SHA 4b70c32a…)",
+  "candidateId": "REM-INT-v1.5-r3",
+  "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+  "rows": [
+    {
+      "id": "DOD-R1",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV",
+      "expected": "V1不改；V2空库/旧库迁移成功；不用开发库",
+      "actual": "独立git diff HEAD确认V1/pom/package/lock零差异；本轮全新临时库真实启动V1→V2迁移成功(dev-default.log)；旧借阅库迁移由同候选ReminderMigrationTest覆盖；backend/data未触碰",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dev-default.log",
+        "git diff HEAD(空)",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/backend-verify.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用+独立启动观察"
+    },
+    {
+      "id": "DOD-R2",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/REV",
+      "expected": "保留既有测试全通过，不删/跳过/放宽",
+      "actual": "同候选证据核对：backend-verify.log Tests run: 611；frontend-test.log 40文件397 passed；standard-e2e.log 13 passed；修订披露于集成矩阵§8；本轮标准E2E重跑见DOD-05",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/backend-verify.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/frontend-test.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/standard-e2e.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用同候选证据，非代签"
+    },
+    {
+      "id": "DOD-R3",
+      "definitionVersion": "v1.1",
+      "responsibility": "REV",
+      "expected": "无外发/新依赖/REQUIRES_NEW；原借阅行为不变",
+      "actual": "独立评审会话8de00986实际读取：PASS，含无REQUIRES_NEW/外发/依赖结论；本轮相邻回归借还续借检索统计正常",
+      "result": "PASS",
+      "evidence": [
+        "mcp read_chat_session 8de00986 Turn7d2321d2",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/observations.jsonl(B5)"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用已执行独立评审"
+    },
+    {
+      "id": "DOD-R4",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/ACC",
+      "expected": "真实浏览器临时库覆盖到期/逾期/催还/结案+截图+边界失败",
+      "actual": "本轮Python Playwright真实chromium：四类行为+边界(501/500/空备注/IDOR/CSRF/403/409/404)+真实DB_BUSY失败路径+390px；30+截图；0 pageerror",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/test-results/acceptance-reminder",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/observations.jsonl",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/browser-report.json"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "独立验收实际执行"
+    },
+    {
+      "id": "DOD-R5",
+      "definitionVersion": "v1.1",
+      "responsibility": "IMPL/ACC",
+      "expected": "README配置限制+矩阵逐条完整",
+      "actual": "README§6.1配置/触达/DB安全已核对；集成矩阵定义/结果分离、候选绑定、证据索引完整；本验收另产出ac-matrix/dod-matrix不改原矩阵",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/README.md",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/reminder-ac-dod-matrix.md",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/ac-matrix.json",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dod-matrix.json"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": ""
+    },
+    {
+      "id": "DOD-01",
+      "definitionVersion": "v1",
+      "responsibility": "IMPL",
+      "expected": "空克隆JDK21 verify/Java8拒绝/npm ci/build",
+      "actual": "同候选K2真实git clone+329候选overlay：ci/verify611/build exit0；X JDK8 enforcer拒绝；证据文件存在已核对",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/clone-candidate-summary.json",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/clean-candidate-summary.json",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/java8-negative-confirmed.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用同候选证据，非代签"
+    },
+    {
+      "id": "DOD-02",
+      "definitionVersion": "v1",
+      "responsibility": "IMPL/ACCEPT",
+      "expected": "dev.sh≤120s/新库迁移/浏览器登录/Ctrl-C双退出/端口占用提示",
+      "actual": "独立实测：后端3.116s就绪+前端296ms；全新临时库V1/V2；真实双角色UI登录；第二实例占用18099明确拒绝exit1；真实PTY发送ETX后两端口释放、无残留进程(dev.sh exit=1系监控循环与INT trap竞争,清理完整,DoD文字满足)",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dev-default.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/port-conflict.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/pty-runner.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dev-pt1s.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "独立验收实际执行；exit code竞争已披露"
+    },
+    {
+      "id": "DOD-03",
+      "definitionVersion": "v1",
+      "responsibility": "IMPL",
+      "expected": "全量后端零失败/AC映射/JaCoCo",
+      "actual": "同候选B 611/0/0/0+JaCoCo+T三轮96；证据存在已核对",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/backend-verify.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/high-risk-run1.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/high-risk-run2.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/high-risk-run3.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用，非代签"
+    },
+    {
+      "id": "DOD-04",
+      "definitionVersion": "v1",
+      "responsibility": "IMPL",
+      "expected": "lint/typecheck/test/build零error",
+      "actual": "同候选F四项exit0(397测试)；chunk体积告警非错误保留",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/frontend-lint.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/frontend-typecheck.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/frontend-test.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/frontend-build.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用，非代签"
+    },
+    {
+      "id": "DOD-05",
+      "definitionVersion": "v1",
+      "responsibility": "IMPL/ACCEPT",
+      "expected": "标准E2E 7步冒烟chromium独立端口/临时库",
+      "actual": "本轮独立重跑标准npm --prefix frontend run e2e：13 passed，exit0",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/standard-e2e-acceptance.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/frontend/playwright-report/index.html"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "独立验收实际执行"
+    },
+    {
+      "id": "DOD-06",
+      "definitionVersion": "v1",
+      "responsibility": "IMPL/ACCEPT",
+      "expected": "dev管理员/演示读者/逾期种子；重启幂等；test不写种子",
+      "actual": "独立实测：admin/reader1/reader2种子登录正常；重启前后books24/copies36/readers8/loans22计数不变；loan2逾期未还且报表可见；test profile无种子由同候选ContextLoadsTest覆盖",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/counts-before-restart.txt",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/counts-after-restart.txt",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/observations.jsonl(B5)"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "独立+引用"
+    },
+    {
+      "id": "DOD-07",
+      "definitionVersion": "v1",
+      "responsibility": "IMPL/ACCEPT",
+      "expected": "README完整；验收人员只按README从零启动冒烟",
+      "actual": "本验收仅按README§3/§8隔离启动说明操作即完成启动与全部冒烟；使用既有依赖无安装；配置/账号/限制章节齐全",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/README.md",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/commands.log",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dev-default.log"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "独立验收实际执行"
+    },
+    {
+      "id": "DOD-08",
+      "definitionVersion": "v1",
+      "responsibility": "IMPL/REV",
+      "expected": "BCrypt/权限/CSRF/IDOR/脱敏/参数化/audit",
+      "actual": "同候选B安全测试+N audit found0+评审安全结论；本轮独立IDOR/CSRF/403/401/501/400实测全部符合",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/npm-audit.log",
+        "评审会话8de00986",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/observations.jsonl(B1/B2)"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用+独立补充"
+    },
+    {
+      "id": "DOD-09",
+      "definitionVersion": "v1",
+      "responsibility": "IMPL",
+      "expected": "逐条定义/阶段/实际/方法/执行者/证据/候选追溯",
+      "actual": "集成矩阵+快照绑定完整；本验收矩阵同样逐条完整",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/reminder-ac-dod-matrix.md",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/ac-matrix.json",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dod-matrix.json"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用+本验收产出"
+    },
+    {
+      "id": "DOD-10",
+      "definitionVersion": "v1",
+      "responsibility": "REV",
+      "expected": "无非目标/新依赖/REQUIRES_NEW；旧迁移未改",
+      "actual": "独立评审PASS(会话实际读取)；本轮git diff确认V1/pom/package/lock未改",
+      "result": "PASS",
+      "evidence": [
+        "评审会话8de00986 Turn7d2321d2",
+        "git diff HEAD(空)"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用已执行独立评审"
+    },
+    {
+      "id": "DOD-11",
+      "definitionVersion": "v1",
+      "responsibility": "REV",
+      "expected": "同候选独立评审PASS无未关闭Blocker/Critical",
+      "actual": "实际读取评审会话：PASS；330/330+aggregate一致；Blocker0/Critical0/Major0/Minor4非阻断",
+      "result": "PASS",
+      "evidence": [
+        "mcp read_chat_session 8de00986-f9b7-5c68-a1a8-dc049c2b4c52"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "引用已执行独立评审，候选同一"
+    },
+    {
+      "id": "DOD-12",
+      "definitionVersion": "v1",
+      "responsibility": "ACCEPT",
+      "expected": "同评审快照本机独立验收PASS",
+      "actual": "本验收与评审同一候选REM-INT-v1.5-r3(330/330 hash+aggregate验收前后一致)；全部到期必需AC/DoD独立实测或同候选证据核验通过；0产品缺陷；详见ac-matrix/dod-matrix/summary",
+      "result": "PASS",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/summary.json",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/ac-matrix.json",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/dod-matrix.json",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/candidate-hash-pre.json",
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/acceptance/reminder/candidate-hash-post.json"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "本验收结论；不是发布许可"
+    },
+    {
+      "id": "部署/发布",
+      "definitionVersion": "v1",
+      "responsibility": "—",
+      "expected": "交付终点不含发布",
+      "actual": "增量§2.12与README非目标明确排除部署/发布/生产操作",
+      "result": "NOT_APPLICABLE",
+      "evidence": [
+        "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/design/reminder-increment.md"
+      ],
+      "candidateId": "REM-INT-v1.5-r3",
+      "environment": "本机arm64 macOS(宿主25.6.0/Maven实报26.6.2差异保留)；Homebrew JDK21/Maven3.9.16/Node26.7.0/npm11.19.0；Python Playwright chromium 145.0.7632.6 headless(验收浏览器)；标准E2E用项目Playwright1.65.0；临时SQLite(WAL) /var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T//library-reminder-acc.YtPNIG/library.db；端口18099/15199；验收进程LIB_REMINDER_SCANINTERVAL=PT1S(仅验收环境,生产默认PT1H已另行核实)；业务时区Asia/Shanghai",
+      "note": "范围依据：批准终点=本机实现+评审+验收"
+    }
+  ]
+}

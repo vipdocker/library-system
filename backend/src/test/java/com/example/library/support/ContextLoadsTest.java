@@ -23,8 +23,13 @@ class ContextLoadsTest extends IntegrationTestBase {
                 "SELECT count(*) FROM sqlite_master WHERE type='table' AND name IN "
                         + "('app_user','reader','category','book','book_copy','loan')", Integer.class);
         assertThat(tables).isEqualTo(6);
-        Integer flywayApplied = jdbcTemplate.queryForObject(
-                "SELECT count(*) FROM flyway_schema_history WHERE success = 1", Integer.class);
-        assertThat(flywayApplied).isEqualTo(1);
+        java.util.List<String> reminderTables = jdbcTemplate.queryForList(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name IN "
+                        + "('notification','dunning_record') ORDER BY name", String.class);
+        assertThat(reminderTables).containsExactly("dunning_record", "notification");
+        java.util.List<String> flywayApplied = jdbcTemplate.queryForList(
+                "SELECT version FROM flyway_schema_history WHERE success = 1 ORDER BY installed_rank",
+                String.class);
+        assertThat(flywayApplied).containsExactly("1", "2");
     }
 }

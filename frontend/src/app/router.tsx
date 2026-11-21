@@ -31,6 +31,8 @@ const StatsPage = lazy(() => import('../features/stats/pages/StatsPage'));
 const OverdueReportPage = lazy(() => import('../features/stats/pages/OverdueReportPage'));
 
 const ChangePasswordPage = lazy(() => import('../features/account/pages/ChangePasswordPage'));
+const NotificationInboxPage = lazy(() => import('../features/notifications/pages/NotificationInboxPage'));
+const DunningCaseListPage = lazy(() => import('../features/dunning/pages/DunningCaseListPage'));
 
 export function AppRoutes() {
   return (
@@ -64,6 +66,7 @@ export function AppRoutes() {
               </RequireRole>
             }
           />
+          <Route path="my/notifications" element={<RequireRole role="READER"><NotificationInboxPage /></RequireRole>} />
           <Route path="account/password" element={<ChangePasswordPage />} />
           <Route path="admin" element={<RequireRole role="ADMIN" />}>
             <Route path="dashboard" element={<DashboardPage />} />
@@ -76,6 +79,7 @@ export function AppRoutes() {
             <Route path="circulation" element={<CirculationDeskPage />} />
             <Route path="loans" element={<AdminLoanListPage />} />
             <Route path="reports/overdue" element={<OverdueReportPage />} />
+            <Route path="dunning" element={<DunningCaseListPage />} />
             <Route path="stats" element={<StatsPage />} />
           </Route>
           <Route path="403" element={<ForbiddenPage />} />

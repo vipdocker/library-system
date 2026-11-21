@@ -1,0 +1,176 @@
+{
+  "suffix": "qwnwy4",
+  "today": "2026-11-20",
+  "readers": {
+    "a": {
+      "id": 5,
+      "cardNo": "R000005",
+      "name": "验收读者a-qwnwy4",
+      "username": "acc_a_qwnwy4"
+    },
+    "b": {
+      "id": 6,
+      "cardNo": "R000006",
+      "name": "验收读者b-qwnwy4",
+      "username": "acc_b_qwnwy4"
+    },
+    "c": {
+      "id": 7,
+      "cardNo": "R000007",
+      "name": "验收读者c-qwnwy4",
+      "username": "acc_c_qwnwy4"
+    },
+    "d": {
+      "id": 8,
+      "cardNo": "R000008",
+      "name": "验收读者d-qwnwy4",
+      "username": "acc_d_qwnwy4"
+    }
+  },
+  "loans": {
+    "D4": {
+      "loanId": 11,
+      "readerKey": "a",
+      "readerId": 5,
+      "cardNo": "R000005",
+      "username": "acc_a_qwnwy4",
+      "bookTitle": "验收图书D4-qwnwy4",
+      "bookId": 13,
+      "barcode": "C00000025",
+      "targetDue": "2026-11-24",
+      "offset": 4
+    },
+    "D3": {
+      "loanId": 12,
+      "readerKey": "a",
+      "readerId": 5,
+      "cardNo": "R000005",
+      "username": "acc_a_qwnwy4",
+      "bookTitle": "验收图书D3-qwnwy4",
+      "bookId": 14,
+      "barcode": "C00000026",
+      "targetDue": "2026-11-23",
+      "offset": 3
+    },
+    "D2": {
+      "loanId": 13,
+      "readerKey": "a",
+      "readerId": 5,
+      "cardNo": "R000005",
+      "username": "acc_a_qwnwy4",
+      "bookTitle": "验收图书D2-qwnwy4",
+      "bookId": 15,
+      "barcode": "C00000027",
+      "targetDue": "2026-11-22",
+      "offset": 2
+    },
+    "D0": {
+      "loanId": 14,
+      "readerKey": "a",
+      "readerId": 5,
+      "cardNo": "R000005",
+      "username": "acc_a_qwnwy4",
+      "bookTitle": "验收图书D0-qwnwy4",
+      "bookId": 16,
+      "barcode": "C00000028",
+      "targetDue": "2026-11-20",
+      "offset": 0
+    },
+    "RENEW": {
+      "loanId": 15,
+      "readerKey": "a",
+      "readerId": 5,
+      "cardNo": "R000005",
+      "username": "acc_a_qwnwy4",
+      "bookTitle": "验收图书RENEW-qwnwy4",
+      "bookId": 17,
+      "barcode": "C00000029",
+      "targetDue": "2026-11-23",
+      "offset": 3
+    },
+    "O1": {
+      "loanId": 16,
+      "readerKey": "b",
+      "readerId": 6,
+      "cardNo": "R000006",
+      "username": "acc_b_qwnwy4",
+      "bookTitle": "验收图书O1-qwnwy4",
+      "bookId": 18,
+      "barcode": "C00000030",
+      "targetDue": "2026-11-19",
+      "offset": -1
+    },
+    "O8": {
+      "loanId": 17,
+      "readerKey": "b",
+      "readerId": 6,
+      "cardNo": "R000006",
+      "username": "acc_b_qwnwy4",
+      "bookTitle": "验收图书O8-qwnwy4",
+      "bookId": 19,
+      "barcode": "C00000031",
+      "targetDue": "2026-11-12",
+      "offset": -8
+    },
+    "O15": {
+      "loanId": 18,
+      "readerKey": "b",
+      "readerId": 6,
+      "cardNo": "R000006",
+      "username": "acc_b_qwnwy4",
+      "bookTitle": "验收图书O15-qwnwy4",
+      "bookId": 20,
+      "barcode": "C00000032",
+      "targetDue": "2026-11-05",
+      "offset": -15
+    },
+    "O10": {
+      "loanId": 19,
+      "readerKey": "b",
+      "readerId": 6,
+      "cardNo": "R000006",
+      "username": "acc_b_qwnwy4",
+      "bookTitle": "验收图书O10-qwnwy4",
+      "bookId": 21,
+      "barcode": "C00000033",
+      "targetDue": "2026-11-10",
+      "offset": -10
+    },
+    "RETID": {
+      "loanId": 20,
+      "readerKey": "c",
+      "readerId": 7,
+      "cardNo": "R000007",
+      "username": "acc_c_qwnwy4",
+      "bookTitle": "验收图书RETID-qwnwy4",
+      "bookId": 22,
+      "barcode": "C00000034",
+      "targetDue": "2026-11-18",
+      "offset": -2
+    },
+    "RETBAR": {
+      "loanId": 21,
+      "readerKey": "c",
+      "readerId": 7,
+      "cardNo": "R000007",
+      "username": "acc_c_qwnwy4",
+      "bookTitle": "验收图书RETBAR-qwnwy4",
+      "bookId": 23,
+      "barcode": "C00000035",
+      "targetDue": "2026-11-17",
+      "offset": -3
+    },
+    "DIS": {
+      "loanId": 22,
+      "readerKey": "d",
+      "readerId": 8,
+      "cardNo": "R000008",
+      "username": "acc_d_qwnwy4",
+      "bookTitle": "验收图书DIS-qwnwy4",
+      "bookId": 24,
+      "barcode": "C00000036",
+      "targetDue": "2026-11-15",
+      "offset": -5
+    }
+  }
+}

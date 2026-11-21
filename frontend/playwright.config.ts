@@ -43,6 +43,7 @@ export default defineConfig({
         PATH: `${javaHome}/bin:${brewPath}`,
         SERVER_PORT: String(backendPort),
         LIB_DB_PATH: e2eDbPath,
+        LIB_REMINDER_SCANINTERVAL: 'PT1S',
         LIB_ADMIN_PASSWORD: process.env.LIB_ADMIN_PASSWORD ?? 'Admin@12345',
       },
       url: `http://localhost:${backendPort}/api/auth/csrf`,

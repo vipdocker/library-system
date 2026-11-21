@@ -22,6 +22,8 @@ public enum ErrorCode {
     COPY_NOT_FOUND(HttpStatus.NOT_FOUND, "副本不存在"),
     READER_NOT_FOUND(HttpStatus.NOT_FOUND, "读者不存在"),
     LOAN_NOT_FOUND(HttpStatus.NOT_FOUND, "借阅记录不存在"),
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "通知不存在"),
+    LOAN_NOT_OVERDUE(HttpStatus.CONFLICT, "借阅尚未逾期"),
     ACTIVE_LOAN_NOT_FOUND(HttpStatus.NOT_FOUND, "该副本没有正在借出的记录"),
     READER_PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "读者档案不存在"),
 

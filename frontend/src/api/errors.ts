@@ -40,6 +40,8 @@ export const ERROR_CODES = [
   'METHOD_NOT_ALLOWED',
   'INTERNAL_ERROR',
   'NETWORK_ERROR',
+  'NOTIFICATION_NOT_FOUND',
+  'LOAN_NOT_OVERDUE',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];
@@ -81,6 +83,8 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
   METHOD_NOT_ALLOWED: '请求方法不被该接口支持，请刷新页面后重试',
   INTERNAL_ERROR: '系统内部错误，请稍后再试',
   NETWORK_ERROR: '网络异常，请检查连接后重试',
+  NOTIFICATION_NOT_FOUND: '通知不存在或无权限查看',
+  LOAN_NOT_OVERDUE: '该借阅尚未逾期，不能登记催还',
 };
 
 /** 取错误码对应的中文文案；未知错误码回退到通用提示。 */

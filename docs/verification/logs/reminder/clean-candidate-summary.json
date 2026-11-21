@@ -1,0 +1,26 @@
+{
+  "taskId": "lib-borrow-reminder-p1",
+  "subtaskId": "REM-INT",
+  "operation": "integrate",
+  "planVersion": "reminder-plan-v1.5",
+  "dispatchRound": 2,
+  "candidateRoot": "/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-clean-candidate-s6gdo_j7",
+  "isGitClone": false,
+  "method": "Explicitly authorized isolated copy of current uncommitted candidate; empty dependencies and build outputs",
+  "initialAbsent": [".git", "frontend/node_modules", "backend/target", "backend/data", "frontend/dist", ".vite"],
+  "excluded": [".git", "node_modules", "backend/target", "backend/data", "frontend/dist", "frontend/test-results", "frontend/playwright-report", ".vite", "docs/hongkong-*", "unrelated scripts", "stray acceptance jar", "other user untracked files"],
+  "inputCount": 329,
+  "inputAggregateSha256": "64cf10ecb380cd313957180463b0b1d14434c05ecf7ec1821ec091a369b284a1",
+  "inputManifest": "/var/folders/4k/152xtrds5l5080jc5d_s58s00000gp/T/library-reminder-clean-candidate-s6gdo_j7/verification-inputs.json",
+  "inputManifestSha256": "34bf94d64d3084805d369017b8b8a84634f5f988c62d59f960113b8d973dabb1",
+  "allInputsMatchedWorkspaceBeforeAndAfter": true,
+  "dependencyConfigurationChanged": false,
+  "commands": [
+    {"phase": "npm-ci", "command": ["/opt/homebrew/bin/npm", "--prefix", "frontend", "ci"], "exitCode": 0, "seconds": 4.52, "installedPackages": 316, "auditedPackages": 317, "log": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/clean-candidate-npm-ci.log", "sha256": "b04ec22aef48de6f28a117c750e353fc1f9050611e04848d3988c45c11c66021"},
+    {"phase": "backend-verify", "command": ["/bin/bash", "-c", "source scripts/env.sh && mvn -f backend/pom.xml verify"], "exitCode": 0, "seconds": 189.798, "tests": 611, "failures": 0, "errors": 0, "skipped": 0, "log": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/clean-candidate-backend-verify.log", "sha256": "0f4db553603bf24ee9dd79462889db3feca302753f60c23e072f398cd955e566"},
+    {"phase": "frontend-build", "command": ["/opt/homebrew/bin/npm", "--prefix", "frontend", "run", "build"], "exitCode": 0, "seconds": 7.418, "log": "/Users/duff/Documents/Lingma-Demo/qoder-pl-test10/docs/verification/logs/reminder/clean-candidate-frontend-build.log", "sha256": "afa9504a9eecc066ce3e64b478459257ea1351e7d6af2f7df6189bebd55f1d37"}
+  ],
+  "warnings": ["Dev eslint9.39.5 deprecation", "npm reported esbuild/fsevents install scripts not covered by allowScripts; no approval or configuration change performed; actual build passed", "Production chunk927.80kB exceeds500kB warning"],
+  "retainedTemporaryCandidate": true,
+  "result": "PASS"
+}
