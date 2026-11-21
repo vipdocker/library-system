@@ -10,7 +10,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint .",
+    "lint": "eslint . && node --test eslint.config.test.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "e2e": "playwright test"
