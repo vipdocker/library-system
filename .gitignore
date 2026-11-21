@@ -23,3 +23,5 @@ coverage/
 # 本地环境变量覆盖文件
 .env
 .env.local
+
+/bak/
