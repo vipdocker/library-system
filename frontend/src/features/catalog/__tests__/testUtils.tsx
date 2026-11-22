@@ -29,7 +29,7 @@ export function renderCatalog(
       mutations: { retry: false },
     },
   });
-  return render(
+  const view = render(
     <QueryClientProvider client={client}>
       <AntdApp>
         <MemoryRouter initialEntries={[route]}>
@@ -49,6 +49,7 @@ export function renderCatalog(
       </AntdApp>
     </QueryClientProvider>,
   );
+  return { ...view, client };
 }
 
 export const adminUser: UserInfo = {
@@ -92,6 +93,7 @@ export function makeBook(overrides: Partial<BookSummary> = {}): BookSummary {
     category: { id: 3, name: '科技' },
     totalCopies: 3,
     availableCopies: 2,
+    cover: null,
     ...overrides,
   };
 }
@@ -99,6 +101,8 @@ export function makeBook(overrides: Partial<BookSummary> = {}): BookSummary {
 export function makeBookDetail(overrides: Partial<BookDetail> = {}): BookDetail {
   return {
     ...makeBook(),
+    openLibraryIsbn: null,
+    metadataSourceUrl: null,
     description: '从程序员视角讲解计算机系统的经典教材。',
     createdAt: '2026-11-01T08:00:00Z',
     updatedAt: '2026-11-10T08:00:00Z',

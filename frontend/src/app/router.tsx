@@ -16,6 +16,7 @@ const BookSearchPage = lazy(() => import('../features/catalog/pages/BookSearchPa
 const BookDetailPage = lazy(() => import('../features/catalog/pages/BookDetailPage'));
 const AdminBookListPage = lazy(() => import('../features/catalog/pages/AdminBookListPage'));
 const BookFormPage = lazy(() => import('../features/catalog/pages/BookFormPage'));
+const ProxySettingsPage = lazy(() => import('../features/settings/pages/ProxySettingsPage'));
 const CategoryPage = lazy(() => import('../features/catalog/pages/CategoryPage'));
 
 const AdminReaderListPage = lazy(() => import('../features/readers/pages/AdminReaderListPage'));
@@ -81,6 +82,7 @@ export function AppRoutes() {
             <Route path="reports/overdue" element={<OverdueReportPage />} />
             <Route path="dunning" element={<DunningCaseListPage />} />
             <Route path="stats" element={<StatsPage />} />
+            <Route path="settings/proxy" element={<ProxySettingsPage />} />
           </Route>
           <Route path="403" element={<ForbiddenPage />} />
           <Route path="*" element={<NotFoundPage />} />

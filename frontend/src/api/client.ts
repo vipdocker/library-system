@@ -93,8 +93,9 @@ async function doRequest<T>(
   path: string,
   options: RequestOptions,
   csrfRetried: boolean,
+  responseType: 'json' | 'blob' = 'json',
 ): Promise<T> {
-  const headers: Record<string, string> = { Accept: 'application/json' };
+  const headers: Record<string, string> = { Accept: responseType === 'blob' ? 'image/jpeg, image/png' : 'application/json' };
   if (options.body !== undefined) {
     headers['Content-Type'] = 'application/json';
   }
@@ -126,7 +127,7 @@ async function doRequest<T>(
     if (error.code === 'CSRF_INVALID') {
       await bootstrapCsrf();
       if (IDEMPOTENT_METHODS.has(method)) {
-        return doRequest<T>(method, path, options, true);
+        return doRequest<T>(method, path, options, true, responseType);
       }
     }
     throw error;
@@ -136,6 +137,7 @@ async function doRequest<T>(
     throw await parseError(res);
   }
 
+  if (responseType === 'blob') return await res.blob() as T;
   if (res.status === 204) return undefined as T;
   const text = await res.text();
   if (!text) return undefined as T;
@@ -150,6 +152,11 @@ type CallOptions = Omit<RequestOptions, 'query' | 'body'>;
 
 export function apiGet<T>(path: string, query?: QueryParams, options?: CallOptions): Promise<T> {
   return request<T>('GET', path, { ...options, query });
+}
+
+/** Protected binary GET; shares JSON error parsing, cookies and session handling. */
+export function apiGetBlob(path: string, query?: QueryParams, options?: CallOptions): Promise<Blob> {
+  return doRequest<Blob>('GET', path, { ...options, query }, false, 'blob');
 }
 
 export function apiPost<T>(path: string, body?: unknown, options?: CallOptions): Promise<T> {

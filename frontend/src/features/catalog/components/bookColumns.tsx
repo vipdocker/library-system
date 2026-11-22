@@ -25,7 +25,7 @@ export function bookBaseColumns(sort: string): TableProps<BookSummary>['columns'
       sortOrder: sortOrderOf(sort, 'title'),
       render: (_, book) => (
         <Space size={12} align="center">
-          <BookCover title={book.title} author={book.author} size="sm" />
+          <BookCover title={book.title} author={book.author} bookId={book.id} cover={book.cover} size="sm" />
           <Link to={`/books/${book.id}`} style={{ fontWeight: 600 }}>
             {book.title}
           </Link>

@@ -66,6 +66,9 @@ function bookDetailFixture(id: number): BookDetail {
     totalCopies: 3,
     availableCopies: 2,
     description: '经典教材。',
+    cover: null,
+    openLibraryIsbn: null,
+    metadataSourceUrl: null,
     createdAt: '2026-11-01T08:00:00Z',
     updatedAt: '2026-11-10T08:00:00Z',
   };
@@ -137,6 +140,7 @@ beforeEach(() => {
   vi.mocked(apiGet).mockImplementation(async (path: string) => {
     if (path === '/api/notifications/me') return emptyPage as never;
     if (path === '/api/notifications/me/unread-count') return { unreadCount: 0 } as never;
+    if (path === '/api/admin/settings/proxy') return { enabled: false, host: null, port: null, revision: 0, updatedAt: null } as never;
     if (path === '/api/categories') return [] as never;
     if (path === '/api/books') return emptyPage as never;
     const bookMatch = /^\/api\/books\/(\d+)$/.exec(path);
@@ -186,6 +190,7 @@ describe('AC-AUTH-09 路由注册与守卫（设计 10.1 全表，真实页面�
     ['/admin/loans', '借阅记录'],
     ['/admin/reports/overdue', '逾期报表'],
     ['/admin/stats', '借阅统计'],
+    ['/admin/settings/proxy', '代理配置'],
     ['/books', '图书检索'],
     ['/books/5', '深入理解计算机系统'],
     ['/account/password', '修改口令'],
@@ -221,6 +226,12 @@ describe('AC-AUTH-09 路由注册与守卫（设计 10.1 全表，真实页面�
     loginAs(reader);
     renderRoute('/admin/books');
     expect(await screen.findByText('无权限访问该页面')).toBeInTheDocument();
+  });
+
+  it('AC-FE-04 READER direct proxy route is forbidden before settings API is requested', async () => {
+    loginAs(reader); renderRoute('/admin/settings/proxy');
+    expect(await screen.findByText('无权限访问该页面')).toBeInTheDocument();
+    expect(vi.mocked(apiGet).mock.calls.some(([path]) => path.startsWith('/api/admin/settings'))).toBe(false);
   });
 
   it('ADMIN 访问 /my/loans → 403 页', async () => {

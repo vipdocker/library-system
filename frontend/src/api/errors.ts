@@ -42,6 +42,11 @@ export const ERROR_CODES = [
   'NETWORK_ERROR',
   'NOTIFICATION_NOT_FOUND',
   'LOAN_NOT_OVERDUE',
+  'COVER_NOT_FOUND',
+  'PAYLOAD_TOO_LARGE',
+  'COVER_UNSUPPORTED_TYPE',
+  'OPEN_LIBRARY_UNAVAILABLE',
+  'OPEN_LIBRARY_RATE_LIMITED',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];
@@ -85,6 +90,11 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
   NETWORK_ERROR: '网络异常，请检查连接后重试',
   NOTIFICATION_NOT_FOUND: '通知不存在或无权限查看',
   LOAN_NOT_OVERDUE: '该借阅尚未逾期，不能登记催还',
+  COVER_NOT_FOUND: '该图书暂无封面',
+  PAYLOAD_TOO_LARGE: '图片或请求过大，请选择不超过 2 MiB 的图片',
+  COVER_UNSUPPORTED_TYPE: '封面须为有效的 JPEG 或 PNG 图片',
+  OPEN_LIBRARY_UNAVAILABLE: '书目服务暂不可用，可继续手动录入',
+  OPEN_LIBRARY_RATE_LIMITED: '书目查询过于频繁，请稍后手动重试',
 };
 
 /** 取错误码对应的中文文案；未知错误码回退到通用提示。 */

@@ -43,6 +43,12 @@ const DESIGN_ERROR_CODES = [
   // reminder-increment.md v1.1 §3：追加，不删减 R1 清单。
   'NOTIFICATION_NOT_FOUND',
   'LOAN_NOT_OVERDUE',
+  // FE-v1: existing backend OL-v1 cover/lookup contract.
+  'COVER_NOT_FOUND',
+  'PAYLOAD_TOO_LARGE',
+  'COVER_UNSUPPORTED_TYPE',
+  'OPEN_LIBRARY_UNAVAILABLE',
+  'OPEN_LIBRARY_RATE_LIMITED',
 ] as const;
 
 describe('AC-UI-03 errors.ts 错误码完整性', () => {

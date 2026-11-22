@@ -2,7 +2,7 @@
 // 编辑页内含副本管理（追加、改状态、删除，见 CopiesPanel）。
 // 前端校验与第 8.4 节契约一致（含 D4③ ISBN 严格校验位）；服务端 fieldErrors 映射到对应表单项；
 // 提交中按钮 loading 并禁用，防止重复提交。
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Alert,
   App,
@@ -21,12 +21,15 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router';
 import { ApiError } from '../../../api/client';
 import { errorMessage } from '../../../api/errors';
-import type { BookInput } from '../../../api/types';
+import type { BookDetail, BookInput } from '../../../api/types';
 import { EmptyState } from '../../../components/EmptyState';
 import { PageError } from '../../../components/PageError';
 import { PageLoading } from '../../../components/PageLoading';
-import { catalogKeys, createBook, getBook, listCategories, updateBook } from '../api';
+import { DEFAULT_BOOK_QUERY, catalogKeys, createBook, getBook, listCategories, searchBooks, updateBook } from '../api';
 import { CopiesPanel } from '../components/CopiesPanel';
+import { CoverEditor } from '../components/CoverEditor';
+import { OpenLibraryCandidatePanel } from '../components/OpenLibraryCandidatePanel';
+import { type CoverDraft, coverPayload } from '../coverDraft';
 import { applyServerFieldErrors } from '../formErrors';
 import { isValidIsbn, normalizeIsbn, trimToNull } from '../validation';
 
@@ -54,6 +57,11 @@ const FORM_FIELDS = [
 
 export default function BookFormPage() {
   const { id } = useParams();
+  return <BookForm key={id ?? 'new'} />;
+}
+
+function BookForm() {
+  const { id } = useParams();
   const isEdit = id !== undefined;
   const bookId = Number(id);
   const navigate = useNavigate();
@@ -61,6 +69,15 @@ export default function BookFormPage() {
   const queryClient = useQueryClient();
   const [form] = Form.useForm<BookFormValues>();
   const [formError, setFormError] = useState<string | null>(null);
+  const [baseline, setBaseline] = useState<BookDetail>();
+  const [draft, setDraft] = useState<CoverDraft>({ action: 'KEEP' });
+  const [sourceIsbn, setSourceIsbn] = useState<string>();
+  const [saving, setSaving] = useState(false);
+  const locked = useRef(false);
+  const submittedIsbn = useRef<string | undefined>(undefined);
+  const isLocked = () => locked.current;
+  const [recheck, setRecheck] = useState<string>();
+  const [coverServerError, setCoverServerError] = useState<string>();
 
   const bookQuery = useQuery({
     queryKey: catalogKeys.book(bookId),
@@ -73,22 +90,17 @@ export default function BookFormPage() {
     queryFn: listCategories,
   });
 
+  if (bookQuery.data && !baseline) setBaseline(bookQuery.data);
+
   const saveMutation = useMutation({
-    mutationFn: (values: BookFormValues) => {
-      const base: BookInput = {
-        isbn: normalizeIsbn(values.isbn),
-        title: values.title.trim(),
-        author: values.author.trim(),
-        publisher: trimToNull(values.publisher),
-        publishYear: values.publishYear ?? null,
-        categoryId: values.categoryId ?? null,
-        description: trimToNull(values.description),
-      };
-      return isEdit
-        ? updateBook(bookId, base)
-        : createBook({ ...base, initialCopies: values.initialCopies ?? 1 });
-    },
+    retry: false,
+    mutationFn: (input: BookInput & { initialCopies?: number }) => isEdit ? updateBook(bookId, input) : createBook(input),
     onSuccess: (book) => {
+      setBaseline(book);
+      setDraft({ action: 'KEEP' });
+      setSourceIsbn(undefined);
+      form.setFieldsValue({ isbn: book.isbn, title: book.title, author: book.author, publisher: book.publisher ?? undefined, publishYear: book.publishYear, categoryId: book.category?.id, description: book.description ?? undefined });
+      queryClient.setQueryData(catalogKeys.book(book.id), book);
       queryClient.invalidateQueries({ queryKey: catalogKeys.all });
       if (isEdit) {
         message.success('图书已保存');
@@ -99,13 +111,28 @@ export default function BookFormPage() {
     },
     onError: (error) => {
       const { formLevelMessage } = applyServerFieldErrors(form, error, FORM_FIELDS);
-      if (formLevelMessage) setFormError(formLevelMessage);
+      if (error instanceof ApiError) setCoverServerError(error.fieldErrors.find(({ field }) => field === 'cover')?.message);
+      if (!(error instanceof ApiError) || error.code === 'NETWORK_ERROR') setFormError('保存结果未知，服务器可能已保存。请先重新读取核对，再决定是否提交；草稿已保留。');
+      else if (formLevelMessage) setFormError(formLevelMessage);
     },
+    onSettled: () => { locked.current = false; setSaving(false); },
   });
 
   const onFinish = (values: BookFormValues) => {
-    setFormError(null);
-    saveMutation.mutate(values);
+    if (locked.current) return;
+    locked.current = true;
+    setSaving(true);
+    setFormError(null); setRecheck(undefined); setCoverServerError(undefined);
+    const cover = coverPayload(draft);
+    const input: BookInput & { initialCopies?: number } = {
+      isbn: normalizeIsbn(values.isbn), title: values.title.trim(), author: values.author.trim(),
+      publisher: trimToNull(values.publisher), publishYear: values.publishYear ?? null,
+      categoryId: values.categoryId ?? null, description: trimToNull(values.description),
+      ...(cover ? { cover } : {}), ...(sourceIsbn ? { openLibraryIsbn: sourceIsbn } : {}),
+      ...(!isEdit ? { initialCopies: values.initialCopies ?? 1 } : {}),
+    };
+    submittedIsbn.current = input.isbn;
+    saveMutation.mutate(input);
   };
 
   if (isEdit && (!Number.isInteger(bookId) || bookId <= 0)) {
@@ -117,9 +144,9 @@ export default function BookFormPage() {
     );
   }
 
-  if (isEdit && bookQuery.isPending) return <PageLoading tip="图书加载中…" />;
+  if (isEdit && bookQuery.isPending && !baseline) return <PageLoading tip="图书加载中…" />;
 
-  if (isEdit && bookQuery.isError) {
+  if (isEdit && bookQuery.isError && !baseline) {
     const error = bookQuery.error;
     if (error instanceof ApiError && error.status === 404) {
       return (
@@ -132,7 +159,7 @@ export default function BookFormPage() {
     return <PageError error={error} onRetry={() => bookQuery.refetch()} />;
   }
 
-  const book = isEdit ? bookQuery.data : undefined;
+  const book = isEdit ? baseline : undefined;
   const initialValues: Partial<BookFormValues> = book
     ? {
         isbn: book.isbn,
@@ -173,10 +200,26 @@ export default function BookFormPage() {
         />
       )}
 
+      {formError?.includes('保存结果未知') && <Space orientation="vertical" style={{ marginBottom: 16 }}>
+        <Button disabled={saving} onClick={async () => {
+          try {
+            if (isEdit) {
+              const latest = await getBook(bookId);
+              setRecheck(`服务器当前：${latest.isbn} · ${latest.title} · ${latest.author} · 封面 ${latest.cover?.sha256 ?? '无'}。当前草稿仍保留，请核对后决定。`);
+            } else {
+              const matches = await searchBooks({ ...DEFAULT_BOOK_QUERY, field: 'isbn', q: submittedIsbn.current ?? normalizeIsbn(form.getFieldValue('isbn') ?? '') });
+              const found = matches.items[0];
+              setRecheck(found ? `服务器找到该 ISBN：${found.title} · ${found.author} · 图书编号 ${found.id} · 封面 ${found.cover?.sha256 ?? '无'}。当前草稿仍保留，请核对后决定。` : '服务器当前未找到该 ISBN；本次读取不证明原请求未保存，请稍后核对再决定。');
+            }
+          } catch { setRecheck('重新读取失败，请稍后核对；不要重复提交。'); }
+        }}>重新读取核对</Button>
+        {recheck && <Typography.Text role="status" style={{ overflowWrap: 'anywhere' }}>{recheck}</Typography.Text>}
+      </Space>}
       <Form<BookFormValues>
         form={form}
         layout="vertical"
         initialValues={initialValues}
+        disabled={saving}
         onFinish={onFinish}
         style={{ maxWidth: 720 }}
         requiredMark
@@ -216,6 +259,12 @@ export default function BookFormPage() {
           </Form.Item>
         </Flex>
 
+        <OpenLibraryCandidatePanel form={form} disabled={saving} isLocked={isLocked} draft={draft} onApply={(isbn, hasMetadata, cover) => {
+          if (locked.current) return;
+          if (hasMetadata) setSourceIsbn(isbn);
+          if (cover) { setDraft(cover); setCoverServerError(undefined); }
+        }} />
+        <CoverEditor book={book} draft={draft} onChange={(next) => { setDraft(next); setCoverServerError(undefined); }} disabled={saving} isLocked={isLocked} serverError={coverServerError} />
         <Form.Item
           name="title"
           label="书名"
@@ -292,12 +341,12 @@ export default function BookFormPage() {
               type="primary"
               htmlType="submit"
               icon={<SaveOutlined />}
-              loading={saveMutation.isPending}
-              disabled={saveMutation.isPending}
+              loading={saving}
+              disabled={saving}
             >
               {isEdit ? '保存修改' : '创建图书'}
             </Button>
-            <Button onClick={() => navigate('/admin/books')} disabled={saveMutation.isPending}>
+            <Button onClick={() => navigate('/admin/books')} disabled={saving}>
               取消
             </Button>
           </Space>

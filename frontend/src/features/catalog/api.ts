@@ -1,6 +1,6 @@
 // catalog feature 接口函数。契约来源：docs/design/solution-design.md 第 8.3 / 8.4 节（design-v0.1）。
 // 共享 client / types 只读（T02 产出）；本文件只负责 catalog 的路径、参数与返回类型。
-import { apiDelete, apiGet, apiPatch, apiPost, apiPut } from '../../api/client';
+import { apiDelete, apiGet, apiGetBlob, apiPatch, apiPost, apiPut } from '../../api/client';
 import type {
   BookCreateInput,
   BookDetail,
@@ -13,6 +13,7 @@ import type {
   CopyBatchInput,
   CopyStatusInput,
   Page,
+  OpenLibraryLookup,
 } from '../../api/types';
 
 /** 图书检索排序白名单（第 8.4 节）：title、author、publishYear、createdAt；默认 title,asc。 */
@@ -85,6 +86,14 @@ export function searchBooks(query: BookQuery): Promise<Page<BookSummary>> {
 
 export function getBook(id: number): Promise<BookDetail> {
   return apiGet<BookDetail>(`/api/books/${id}`);
+}
+
+export function getBookCover(id: number, sha256: string, signal?: AbortSignal): Promise<Blob> {
+  return apiGetBlob(`/api/books/${id}/cover`, { v: sha256 }, { signal });
+}
+
+export function lookupOpenLibrary(isbn: string, signal?: AbortSignal): Promise<OpenLibraryLookup> {
+  return apiGet<OpenLibraryLookup>('/api/catalog/open-library', { isbn }, { signal });
 }
 
 export function createBook(input: BookCreateInput): Promise<BookDetail> {

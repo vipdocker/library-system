@@ -20,6 +20,37 @@ export interface Category {
   bookCount: number;
 }
 
+export type CoverMediaType = 'image/jpeg' | 'image/png';
+export interface BookCoverMetadata {
+  url: string;
+  mediaType: CoverMediaType;
+  byteLength: number;
+  width: number;
+  height: number;
+  sha256: string;
+  sourceUrl: string | null;
+}
+export type CoverChange = { action: 'KEEP' | 'REMOVE' } | {
+  action: 'REPLACE'; mediaType: CoverMediaType; base64: string; sourceIsbn: string | null;
+};
+export interface OpenLibraryLookup {
+  isbn: string;
+  found: boolean;
+  sourceUrl: string;
+  fields: { title: string | null; author: string | null; publisher: string | null; description: string | null; publishYear: number | null };
+  cover: { mediaType: CoverMediaType; base64: string; byteLength: number; width: number; height: number } | null;
+  warnings: { code: string; field: string | null; message: string }[];
+  retryAfterSeconds: number | null;
+}
+export interface ProxySettings {
+  enabled: boolean;
+  host: string | null;
+  port: number | null;
+  revision: number;
+  updatedAt: string | null;
+}
+export type ProxySettingsInput = Pick<ProxySettings, 'enabled' | 'host' | 'port'>;
+
 export interface BookSummary {
   id: number;
   isbn: string;
@@ -30,9 +61,12 @@ export interface BookSummary {
   category: { id: number; name: string } | null;
   totalCopies: number;
   availableCopies: number;
+  cover: BookCoverMetadata | null;
 }
 
 export interface BookDetail extends BookSummary {
+  openLibraryIsbn: string | null;
+  metadataSourceUrl: string | null;
   description: string | null;
   createdAt: string;
   updatedAt: string;
@@ -163,6 +197,8 @@ export interface CategoryInput {
 }
 
 export interface BookInput {
+  cover?: CoverChange | null;
+  openLibraryIsbn?: string | null;
   isbn: string;
   title: string;
   author: string;

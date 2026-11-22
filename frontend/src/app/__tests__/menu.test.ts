@@ -24,6 +24,7 @@ describe('AC-AUTH-09 / AC-UI-05 角色菜单', () => {
       '/admin/reports/overdue',
       '/admin/dunning',
       '/admin/stats',
+      '/admin/settings/proxy',
       '/account/password',
     ]) {
       expect(keys, required).toContain(required);

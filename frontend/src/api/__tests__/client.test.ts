@@ -5,6 +5,7 @@ import {
   UNAUTHORIZED_EVENT,
   apiDelete,
   apiGet,
+  apiGetBlob,
   apiPost,
   apiPut,
   bootstrapCsrf,
@@ -78,6 +79,37 @@ describe('AC-AUTH-06 client CSRF 头', () => {
     await apiPost('/api/auth/logout');
     const init = fetchMock.mock.calls[0][1] as RequestInit;
     expect((init.headers as Record<string, string>)['X-XSRF-TOKEN']).toBe('a+b/c=');
+  });
+});
+
+describe('AC-FE-03 blob uses the same protected client', () => {
+  it('returns exact bytes with cookies, query and cancellation, without JSON or CSRF headers', async () => {
+    fetchMock.mockResolvedValue(new Response(new Uint8Array([137, 80, 78, 71]), { headers: { 'Content-Type': 'image/png' } }));
+    const signal = new AbortController().signal;
+    const blob = await apiGetBlob('/api/books/5/cover', { v: 'sha' }, { signal });
+    expect(blob.type).toBe('image/png');
+    expect(Array.from(new Uint8Array(await blob.arrayBuffer()))).toEqual([137, 80, 78, 71]);
+    expect(fetchMock).toHaveBeenCalledWith('/api/books/5/cover?v=sha', expect.objectContaining({ credentials: 'same-origin', signal }));
+    const headers = fetchMock.mock.calls[0][1].headers;
+    expect(headers.Accept).toBe('image/jpeg, image/png');
+    expect(headers['Content-Type']).toBeUndefined();
+    expect(headers['X-XSRF-TOKEN']).toBeUndefined();
+  });
+  it.each([401, 403, 404, 429, 502])('retains JSON errors at %s and 401 session handling', async (status) => {
+    const listener = vi.fn();
+    window.addEventListener(UNAUTHORIZED_EVENT, listener);
+    fetchMock.mockResolvedValue(jsonResponse(status, { ...errorBody('COVER_NOT_FOUND', status), details: { retryAfterSeconds: 30 } }));
+    await expect(apiGetBlob('/api/books/5/cover')).rejects.toMatchObject({ status, code: 'COVER_NOT_FOUND', details: { retryAfterSeconds: 30 } });
+    expect(listener).toHaveBeenCalledTimes(status === 401 ? 1 : 0);
+    window.removeEventListener(UNAUTHORIZED_EVENT, listener);
+  });
+  it('does not convert cancellation or retry a disconnected request', async () => {
+    const controller = new AbortController();
+    controller.abort();
+    const error = new DOMException('Aborted', 'AbortError');
+    fetchMock.mockRejectedValue(error);
+    await expect(apiGetBlob('/api/books/5/cover', undefined, { signal: controller.signal })).rejects.toBe(error);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
 

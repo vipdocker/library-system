@@ -72,6 +72,8 @@ export default function BookDetailPage() {
     { key: 'author', label: '作者', children: book.author },
     { key: 'publisher', label: '出版社', children: book.publisher ?? '—' },
     { key: 'publishYear', label: '出版年', children: book.publishYear ?? '—' },
+    { key: 'metadataSource', label: '书目来源记录', children: book.metadataSourceUrl ? <a href={book.metadataSourceUrl} target="_blank" rel="noreferrer">Open Library · {book.openLibraryIsbn}</a> : '人工录入' },
+    { key: 'coverSource', label: '封面来源记录', children: book.cover ? book.cover.sourceUrl ? <a href={book.cover.sourceUrl} target="_blank" rel="noreferrer">Open Library</a> : '本地上传' : '暂无封面' },
     {
       key: 'category',
       label: '分类',
@@ -113,7 +115,7 @@ export default function BookDetailPage() {
           marginBottom: 24,
         }}
       >
-        <BookCover title={book.title} author={book.author} size="lg" />
+        <BookCover title={book.title} author={book.author} bookId={book.id} cover={book.cover} size="lg" />
         <div style={{ flex: '1 1 240px', minWidth: 0 }}>
           <Typography.Title level={2} style={{ marginTop: 0, marginBottom: 4 }}>
             {book.title}

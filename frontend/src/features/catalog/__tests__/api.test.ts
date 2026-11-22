@@ -1,6 +1,6 @@
 // catalog api.ts 与契约（solution-design 8.4）的路径/方法/参数映射核对，供 T13 联调对照。
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { apiDelete, apiGet, apiPatch, apiPost, apiPut } from '../../../api/client';
+import { apiDelete, apiGet, apiGetBlob, apiPatch, apiPost, apiPut } from '../../../api/client';
 import {
   DEFAULT_BOOK_QUERY,
   addCopies,
@@ -10,6 +10,8 @@ import {
   deleteCategory,
   deleteCopy,
   getBook,
+  getBookCover,
+  lookupOpenLibrary,
   listCategories,
   listCopies,
   searchBooks,
@@ -23,6 +25,7 @@ vi.mock('../../../api/client', async (importOriginal) => {
   return {
     ...actual,
     apiGet: vi.fn(),
+    apiGetBlob: vi.fn(),
     apiPost: vi.fn(),
     apiPut: vi.fn(),
     apiPatch: vi.fn(),
@@ -96,6 +99,21 @@ describe('AC-SRCH-02 / AC-BOOK-01 图书接口映射', () => {
     expect(apiPut).toHaveBeenCalledWith('/api/books/5', input);
     await deleteBook(5);
     expect(apiDelete).toHaveBeenCalledWith('/api/books/5');
+  });
+});
+
+describe('AC-FE-02/03 same-origin cover and preview mappings', () => {
+  it('lookup is GET with signal and cover is protected binary GET with SHA query', async () => {
+    const signal = new AbortController().signal;
+    await lookupOpenLibrary('9780140328721', signal);
+    expect(apiGet).toHaveBeenCalledWith('/api/catalog/open-library', { isbn: '9780140328721' }, { signal });
+    await getBookCover(5, 'abc', signal);
+    expect(apiGetBlob).toHaveBeenCalledWith('/api/books/5/cover', { v: 'abc' }, { signal });
+  });
+  it('preserves explicit cover/source input, with no extra update fields', async () => {
+    const input = { isbn: '9780140328721', title: 't', author: 'a', cover: { action: 'REMOVE' as const }, openLibraryIsbn: '9780140328721' };
+    await updateBook(5, input);
+    expect(apiPut).toHaveBeenCalledWith('/api/books/5', input);
   });
 });
 
