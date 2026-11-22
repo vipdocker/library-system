@@ -1,0 +1,42 @@
+# Claude 亮色改造 — 冻结候选快照（CLR-INT integrate round1 / 会话派发轮次4）
+
+- taskId: claude-light-restyle-20261121
+- subtaskId: CLR-INT；operation=integrate；dispatchRound=1（本会话第4轮派发）
+- plan/design/AC-DoD 版本: claude-light-plan-v1 / claude-light-design-v1 / claude-light-ac-dod-v1
+- candidateId: claude-light-int-r1-bef199566cca
+- sourceDigest: bef199566cca7817a9728351b782d0c20f7e23f00d9fdd58bc05971b8b9c6dc9
+  （算法：候选相对路径 Array.sort() → 原始文件 SHA256 map → SHA256(JSON.stringify(map))，无空白换行）
+- manifest: development/integration/candidate-manifest.json（SHA256 192db62e32b5491939b92419af0337ce6d0a1db2de863c8623378fb0cdddcd24）
+- 候选文件数: 358（ownership：本任务变更 19 / 外部暂停改动 29 / 原基线不变 310）
+- 基线 HEAD: 571c44c7863c50cf45740386a355520ded041586（仅历史基线；候选=当前未提交工作树，不以 HEAD 充作候选）
+- tracked diff SHA256: ebef8c2da13c2d79c4c62d4cd72284b4ff6780c31c3217b823a71cf886f572a5（test-all 前后一致）
+- git status（除本任务新证据）SHA256: 06924f6ccabe44fb69289a358ea94ae7c182bd3eabac036584b5d5c17f30d7da（前后一致）
+- 环境: Node v26.7.0（/opt/homebrew/bin）/ npm 11.19.0 / OpenJDK 21.0.12 / Maven 3.9.16 / Playwright 1.65.0 Chromium / antd 6.7.1 / macOS darwin arm64
+- 冻结时点: CLR-INT 全量 bash scripts/test-all.sh exit 0 之后；冻结前后 19 任务文件 / 29 外部文件 / 358 digest 逐文件 SHA 0 差异；无并发 writer、四端口无监听、0 构建进程。
+
+## 规范与来源
+- 冻结设计 docs/design/claude-light-restyle-design.md SHA256 67bb2bdb1bb07e4fb7127ed5051526b0fdf3709ef76d6085fda20dfef26ee345（只读，未改）
+- 新根 DESIGN.md SHA256 b65f44b7716d1d920ebf189e851676dcfe01391022a3eb6f682d4bb53af025f8；唯一来源注释块（BEGIN/END 各1）剥离后与 Claude 源逐字节相等
+- Claude 源 SHA256 3d972f34f8d4f33b442fa28220cf3b7ca2f13c0a97c468e3988148f82521f9df（/Users/duff/.qoder/plugins/cache/local/sdlc-agent-orchestrator/0.6.2/design-styles/claude/DESIGN.md）
+- 旧 Linear 根精确存档 docs/design/linear-upstream-design.snapshot.md SHA256 70ca40c5a5dadee01eb368135ad71d1bce1ab102fa9f95183277f6e7d1b2d8f5（=旧根 SHA）
+- 复验证据: development/integration/logs/provenance-reverify.json
+
+## 外部暂停改动（只读保留，锁定测试 context，不赋予验收资格）
+- 29 个后端文件属封面/open-library 任务（用户确认『已暂停』、亮色优先）：12 tracked 修改（含 ReminderConcurrencyTest/ReminderMigrationTest/SecurityConfig/Book* DTO 等）+ 17 untracked（BookCover*/OpenLibrary*/V3__book_covers.sql 等）。
+- 清单与 SHA: development/round2/logs/foreign-hashes-before.txt；INT 前后复验 0 差异（integration/logs/foreign-files-after.txt）。
+- 本任务未实施/未验收封面功能；其新增用例仅被本次全量回归间接覆盖（655 后端测试含 BookCoverApiTest 9、OpenLibraryClientTest 18 等全过）。
+- 前端书封仍为中性示意 BookCover；后台额外封面字段本任务不接入。
+
+## 恢复 dev 的数据安全注意（只读记录，不执行）
+- 迁移清单现为 V1__init_schema.sql / V2__reminders_dunning.sql（基线）+ V3__book_covers.sql（外部封面任务新增）。
+- 正常默认 dev 启动会对开发库执行 Flyway 迁移（含 V3）。本轮未触碰 backend/data 及 WAL/SHM/bak，未执行任何迁移。
+- 『验证后恢复程序』不构成开发库迁移授权；恢复方式由主会话单独决定（如先备份/副本验证或等待封面任务处置）。
+
+## 排除项
+- manifest 不含：docs/verification 证据、DB/WAL/SHM、凭据/环境文件、bak、node_modules/target/dist/test-results/playwright-report、自哈希文件。
+- 证据独立 hash 见 development/integration/evidence-hashes.txt（不含其自身，避免自哈希循环）。
+
+## 状态
+- 本快照为可供独立 ACC 验收的固定候选；不是整体历史质量/审计结论，不是上线许可。
+- DoD6 独立 ACC 仍待到期；未提交/未 push/未 deploy；dev 恢复由主会话负责。
+- 候选源若再变动：本快照与全部绑定证据失效，须重验并重新冻结。

@@ -57,7 +57,7 @@ export function AppLayout() {
         onCollapse={setCollapsed}
         breakpoint="lg"
         width={232}
-        theme="dark"
+        theme="light"
         style={{ borderRight: `1px solid ${token.colorBorderSecondary}` }}
       >
         <div
@@ -78,7 +78,7 @@ export function AppLayout() {
           )}
         </div>
         <Menu
-          theme="dark"
+          theme="light"
           mode="inline"
           items={menuItems}
           selectedKeys={selectedKey ? [selectedKey] : []}
@@ -104,7 +104,7 @@ export function AppLayout() {
               {user?.role === 'ADMIN' ? '管理员' : '读者'}
             </Tag>
             <Space size={8} align="center" style={{ minWidth: 0 }}>
-              <Avatar size="small" icon={<UserOutlined />} style={{ background: token.colorBgElevated, color: token.colorTextSecondary, flexShrink: 0 }} />
+              <Avatar size="small" icon={<UserOutlined />} style={{ background: token.colorFillSecondary, color: token.colorTextSecondary, flexShrink: 0 }} />
               <Typography.Text
                 ellipsis={{ tooltip: user?.displayName ?? user?.username }}
                 style={{ color: token.colorText, maxWidth: '6em', whiteSpace: 'nowrap' }}

@@ -1,0 +1,110 @@
+{
+  "taskId": "claude-light-restyle-20261121",
+  "subtaskId": "CLR-INT",
+  "operation": "integrate",
+  "dispatchRound": 1,
+  "sessionDispatchRound": 4,
+  "planVersion": "claude-light-plan-v1",
+  "designVersion": "claude-light-design-v1",
+  "acDodVersion": "claude-light-ac-dod-v1",
+  "dependsOn": ["CLR01", "CLR02"],
+  "status": "READY_FOR_CHECKS",
+  "meaning": "frozen candidate ready for independent ACC only; NOT overall historical quality/audit conclusion, NOT release approval, NOT independent acceptance PASS",
+  "sourceChangesThisRound": "NONE — integration verification + freeze only; no source/test/config modified; no integration defect found requiring fix",
+  "inputVerification": {
+    "devSubtaskEvidence": "round1 ../results.json + ../logs/* (CLR01 provenance/RED-GREEN), round2 ../round2/results.json + logs (CLR02 413/37 + 24-image review); main session independently re-verified manifests before dispatch",
+    "hashChecksAtIntStart": {"task19": "logs/task-files-check.txt 0 fails", "foreign29": "logs/foreign-files-check.txt 0 fails", "worktree358": "logs/worktree-digest-check.txt 0 fails", "specs": "frozen 67bb2bdb… / root b65f44b7… / snapshot 70ca40c5… confirmed"},
+    "provenanceReverify": "logs/provenance-reverify.json — BEGIN/END count 1 each, block immediately after first --- fence, stripped Buffer equals Claude source bytes, snapshot equals expected old-root SHA",
+    "concurrency": "cover task user-confirmed paused; 0 mvn/maven/surefire/spring-boot/vite/playwright processes and 4 ports free at start and end; no foreign process touched; no HEAD restore/worktree/stash"
+  },
+  "fullEntryRun": {
+    "command": "bash scripts/test-all.sh",
+    "outerExit": 0,
+    "log": "logs/test-all.log (TEST_ALL_EXIT=0 appended)",
+    "steps": [
+      {"step": "mvn -f backend/pom.xml verify", "result": "BUILD SUCCESS, Tests run: 655, Failures: 0, Errors: 0, Skipped: 0, Total time 02:56 min", "note": "includes ArchitectureTest 6/6 and foreign cover tests (BookCoverApiTest 9, BookCoverMigrationTest 2, OpenLibraryClientTest 18, OpenLibraryApiTest 4, CoverImageValidatorTest 5, ReminderConcurrencyTest 7, ReminderMigrationTest 2) — all passed; foreign functionality NOT accepted by this task"},
+      {"step": "frontend lint", "result": "exit 0 (chain continued; includes eslint.config.test.mjs boundary checks)"},
+      {"step": "frontend typecheck", "result": "exit 0"},
+      {"step": "frontend test", "result": "41 files / 413 tests passed"},
+      {"step": "frontend build", "result": "exit 0, built in 3.78s"},
+      {"step": "frontend e2e", "result": "37 passed (24 visual + 13 business), 4.2m, Chromium workers=1 retries=0, ports 18096/15196 + system-temp DB"}
+    ],
+    "knownNonBlockingWarnings": ["Vite chunk-size suggestion", "JVM dynamic agent loading (byte-buddy/Mockito) future-restriction warning", "OpenJDK CDS sharing warning"],
+    "isolation": "single serial group; dev stopped; backend/data/WAL/SHM/bak never touched; no dependency install/global env change"
+  },
+  "computedEvidence": {
+    "summary": "computed/e2e-contrast-summary.json",
+    "screenshotsThisRun": 262, "computedJsonFiles": 119, "graphicJsonFilesCopied": 4,
+    "textSamples": 5059, "contrastFailuresBelow4_5": 0, "genuinelyDisabledExclusions": 9, "horizontalOverflowStates": 0,
+    "realApplicationStates": 100, "simulatedGetOnlyStates": 19, "isolatedComponentFixtureStates": 13,
+    "roles": ["anonymous", "ADMIN", "READER", "component fixture"], "viewports": [1440, 1024, 390], "distinctRoutes": 22,
+    "focus": "2px solid rgb(147,75,52) offset 2px, >=3 on all cream surfaces; error/warning borders keep own foreground; no double ring",
+    "graphics": "403/404 real Lock/Search, every SVG path fill rgb(98,95,88), imageCount 0, return navigation verified"
+  },
+  "screenshotVisualReview": {
+    "method": "15 key PNGs copied from THIS run's real-browser artifacts into screenshots/ and all 15 actually Read; conclusions below",
+    "reviewed": [
+      {"file": "screenshots/login-default.png", "conclusion": "cream canvas + soft brand panel, serif headings, terracotta mark, deep-terracotta primary white text, readable muted hints, neutral password mask, no sensitive data"},
+      {"file": "screenshots/login-hover.png", "conclusion": "hover #934b34 white text + 2px focus ring; no Linear inversion"},
+      {"file": "screenshots/admin-route-0.png", "conclusion": "ADMIN dashboard: light soft sider, cream-strong selected item ink text, serif 仪表盘, card hero, ink statistics, terracotta links, body+deep-teal trend series with legend/values"},
+      {"file": "screenshots/reader-unread.png", "conclusion": "READER notifications: unread terracotta edge + card bg, teal info Alert, error current-state tag, neutral badge, muted metadata readable, pagination active link"},
+      {"file": "screenshots/category-modal.png", "conclusion": "canvas Modal on warm scrim, ink sans title, readable placeholders, white-text 保存, deep-red outlined 删除; no black surface"},
+      {"file": "screenshots/admin-collapsed-tooltip.png", "conclusion": "collapsed-menu Tooltip light cream bg + dark text (no dark tooltip); dunning info Alert readable; 390 radio wrap"},
+      {"file": "screenshots/acc-d01-403-1440.png", "conclusion": "real neutral Lock, ink 403, muted subtitle, white-text terracotta 返回首页, READER light menu"},
+      {"file": "screenshots/acc-d01-404-390.png", "conclusion": "real neutral Search at 390, collapsed sider, header fits, no overflow"},
+      {"file": "screenshots/stats-fit-390.png", "conclusion": "stacked full-value date range, full select value, serif 24px mobile title, readable chips/legend, rank counts contained, no horizontal overflow"},
+      {"file": "screenshots/stats-calendar-mobile-second-panel.png", "conclusion": "stacked panels, second month reachable by vertical scroll, card range strip, terracotta/white endpoints, readable outside-month dates"},
+      {"file": "screenshots/datepicker-portal.png", "conclusion": "two-month range on canvas, card ::before strip, terracotta endpoints white numerals, readable outside-month, 2px focus on range input, neutral ranks"},
+      {"file": "screenshots/catalog-503.png", "conclusion": "simulated GET 503: light-red Alert, deep-red icon, ink 加载失败, readable body, 重试"},
+      {"file": "screenshots/catalog-loading.png", "conclusion": "simulated loading: terracotta Spin dots + muted 图书加载中… on canvas"},
+      {"file": "screenshots/catalog-empty.png", "conclusion": "simulated empty: neutral inbox graphic, muted description, card table header"},
+      {"file": "screenshots/fixture-error-Input-focus.png", "conclusion": "labeled isolated real-component harness: error red border + single 2px terracotta focus ring offset; warning amber; normal control-border"}
+    ],
+    "overallConclusion": "INT-run visuals match approved Claude light direction across roles/states/viewports; no dark/Linear residue; semantics, focus, graphics and disabled exception visually confirmed; book covers remain neutral placeholders (foreign cover fields not wired by this task)"
+  },
+  "frozenCandidate": {
+    "candidateId": "claude-light-int-r1-bef199566cca",
+    "sourceDigest": "bef199566cca7817a9728351b782d0c20f7e23f00d9fdd58bc05971b8b9c6dc9",
+    "manifest": "candidate-manifest.json (SHA256 192db62e32b5491939b92419af0337ce6d0a1db2de863c8623378fb0cdddcd24)",
+    "algorithm": "relative paths Array.sort() -> raw file SHA256 map -> SHA256(JSON.stringify(map)) without whitespace",
+    "fileCount": 358,
+    "ownership": {"task-changed": 19, "external-paused": 29, "baseline-unchanged": 310},
+    "head": "571c44c7863c50cf45740386a355520ded041586 (baseline only; candidate = uncommitted working tree)",
+    "trackedDiffSha256": "ebef8c2da13c2d79c4c62d4cd72284b4ff6780c31c3217b823a71cf886f572a5 (stable before/after test-all)",
+    "gitStatusSha256ExcludingNewEvidence": "06924f6ccabe44fb69289a358ea94ae7c182bd3eabac036584b5d5c17f30d7da (stable)",
+    "crossCheckVsRound2Digest": "358/358 paths identical, 0 SHA mismatches",
+    "postRunStability": "logs/task-files-after.txt / foreign-files-after.txt / worktree-digest-after.txt all 0 failures",
+    "exclusions": "evidence, DB/WAL/SHM, credentials/env files, bak, node_modules/target/dist/test-results/playwright-report, self-hash files",
+    "environment": "Node v26.7.0 / npm 11.19.0 / OpenJDK 21.0.12 / Maven 3.9.16 / Playwright 1.65.0 Chromium / antd 6.7.1 / macOS darwin arm64",
+    "snapshotFile": "../../candidate-snapshot.txt",
+    "matrixFile": "../../ac-dod-matrix.md",
+    "invalidationRule": "any source change invalidates this freeze and all bound evidence; re-verify and re-freeze required"
+  },
+  "externalWorkOwnership": {
+    "owner": "cover/open-library task (user-confirmed paused, light task priority)",
+    "files": 29,
+    "manifest": "../round2/logs/foreign-hashes-before.txt; re-verified logs/foreign-files-after.txt",
+    "treatment": "read-only preserved; SHA-locked as test context; NOT implemented/accepted by this task; its tests only indirectly exercised by full regression",
+    "devRestoreCaution": "migration list now V1/V2 baseline + V3__book_covers.sql (foreign). Normal default dev startup would Flyway-migrate the dev DB incl. V3. This round only READ the migration list; never touched backend/data/WAL/SHM/bak and ran no migration. 'Restore after verification' is NOT migration authorization; main session must decide a safe restore path separately."
+  },
+  "acDodDueStatus": {
+    "AC1": "PASS", "AC2": "PASS", "AC3": "PASS", "AC4": "PASS", "AC5": "PASS",
+    "DoD1": "PASS", "DoD2": "PASS", "DoD3": "PASS", "DoD4": "PASS", "DoD5": "PASS",
+    "DoD6": "NOT_DUE (independent ACC pending; candidate frozen and supplied)",
+    "acceptColumns": "all NOT_DUE — ACC session dispatched separately by main session",
+    "matrix": "../../ac-dod-matrix.md"
+  },
+  "notRunOrOutOfScope": [
+    "independent acceptance (DoD6, ACC session)",
+    "cover/OpenLibrary feature acceptance (foreign scope)",
+    "wiring foreign cover fields into frontend (out of task scope; covers remain neutral placeholders)",
+    "dev restoration / dev-DB migration decision (main session)",
+    "commit/push/deploy (never authorized)"
+  ],
+  "serviceCleanup": "test-all webServers auto-stopped; post-run lsof: no listeners on 18095/15195/18096/15196; ps: 0 build/test processes; no foreign process killed; no temporary service left by this session",
+  "evidenceHashes": "evidence-hashes.txt (lists integration evidence + matrix + snapshot; excludes itself to avoid self-hash loop)",
+  "knownIssues": [],
+  "historyPreserved": "round1/round2 results+logs, old Linear docs/verification/linear-restyle, open-library records untouched; no failed/process log deleted",
+  "skillsUsed": "none loaded (verification/freeze round; native tools + project bash scripts)",
+  "nextStep": "main session reviews frozen candidate, dispatches the originally selected independent ACC session against claude-light-int-r1-bef199566cca, then decides safe dev restoration; this session stops writing and does not self-dispatch ACC/INT further"
+}

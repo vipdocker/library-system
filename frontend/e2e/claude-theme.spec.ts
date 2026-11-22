@@ -42,7 +42,7 @@ async function capture(page: Page, info: TestInfo, name: string, role: string, m
     }
   });
   const image = info.outputPath(`${name}.png`);
-  const maskColor = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--linear-surface-3').trim());
+  const maskColor = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--claude-surface-cream-strong').trim());
   await page.screenshot({ path: image, fullPage: true, maskColor, mask: [page.locator('input[type="password"]')] });
   await info.attach(name, { path: image, contentType: 'image/png' });
   const samples = await page.locator(scope).first().evaluate((root) => {
@@ -118,7 +118,7 @@ async function capture(page: Page, info: TestInfo, name: string, role: string, m
   expect.soft(samples.length, `${name}: actual computed text samples`).toBeGreaterThan(0);
   expect.soft(failures, `${name}: all enabled text/placeholder contrast >=4.5`).toEqual([]);
   expect.soft(overflow.body, `${name}: no body horizontal overflow`).toBeLessThanOrEqual(overflow.viewport);
-  await expect.soft(page.locator('body')).toHaveCSS('background-color', 'rgb(1, 1, 2)');
+  await expect.soft(page.locator('body')).toHaveCSS('background-color', 'rgb(250, 249, 245)');
   return { samples, failures, overflow };
 }
 
@@ -133,12 +133,12 @@ test('AC-2/3 login default hover pressed focus and validation at both widths', a
   await ready(page);
   const button = page.getByRole('button', { name: /登\s*录/ });
   await page.getByLabel('用户名').blur();
-  await expect(button).toHaveCSS('background-color', 'rgb(94, 106, 210)');
+  await expect(button).toHaveCSS('background-color', 'rgb(169, 88, 62)');
   await expect(button).toHaveCSS('color', 'rgb(255, 255, 255)');
   await capture(page, info, 'login-default', 'anonymous');
   await page.getByLabel('用户名').focus();
   await expect(page.locator('.ant-input-affix-wrapper').first()).toHaveCSS('outline-width', '2px');
-  await expect(page.locator('.ant-input-affix-wrapper').first()).toHaveCSS('outline-color', 'rgb(94, 105, 209)');
+  await expect(page.locator('.ant-input-affix-wrapper').first()).toHaveCSS('outline-color', 'rgb(147, 75, 52)');
   const focusCascade = await page.getByLabel('用户名').evaluate(element => {
     const matches: { selector: string; style: string }[] = [];
     for (const sheet of document.styleSheets) for (const rule of sheet.cssRules) {
@@ -155,25 +155,25 @@ test('AC-2/3 login default hover pressed focus and validation at both widths', a
   const visibilityToggle = page.locator('.ant-input-password-icon');
   await expect(visibilityToggle).toBeFocused();
   await expect(visibilityToggle).toHaveCSS('outline-width', '2px');
-  await expect(visibilityToggle).toHaveCSS('outline-color', 'rgb(94, 105, 209)');
+  await expect(visibilityToggle).toHaveCSS('outline-color', 'rgb(147, 75, 52)');
   await visibilityToggle.press('Tab');
   await expect(button).toBeFocused();
   await expect(button).toHaveCSS('outline-width', '2px');
-  await expect(button).toHaveCSS('outline-color', 'rgb(94, 105, 209)');
+  await expect(button).toHaveCSS('outline-color', 'rgb(147, 75, 52)');
   await capture(page, info, 'login-keyboard-button', 'anonymous');
   await button.hover();
-  await expect(button).toHaveCSS('background-color', 'rgb(130, 143, 255)');
-  await expect(button).toHaveCSS('color', 'rgb(1, 1, 2)');
+  await expect(button).toHaveCSS('background-color', 'rgb(147, 75, 52)');
+  await expect(button).toHaveCSS('color', 'rgb(255, 255, 255)');
   await capture(page, info, 'login-hover', 'anonymous');
   await page.mouse.down();
-  await expect(button).toHaveCSS('background-color', 'rgb(94, 105, 209)');
+  await expect(button).toHaveCSS('background-color', 'rgb(125, 61, 42)');
   await expect(button).toHaveCSS('color', 'rgb(255, 255, 255)');
   await capture(page, info, 'login-pressed', 'anonymous');
   await page.mouse.up();
   await expect(page.getByText('请输入用户名', { exact: true })).toBeVisible();
   await capture(page, info, 'login-validation', 'anonymous');
   await page.getByLabel('用户名').focus();
-  await expect.soft(page.locator('.ant-input-affix-wrapper').first()).toHaveCSS('outline-color', 'rgb(94, 105, 209)');
+  await expect.soft(page.locator('.ant-input-affix-wrapper').first()).toHaveCSS('outline-color', 'rgb(147, 75, 52)');
   await expect.soft(page.locator('.ant-input-affix-wrapper').first()).toHaveCSS('outline-width', '2px');
   await capture(page, info, 'login-focus', 'anonymous');
   await page.getByLabel('密码').focus();
@@ -217,7 +217,7 @@ test('AC-3/4 READER routes overdue/history/unread/read and real 403/404', async 
   await page.goto('/admin/dashboard');
   await expect(page.getByText('无权限访问该页面')).toBeVisible();
   await capture(page, info, 'reader-real-403', 'READER');
-  await page.goto('/linear-not-existing');
+  await page.goto('/claude-not-existing');
   await expect(page.getByText('页面不存在')).toBeVisible();
   await capture(page, info, 'reader-404', 'READER');
 });
@@ -225,7 +225,7 @@ test('AC-3/4 READER routes overdue/history/unread/read and real 403/404', async 
 for (const viewport of [desktop, mobile]) {
   for (const state of [
     { code: '403', route: '/admin/dashboard', expectedRoute: '/403', subtitle: '无权限访问该页面', icon: 'lock' },
-    { code: '404', route: '/linear-not-existing', expectedRoute: '/linear-not-existing', subtitle: '页面不存在', icon: 'search' },
+    { code: '404', route: '/claude-not-existing', expectedRoute: '/claude-not-existing', subtitle: '页面不存在', icon: 'search' },
   ]) {
     test(`ACC-D01 real READER ${state.code} monochrome graphic and return navigation at ${viewport.width}px`, async ({ page }, info) => {
       await page.setViewportSize(viewport);
@@ -255,11 +255,11 @@ for (const viewport of [desktop, mobile]) {
       await capture(page, info, name, 'READER');
       expect.soft(graphic.iconName, 'Approved icon must actually render, not just be passed as a prop').toBe(state.icon);
       expect.soft(graphic.iconAriaHidden).toBe('true');
-      expect.soft(graphic.iconColor).toBe('rgb(138, 143, 152)');
+      expect.soft(graphic.iconColor).toBe('rgb(98, 95, 88)');
       expect.soft(graphic.imageCount, 'Exception illustration must not be rendered').toBe(0);
       expect.soft(graphic.graphicSvgCount).toBe(1);
       expect.soft(graphic.graphicPathFills.length).toBeGreaterThan(0);
-      for (const fill of graphic.graphicPathFills) expect.soft(fill).toBe('rgb(138, 143, 152)');
+      for (const fill of graphic.graphicPathFills) expect.soft(fill).toBe('rgb(98, 95, 88)');
       await page.getByRole('button', { name: '返回首页', exact: true }).click();
       await expect(page).toHaveURL('/books');
       await ready(page);
@@ -274,7 +274,7 @@ test('AC-3 real category/reader modals danger confirmation Select DatePicker and
   const { reader } = await seedReader(page);
   await page.goto('/admin/categories'); await ready(page);
   await page.getByRole('button', { name: '新建分类' }).first().click();
-  await expect(page.locator('.ant-modal-container')).toHaveCSS('background-color', 'rgb(24, 25, 26)');
+  await expect(page.locator('.ant-modal-container')).toHaveCSS('background-color', 'rgb(250, 249, 245)');
   await capture(page, info, 'category-modal', 'ADMIN', false, '.ant-modal-container');
   await page.getByRole('button', { name: /保\s*存/ }).click();
   await expect(page.getByText('请输入分类名称', { exact: true })).toBeVisible();
@@ -297,11 +297,11 @@ test('AC-3 real category/reader modals danger confirmation Select DatePicker and
   await page.keyboard.press('Escape');
   await page.goto('/admin/books'); await ready(page);
   await page.locator('.ant-table-tbody > tr[data-row-key]').first().hover();
-  await expect(page.locator('.ant-table-tbody > tr[data-row-key] > td').first()).toHaveCSS('background-color', 'rgb(20, 21, 22)');
+  await expect(page.locator('.ant-table-tbody > tr[data-row-key] > td').first()).toHaveCSS('background-color', 'rgb(239, 233, 222)');
   await capture(page, info, 'table-hover', 'ADMIN');
   await page.goto('/admin/stats'); await ready(page);
   await page.getByRole('combobox', { name: '热门图书数量' }).click();
-  await expect(page.locator('.ant-select-dropdown')).toHaveCSS('background-color', 'rgb(24, 25, 26)');
+  await expect(page.locator('.ant-select-dropdown')).toHaveCSS('background-color', 'rgb(250, 249, 245)');
   await capture(page, info, 'select-portal', 'ADMIN', false, '.ant-select-dropdown');
   await page.keyboard.press('Escape');
   await page.getByPlaceholder('开始日期').click();
@@ -310,15 +310,15 @@ test('AC-3 real category/reader modals danger confirmation Select DatePicker and
   const inRange = calendar.samples.filter(sample => sample.calendarLayers.some(layer => layer.cellClass.includes('ant-picker-cell-in-view') && layer.cellClass.includes('ant-picker-cell-in-range')));
   expect(inRange.length).toBeGreaterThan(0);
   for (const sample of inRange) {
-    expect(sample.calendarLayers[0]).toMatchObject({ background: 'rgb(20, 21, 22)', zIndex: '1' });
-    expect(sample.effectiveBackground).toEqual([20, 21, 22, 1]);
+    expect(sample.calendarLayers[0]).toMatchObject({ background: 'rgb(239, 233, 222)', zIndex: '1' });
+    expect(sample.effectiveBackground).toEqual([239, 233, 222, 1]);
     expect(sample.ratio).toBeGreaterThanOrEqual(4.5);
   }
   const selected = calendar.samples.filter(sample => sample.calendarLayers.some(layer => /ant-picker-cell-in-view/.test(layer.cellClass) && /ant-picker-cell-range-(start|end)/.test(layer.cellClass)));
   expect(selected.length).toBeGreaterThanOrEqual(2);
   for (const sample of selected) {
     expect(sample.foreground).toBe('rgb(255, 255, 255)');
-    expect(sample.effectiveBackground).toEqual([94, 106, 210, 1]);
+    expect(sample.effectiveBackground).toEqual([169, 88, 62, 1]);
     expect(sample.ratio).toBeGreaterThanOrEqual(4.5);
   }
   await page.locator('.ant-picker-cell-in-view:not(.ant-picker-cell-in-range):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end)').first().hover();
@@ -427,7 +427,7 @@ for (const item of stateCases) {
   });
 }
 
-test('AC-3 bootstrap loading retains dark canvas with real auth response', async ({ page }, info) => {
+test('AC-3 bootstrap loading retains warm cream canvas with real auth response', async ({ page }, info) => {
   await apiLogin(page, ADMIN_USERNAME, ADMIN_PASSWORD);
   let release: () => void = () => {};
   const held = new Promise<void>(resolve => { release = resolve; });
@@ -460,9 +460,9 @@ test('AC-3 real delete confirmation and active pagination hover/navigation', asy
   for (let i = 0; i < 9; i++) await seedBook(page, 0);
   await page.goto('/admin/books'); await ready(page);
   const active = page.locator('.ant-pagination-item-active a');
-  await expect(active).toHaveCSS('color', 'rgb(130, 143, 255)');
+  await expect(active).toHaveCSS('color', 'rgb(147, 75, 52)');
   await active.hover();
-  await expect(active).toHaveCSS('color', 'rgb(130, 143, 255)');
+  await expect(active).toHaveCSS('color', 'rgb(125, 61, 42)');
   await capture(page, info, 'pagination-active-hover', 'ADMIN');
   const firstId = await page.locator('.ant-table-tbody tr[data-row-key]').first().getAttribute('data-row-key');
   await page.locator('.ant-pagination-item-2').click(); await ready(page);
@@ -553,12 +553,12 @@ for (const viewport of [desktop, { width: 1024, height: 900 }, mobile]) {
 test('F-03/04 real component harness validates disabled dates and normal/error/warning focus', async ({ page }, info) => {
   await page.goto('/login'); await ready(page);
   await page.evaluate(async () => {
-    const paths = ['/node_modules/.vite/deps/react.js', '/node_modules/.vite/deps/react-dom_client.js', '/node_modules/.vite/deps/antd.js', '/node_modules/.vite/deps/dayjs.js', '/src/styles/linearTheme.ts'];
+    const paths = ['/node_modules/.vite/deps/react.js', '/node_modules/.vite/deps/react-dom_client.js', '/node_modules/.vite/deps/antd.js', '/node_modules/.vite/deps/dayjs.js', '/src/styles/claudeTheme.ts'];
     const [react, dom, antd, dayjsModule, visual] = await Promise.all(paths.map(url => import(url)));
     const h = react.default.createElement;
     const node = document.createElement('section');
-    node.id = 'linear-component-fixture';
-    node.style.cssText = 'position:fixed;inset:0;z-index:900;background:var(--linear-canvas);padding:24px;overflow:auto';
+    node.id = 'claude-component-fixture';
+    node.style.cssText = 'position:fixed;inset:0;z-index:900;background:var(--claude-canvas);padding:24px;overflow:auto';
     document.body.append(node);
     const controls = ['Input', 'InputNumber', 'Select', 'DatePicker'];
     const rows = ['normal', 'error', 'warning'].flatMap(status => controls.map(control => {
@@ -567,7 +567,7 @@ test('F-03/04 real component harness validates disabled dates and normal/error/w
       const extra = control === 'Input' ? { prefix: '#' } : control === 'Select' ? { options: [{ value: 'one', label: '选项一' }], defaultValue: 'one' } : control === 'DatePicker' ? { defaultValue: dayjsModule.default('2026-11-21'), disabledDate: (date: { date: () => number }) => date.date() === 15 } : {};
       return h('div', { key: label }, h('label', { htmlFor: props.id }, label), h(antd[control], { ...props, ...extra }));
     }));
-    dom.default.createRoot(node).render(h(antd.ConfigProvider, { theme: visual.linearTheme },
+    dom.default.createRoot(node).render(h(antd.ConfigProvider, { theme: visual.claudeTheme },
       h('h2', null, '组件状态核验（测试夹具，非业务页面）'),
       h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 24 } }, rows)));
   });
@@ -578,10 +578,10 @@ test('F-03/04 real component harness validates disabled dates and normal/error/w
       await input.focus();
       const root = input.locator('xpath=ancestor-or-self::*[contains(@class,"ant-input-affix-wrapper") or contains(@class,"ant-input-number ") or contains(@class,"ant-select ") or contains(@class,"ant-picker ")][1]');
       await expect(root).toHaveCSS('outline-width', '2px');
-      await expect(root).toHaveCSS('outline-color', 'rgb(94, 105, 209)');
+      await expect(root).toHaveCSS('outline-color', 'rgb(147, 75, 52)');
       if (control === 'Input') await expect(input).toHaveCSS('outline-style', 'none');
-      if (status !== 'normal') await expect(root).toHaveCSS('border-top-color', status === 'error' ? 'rgb(193, 136, 137)' : 'rgb(205, 174, 127)');
-      await capture(page, info, `fixture-${status}-${control}-focus`, 'component fixture', false, '#linear-component-fixture');
+      if (status !== 'normal') await expect(root).toHaveCSS('border-top-color', status === 'error' ? 'rgb(165, 54, 54)' : 'rgb(128, 92, 20)');
+      await capture(page, info, `fixture-${status}-${control}-focus`, 'component fixture', false, '#claude-component-fixture');
       await page.keyboard.press('Escape');
     }
   }
@@ -593,6 +593,6 @@ test('F-03/04 real component harness validates disabled dates and normal/error/w
   expect(disabled.length).toBeGreaterThan(0);
   for (const sample of disabled) {
     expect(sample.excluded).toBe('genuinely disabled control');
-    expect(sample.foreground).toBe('rgb(98, 102, 109)');
+    expect(sample.foreground).toBe('rgb(142, 139, 130)');
   }
 });

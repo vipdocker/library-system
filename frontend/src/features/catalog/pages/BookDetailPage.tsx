@@ -106,9 +106,9 @@ export default function BookDetailPage() {
         gap={28}
         wrap
         style={{
-          background: 'var(--linear-surface-2)',
-          border: '1px solid var(--linear-hairline)',
-          borderRadius: 'var(--linear-radius-lg)',
+          background: 'var(--claude-surface-soft)',
+          border: '1px solid var(--claude-hairline)',
+          borderRadius: 'var(--claude-radius-lg)',
           padding: 'clamp(16px, 4vw, 28px)',
           marginBottom: 24,
         }}
@@ -126,7 +126,7 @@ export default function BookDetailPage() {
           <Space size={24} align="center" wrap>
             <div style={{ minWidth: 0, flex: '1 1 220px', maxWidth: 280 }}>
               <Space size={8} align="baseline">
-                <Typography.Text strong style={{ fontSize: 22, color: 'var(--linear-ink)' }}>
+                <Typography.Text strong style={{ fontSize: 22, color: 'var(--claude-ink)' }}>
                   {book.availableCopies}
                 </Typography.Text>
                 <Typography.Text type="secondary">册可借 / 馆藏 {book.totalCopies} 册</Typography.Text>
@@ -134,8 +134,8 @@ export default function BookDetailPage() {
               <Progress
                 percent={percent}
                 showInfo={false}
-                strokeColor="var(--linear-ink-subtle)"
-                railColor="var(--linear-surface-3)"
+                strokeColor="var(--claude-text-muted)"
+                railColor="var(--claude-surface-cream-strong)"
                 size="small"
               />
             </div>

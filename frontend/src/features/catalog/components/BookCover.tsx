@@ -1,6 +1,7 @@
+// 中性暖纸层级：同一 Claude token 源的三种奶油表面，无彩色装饰。
 const PALETTE = [
-  'var(--linear-surface-1)', 'var(--linear-surface-2)', 'var(--linear-surface-3)',
-  'var(--linear-surface-4)', 'var(--linear-surface-2)', 'var(--linear-surface-3)',
+  'var(--claude-surface-soft)', 'var(--claude-surface-card)', 'var(--claude-surface-cream-strong)',
+  'var(--claude-surface-card)', 'var(--claude-surface-cream-strong)', 'var(--claude-surface-soft)',
 ] as const;
 
 function hashTitle(title: string): number {
@@ -29,9 +30,9 @@ export function BookCover({ title, author, size = 'sm' }: BookCoverProps) {
         width,
         height,
         flex: `0 0 ${width}px`,
-        borderRadius: size === 'lg' ? 'var(--linear-radius-sm)' : 'var(--linear-radius-xs)',
+        borderRadius: size === 'lg' ? 'var(--claude-radius-sm)' : 'var(--claude-radius-xs)',
         background: colors,
-        border: '1px solid var(--linear-hairline-strong)',
+        border: '1px solid var(--claude-control-border)',
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
@@ -48,12 +49,12 @@ export function BookCover({ title, author, size = 'sm' }: BookCoverProps) {
           top: 0,
           bottom: 0,
           width: size === 'lg' ? 3 : 1.5,
-          background: 'var(--linear-hairline-strong)',
+          background: 'var(--claude-control-border)',
         }}
       />
       <span
         style={{
-          color: 'var(--linear-ink)',
+          color: 'var(--claude-ink)',
           fontSize: size === 'lg' ? 15 : 7,
           lineHeight: 1.35,
           fontWeight: 600,
@@ -68,9 +69,9 @@ export function BookCover({ title, author, size = 'sm' }: BookCoverProps) {
       </span>
       <span
         style={{
-          borderTop: '1px solid var(--linear-hairline-strong)',
+          borderTop: '1px solid var(--claude-control-border)',
           paddingTop: size === 'lg' ? 6 : 2,
-          color: 'var(--linear-ink-muted)',
+          color: 'var(--claude-text-muted)',
           fontSize: size === 'lg' ? 11 : 5,
           whiteSpace: 'nowrap',
           overflow: 'hidden',

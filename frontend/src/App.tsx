@@ -9,13 +9,13 @@ import { AuthProvider } from './auth/AuthContext';
 import { SessionGuard } from './auth/SessionGuard';
 import { AppRoutes } from './app/router';
 
-import { linearTheme } from './styles/linearTheme';
+import { claudeTheme } from './styles/claudeTheme';
 
 export default function App() {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <ConfigProvider locale={zhCN} theme={linearTheme}>
+        <ConfigProvider locale={zhCN} theme={claudeTheme}>
           <AntdApp>
             <AuthProvider>
               <SessionGuard />
