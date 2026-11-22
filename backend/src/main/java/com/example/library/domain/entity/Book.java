@@ -41,6 +41,9 @@ public class Book {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "open_library_isbn")
+    private String openLibraryIsbn;
+
     @Convert(converter = EpochMillisInstantConverter.class)
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
@@ -119,6 +122,14 @@ public class Book {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getOpenLibraryIsbn() {
+        return openLibraryIsbn;
+    }
+
+    public void setOpenLibraryIsbn(String openLibraryIsbn) {
+        this.openLibraryIsbn = openLibraryIsbn;
     }
 
     public Instant getCreatedAt() {

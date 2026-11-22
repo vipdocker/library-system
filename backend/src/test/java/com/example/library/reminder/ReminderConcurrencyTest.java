@@ -41,7 +41,7 @@ class ReminderConcurrencyTest {
         jdbc.update("INSERT INTO app_user VALUES(1,'admin','test','ADMIN',1,0,0)");
         jdbc.update("INSERT INTO app_user VALUES(2,'reader','test','READER',1,0,0)");
         jdbc.update("INSERT INTO reader VALUES(1,2,'R000001','reader',NULL,NULL,'ACTIVE',0,0)");
-        jdbc.update("INSERT INTO book VALUES(1,'9787115428028','book','author',NULL,NULL,NULL,NULL,0,0)");
+        jdbc.update("INSERT INTO book(id,isbn,title,author,publisher,publish_year,category_id,description,created_at,updated_at) VALUES(1,'9787115428028','book','author',NULL,NULL,NULL,NULL,0,0)");
         jdbc.update("INSERT INTO book_copy VALUES(1,1,'C00000001','BORROWED',0,0)");
         jdbc.update("INSERT INTO loan VALUES(1,1,1,0,'2026-10-01','2026-11-20',NULL,NULL,0,1,NULL,NULL)");
         properties=new ReminderProperties();manager=new DataSourceTransactionManager(ds);

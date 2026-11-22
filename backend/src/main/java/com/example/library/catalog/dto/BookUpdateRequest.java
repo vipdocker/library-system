@@ -16,7 +16,9 @@ public record BookUpdateRequest(
         @Size(max = 100) String publisher,
         @Min(1000) @Max(9999) Integer publishYear,
         Long categoryId,
-        @Size(max = 2000) String description) {
+        @Size(max = 2000) String description,
+        CoverChangeRequest cover,
+        String openLibraryIsbn) {
 
     public BookUpdateRequest {
         isbn = Texts.trimToNull(isbn);

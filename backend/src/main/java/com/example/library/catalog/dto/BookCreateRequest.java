@@ -20,7 +20,9 @@ public record BookCreateRequest(
         @Min(1000) @Max(9999) Integer publishYear,
         Long categoryId,
         @Size(max = 2000) String description,
-        @Min(0) @Max(50) Integer initialCopies) {
+        @Min(0) @Max(50) Integer initialCopies,
+        CoverChangeRequest cover,
+        String openLibraryIsbn) {
 
     public BookCreateRequest {
         isbn = Texts.trimToNull(isbn);

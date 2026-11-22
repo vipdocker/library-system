@@ -14,7 +14,7 @@ class ReminderMigrationTest {
     @Test @DisplayName("DOD-R1: empty database installs V2 and foreign keys")
     void emptyDatabase() throws Exception {
         String url = "jdbc:sqlite:" + dir.resolve("empty.db") + "?foreign_keys=true";
-        Flyway flyway = Flyway.configure().dataSource(url, "", "").load();
+        Flyway flyway = Flyway.configure().dataSource(url, "", "").target("2").load();
         flyway.migrate();
         try (var c = DriverManager.getConnection(url); var s = c.createStatement()) {
             var rs = s.executeQuery("SELECT count(*) FROM sqlite_master WHERE type='table' AND name IN ('notification','dunning_record')");

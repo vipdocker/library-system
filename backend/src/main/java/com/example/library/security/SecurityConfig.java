@@ -99,6 +99,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/auth/password").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/categories", "/api/books", "/api/books/{id}")
                         .authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/books/{id}/cover").hasAnyRole("ADMIN", "READER")
                         .requestMatchers(HttpMethod.GET, "/api/readers/me", "/api/loans/me").hasRole("READER")
                         .requestMatchers("/api/notifications/me", "/api/notifications/me/**").hasRole("READER")
                         .requestMatchers(HttpMethod.POST, "/api/loans/{id}/renew").access(renewRule)

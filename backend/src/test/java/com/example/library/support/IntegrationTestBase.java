@@ -46,9 +46,13 @@ public abstract class IntegrationTestBase {
     @Autowired
     protected AuthTestHelper authTestHelper;
 
+    @Autowired
+    private com.example.library.common.proxy.ProxySettingsService proxySettings;
+
     @BeforeEach
     void cleanDatabaseAndClock() {
         TestDatabase.cleanAllTables(jdbcTemplate);
+        proxySettings.reload();
         mutableClock.reset();
     }
 }

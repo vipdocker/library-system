@@ -58,16 +58,18 @@ public class BookService {
     private final LoanRepository loanRepository;
     private final CopyService copyService;
     private final Clock clock;
+    private final BookCoverRepository covers;
 
     public BookService(BookRepository bookRepository, BookCopyRepository bookCopyRepository,
                        CategoryRepository categoryRepository, LoanRepository loanRepository,
-                       CopyService copyService, Clock clock) {
+                       CopyService copyService, Clock clock, BookCoverRepository covers) {
         this.bookRepository = bookRepository;
         this.bookCopyRepository = bookCopyRepository;
         this.categoryRepository = categoryRepository;
         this.loanRepository = loanRepository;
         this.copyService = copyService;
         this.clock = clock;
+        this.covers = covers;
     }
 
     /** GET /api/books：检索 + 过滤 + 分页 + 白名单排序。 */
@@ -113,7 +115,7 @@ public class BookService {
 
     /** POST /api/books：校验顺序 400（字段/ISBN）→ 404（分类）→ 409（ISBN 重复）。 */
     @Transactional
-    public BookDetailResponse create(BookCreateRequest request) {
+    public BookDetailResponse create(BookCreateRequest request, BookWriteService.PreparedCover cover, String sourceIsbn) {
         String isbn = normalizeAndValidateIsbn(request.isbn());
         Category category = resolveCategory(request.categoryId());
         if (bookRepository.existsByIsbn(isbn)) {
@@ -126,12 +128,16 @@ public class BookService {
         book = saveConflictSafe(book);
         int initialCopies = request.initialCopies() == null ? 1 : request.initialCopies();
         copyService.createCopies(book, initialCopies);
+        book.setOpenLibraryIsbn(sourceIsbn);
+        bookRepository.flush();
+        applyCover(book.getId(), cover);
         return toDetail(book);
     }
 
     /** PUT /api/books/{id}：不含 initialCopies。 */
     @Transactional
-    public BookDetailResponse update(Long id, BookUpdateRequest request) {
+    public BookDetailResponse update(Long id, BookUpdateRequest request,
+                                     BookWriteService.PreparedCover cover, String sourceIsbn) {
         String isbn = normalizeAndValidateIsbn(request.isbn());
         Book book = requireBook(id);
         Category category = resolveCategory(request.categoryId());
@@ -144,7 +150,11 @@ public class BookService {
         book.setCategoryId(category == null ? null : category.getId());
         applyOptionalFields(book, request.publisher(), request.publishYear(), request.description());
         book.setUpdatedAt(clock.instant());
+        if (sourceIsbn != null) {
+            book.setOpenLibraryIsbn(sourceIsbn);
+        }
         book = saveConflictSafe(book);
+        applyCover(id, cover);
         return toDetail(book);
     }
 
@@ -169,6 +179,14 @@ public class BookService {
     }
 
     // ---- 内部辅助 ----
+
+    private void applyCover(Long id, BookWriteService.PreparedCover cover) {
+        if ("REPLACE".equals(cover.action())) {
+            covers.replace(id, cover.image(), cover.sourceIsbn(), clock.millis());
+        } else if ("REMOVE".equals(cover.action())) {
+            covers.remove(id);
+        }
+    }
 
     private Book requireBook(Long id) {
         return bookRepository.findById(id)
@@ -210,7 +228,8 @@ public class BookService {
     private BookDetailResponse toDetail(Book book) {
         long total = bookCopyRepository.countByBookId(book.getId());
         long available = bookCopyRepository.countByBookIdAndStatus(book.getId(), CopyStatus.AVAILABLE);
-        return BookDetailResponse.from(book, categoryRef(book.getCategoryId()), total, available);
+        return BookDetailResponse.from(book, categoryRef(book.getCategoryId()), total, available,
+                covers.metadata(List.of(book.getId())).get(book.getId()));
     }
 
     private CategoryRef categoryRef(Long categoryId) {
@@ -223,7 +242,8 @@ public class BookService {
     }
 
     /** 批量上下文：一次聚合副本计数 + 一次取分类，避免 N+1。 */
-    private record BatchContext(Map<Long, CopyCounts> counts, Map<Long, Category> categories) {
+    private record BatchContext(Map<Long, CopyCounts> counts, Map<Long, Category> categories,
+                                Map<Long, com.example.library.catalog.dto.BookCoverResponse> covers) {
     }
 
     private BatchContext batchContext(List<Book> books) {
@@ -236,7 +256,7 @@ public class BookService {
         Map<Long, Category> categories = categoryIds.isEmpty() ? Map.of()
                 : categoryRepository.findAllById(categoryIds).stream()
                         .collect(Collectors.toMap(Category::getId, Function.identity()));
-        return new BatchContext(counts, categories);
+        return new BatchContext(counts, categories, covers.metadata(bookIds));
     }
 
     private BookSummaryResponse toSummary(Book book, BatchContext context) {
@@ -245,6 +265,6 @@ public class BookService {
         long available = count == null ? 0 : count.getAvailableCopies();
         Category category = book.getCategoryId() == null ? null : context.categories().get(book.getCategoryId());
         CategoryRef ref = category == null ? null : new CategoryRef(category.getId(), category.getName());
-        return BookSummaryResponse.from(book, ref, total, available);
+        return BookSummaryResponse.from(book, ref, total, available, context.covers().get(book.getId()));
     }
 }

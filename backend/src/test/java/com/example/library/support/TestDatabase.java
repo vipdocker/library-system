@@ -47,5 +47,6 @@ public final class TestDatabase {
         jdbcTemplate.execute("DELETE FROM category");
         jdbcTemplate.execute("DELETE FROM app_user");
         jdbcTemplate.execute("DELETE FROM sqlite_sequence");
+        jdbcTemplate.execute("UPDATE system_proxy_settings SET enabled=0,host=NULL,port=NULL,revision=0,updated_at=NULL,updated_by=NULL WHERE id=1");
     }
 }

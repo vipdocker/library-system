@@ -19,6 +19,11 @@ public enum ErrorCode {
 
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "分类不存在"),
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "图书不存在"),
+    COVER_NOT_FOUND(HttpStatus.NOT_FOUND, "封面不存在"),
+    PAYLOAD_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "请求或图片超过大小限制"),
+    COVER_UNSUPPORTED_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "封面仅支持 JPEG 或 PNG"),
+    OPEN_LIBRARY_UNAVAILABLE(HttpStatus.BAD_GATEWAY, "Open Library 暂不可用，请继续手工录入"),
+    OPEN_LIBRARY_RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "Open Library 查询过于频繁，请稍后重试"),
     COPY_NOT_FOUND(HttpStatus.NOT_FOUND, "副本不存在"),
     READER_NOT_FOUND(HttpStatus.NOT_FOUND, "读者不存在"),
     LOAN_NOT_FOUND(HttpStatus.NOT_FOUND, "借阅记录不存在"),

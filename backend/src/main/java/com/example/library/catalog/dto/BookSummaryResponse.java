@@ -16,10 +16,12 @@ public record BookSummaryResponse(
         Integer publishYear,
         CategoryRef category,
         long totalCopies,
-        long availableCopies) {
+        long availableCopies,
+        BookCoverResponse cover) {
 
-    public static BookSummaryResponse from(Book book, CategoryRef category, long totalCopies, long availableCopies) {
+    public static BookSummaryResponse from(Book book, CategoryRef category, long totalCopies, long availableCopies,
+                                            BookCoverResponse cover) {
         return new BookSummaryResponse(book.getId(), book.getIsbn(), book.getTitle(), book.getAuthor(),
-                book.getPublisher(), book.getPublishYear(), category, totalCopies, availableCopies);
+                book.getPublisher(), book.getPublishYear(), category, totalCopies, availableCopies, cover);
     }
 }

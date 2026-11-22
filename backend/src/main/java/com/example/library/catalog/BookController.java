@@ -33,10 +33,26 @@ public class BookController {
 
     private final BookService bookService;
     private final CopyService copyService;
+    private final BookWriteService bookWriteService;
+    private final BookCoverService bookCoverService;
 
-    public BookController(BookService bookService, CopyService copyService) {
+    public BookController(BookService bookService, CopyService copyService,
+                          BookWriteService bookWriteService, BookCoverService bookCoverService) {
         this.bookService = bookService;
         this.copyService = copyService;
+        this.bookWriteService = bookWriteService;
+        this.bookCoverService = bookCoverService;
+    }
+
+    @GetMapping("/{id}/cover")
+    public ResponseEntity<byte[]> cover(@PathVariable Long id) {
+        var cover = bookCoverService.read(id);
+        return ResponseEntity.ok()
+                .header("Content-Type", cover.mediaType())
+                .header("Content-Length", String.valueOf(cover.bytes().length))
+                .header("Cache-Control", "private,no-store")
+                .header("X-Content-Type-Options", "nosniff")
+                .body(cover.bytes());
     }
 
     /** 200 Page<BookSummary>；q/field/categoryId/availableOnly/page/size/sort。 */
@@ -61,13 +77,13 @@ public class BookController {
     /** 201 BookDetail。 */
     @PostMapping
     public ResponseEntity<BookDetailResponse> create(@Valid @RequestBody BookCreateRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookWriteService.create(request));
     }
 
     /** 200 BookDetail。 */
     @PutMapping("/{id}")
     public BookDetailResponse update(@PathVariable Long id, @Valid @RequestBody BookUpdateRequest request) {
-        return bookService.update(id, request);
+        return bookWriteService.update(id, request);
     }
 
     /** 204（同时删除其所有副本）。 */

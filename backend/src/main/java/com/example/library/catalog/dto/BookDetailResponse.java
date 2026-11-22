@@ -22,13 +22,19 @@ public record BookDetailResponse(
         long availableCopies,
         String description,
         String createdAt,
-        String updatedAt) {
+        String updatedAt,
+        BookCoverResponse cover,
+        String openLibraryIsbn,
+        String metadataSourceUrl) {
 
-    public static BookDetailResponse from(Book book, CategoryRef category, long totalCopies, long availableCopies) {
+    public static BookDetailResponse from(Book book, CategoryRef category, long totalCopies, long availableCopies,
+                                           BookCoverResponse cover) {
         return new BookDetailResponse(book.getId(), book.getIsbn(), book.getTitle(), book.getAuthor(),
                 book.getPublisher(), book.getPublishYear(), category, totalCopies, availableCopies,
                 book.getDescription(),
                 DateTimeFormatter.ISO_INSTANT.format(book.getCreatedAt().truncatedTo(ChronoUnit.MILLIS)),
-                DateTimeFormatter.ISO_INSTANT.format(book.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)));
+                DateTimeFormatter.ISO_INSTANT.format(book.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS)),
+                cover, book.getOpenLibraryIsbn(), book.getOpenLibraryIsbn() == null ? null
+                        : "https://openlibrary.org/isbn/" + book.getOpenLibraryIsbn());
     }
 }
