@@ -42,7 +42,16 @@ lib:
     bootstrap: true
   seed:
     demo: false
+  open-library:
+    app-name: ${LIB_OPEN_LIBRARY_APP_NAME:LibraryCatalog}
+    # Maven resource filtering (spring-boot-starter-parent, @ delimiter) injects the real project version.
+    app-version: "@project.version@"
+    # Optional; sent only to openlibrary.org in the User-Agent. Empty = anonymous (still 1 request/second).
+    contact-email: ${LIB_OPEN_LIBRARY_CONTACT_EMAIL:}
+    direct-failure-ttl: ${LIB_OPEN_LIBRARY_DIRECT_FAILURE_TTL:PT30S}
 
 logging:
   level:
     root: INFO
+    # Upstream connection errors are reported by OpenLibraryClient as sanitized enums; this exact logger echoes peer/proxy addresses.
+    reactor.netty.http.client.HttpClientConnect: OFF

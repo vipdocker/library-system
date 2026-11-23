@@ -3,7 +3,7 @@ import { Alert, Button, Checkbox, Flex, Form, Space, Typography } from 'antd';
 import type { FormInstance } from 'antd';
 import { ApiError } from '../../../api/client';
 import { errorMessage } from '../../../api/errors';
-import type { OpenLibraryLookup } from '../../../api/types';
+import type { OpenLibraryDiagnostic, OpenLibraryLookup } from '../../../api/types';
 import { lookupOpenLibrary } from '../api';
 import { type CoverDraft, replacementFromBase64 } from '../coverDraft';
 import { isValidIsbn, normalizeIsbn } from '../validation';
@@ -12,6 +12,19 @@ import { CoverPreview } from './BookCover';
 const FIELDS = { title: '书名', author: '作者', publisher: '出版社', publishYear: '出版年', description: '内容简介' } as const;
 type Field = keyof typeof FIELDS;
 type Value = string | number | null | undefined;
+const STAGES: Record<string, string> = { METADATA: '书目', COVER: '封面' };
+const PROVIDERS: Record<string, string> = { OPEN_LIBRARY: 'Open Library', COVERS: '封面服务', ARCHIVE: '封面归档服务' };
+const PROXY: Record<string, string> = { RESPONDED: '代理已响应', FAILED: '代理连接失败' };
+/** One concise line from sanitized diagnostics; no status is invented when no upstream response arrived. */
+function diagnosis(details: OpenLibraryDiagnostic | Record<string, unknown> | null | undefined): string | undefined {
+  if (!details || typeof details.stage !== 'string') return undefined;
+  const parts = [STAGES[details.stage] ?? details.stage];
+  if (typeof details.provider === 'string') parts.push(PROVIDERS[details.provider] ?? details.provider);
+  parts.push(typeof details.upstreamStatus === 'number' ? `上游 HTTP ${details.upstreamStatus}` : '未收到上游响应');
+  if (details.lastRoute === 'SOCKS5') parts.push(`经代理${typeof details.proxyOutcome === 'string' && PROXY[details.proxyOutcome] ? `（${PROXY[details.proxyOutcome]}）` : ''}`);
+  else if (details.lastRoute === 'DIRECT') parts.push('直连');
+  return parts.join(' · ');
+}
 export function OpenLibraryCandidatePanel({ form, disabled, isLocked, draft, onApply }: {
   form: FormInstance; disabled: boolean; isLocked: () => boolean; draft: CoverDraft;
   onApply: (isbn: string, hasMetadata: boolean, cover?: CoverDraft) => void;
@@ -25,7 +38,7 @@ export function OpenLibraryCandidatePanel({ form, disabled, isLocked, draft, onA
   const [remoteCover, setRemoteCover] = useState<CoverDraft>();
   const [selected, setSelected] = useState<Partial<Record<Field, { value: Value }>>>({});
   const [coverSelection, setCoverSelection] = useState<{ draft: CoverDraft }>();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<{ title: string; detail?: string }>();
   const [notice, setNotice] = useState<string>();
   const [focused, setFocused] = useState<string>();
   const cancel = () => { requestId.current++; abort.current?.abort(); };
@@ -59,11 +72,14 @@ export function OpenLibraryCandidatePanel({ form, disabled, isLocked, draft, onA
       setSelected(defaults); setRemoteCover(cover); setResult(response);
     } catch (failure) {
       if (!current()) return;
-      if (controller.signal.aborted) setError('书目查询超时，可继续手动录入或手动重试');
+      if (controller.signal.aborted) setError({ title: '书目查询超时，可继续手动录入或手动重试' });
       else {
         const code = failure instanceof ApiError ? failure.code : 'NETWORK_ERROR';
-        const seconds = failure instanceof ApiError ? failure.details.retryAfterSeconds : undefined;
-        setError(errorMessage(code) + (typeof seconds === 'number' ? `；请等待 ${seconds} 秒后手动重试` : ''));
+        const details = failure instanceof ApiError ? failure.details : {};
+        const seconds = details.retryAfterSeconds;
+        const wait = details.longWait === true ? '；上游要求长时间等待，请稍后再手动重试'
+          : typeof seconds === 'number' ? `；请等待 ${seconds} 秒后手动重试` : '';
+        setError({ title: errorMessage(code) + wait, detail: diagnosis(details) });
       }
     } finally { clearTimeout(timer); if (id === requestId.current) setLoading(false); }
   }
@@ -89,7 +105,7 @@ export function OpenLibraryCandidatePanel({ form, disabled, isLocked, draft, onA
       {loading && <Button disabled={disabled} onClick={() => { cancel(); setLoading(false); }}>取消查询</Button>}
     </Space>
     <Typography.Paragraph type="secondary" style={{ marginTop: 12 }}>仅查询候选，不会保存。请比较并明确应用所选项；已有内容和本地待选封面不会自动覆盖，分类仍由您选择。</Typography.Paragraph>
-    {error && <Alert type="error" title={error} showIcon />}
+    {error && <Alert type="error" title={error.title} description={error.detail} showIcon />}
     {notice && <Typography.Paragraph role="status">{notice}</Typography.Paragraph>}
     {result && <div>
       <Typography.Paragraph>ISBN {result.isbn} · <a href={result.sourceUrl} target="_blank" rel="noreferrer">Open Library 来源</a></Typography.Paragraph>
@@ -104,10 +120,11 @@ export function OpenLibraryCandidatePanel({ form, disabled, isLocked, draft, onA
       <Flex gap={16} wrap style={{ marginTop: 16 }}>
         {remoteCover?.action === 'REPLACE' && <CoverPreview blob={remoteCover.blob} title="候选封面" size="lg" />}
         <div><Checkbox aria-label="应用候选封面" onFocus={() => setFocused('cover')} onBlur={() => setFocused(undefined)} style={{ outline: focused === 'cover' ? '2px solid var(--claude-link)' : undefined, outlineOffset: 2 }} disabled={disabled || !remoteCover} checked={!!coverSelection} onChange={(event) => setCoverSelection(event.target.checked ? { draft } : undefined)}>应用候选封面</Checkbox>
-          <Typography.Paragraph>{result.cover ? remoteCover ? '默认不选；勾选后才替换当前封面草稿' : '候选封面无法验证' : '未提供封面'}</Typography.Paragraph></div>
+          <Typography.Paragraph>{result.cover ? remoteCover ? '默认不选；勾选后才替换当前封面草稿' : '候选封面无法验证' : result.warnings.some((warning) => warning.field === 'cover') ? '封面暂不可用，请查看下方提示' : '未提供封面'}</Typography.Paragraph></div>
       </Flex>
-      {result.warnings.map((warning, index) => <Alert key={index} type="warning" showIcon title={warning.message} style={{ marginBottom: 8 }} />)}
+      {result.warnings.map((warning, index) => <Alert key={index} type="warning" showIcon title={warning.message} description={diagnosis(warning.details)} style={{ marginBottom: 8 }} />)}
       {result.retryAfterSeconds != null && <Typography.Paragraph>请等待 {result.retryAfterSeconds} 秒后手动重试</Typography.Paragraph>}
+      {result.retryAfterSeconds == null && result.warnings.some((warning) => warning.details?.longWait === true) && <Typography.Paragraph>上游要求长时间等待，请稍后再手动重试</Typography.Paragraph>}
       <Space wrap style={{ marginTop: 16 }}><Button disabled={disabled || Object.keys(selected).length === 0 && !coverSelection} onClick={apply}>应用选中项</Button><Button disabled={disabled} onClick={() => { cancel(); setResult(undefined); setRemoteCover(undefined); setNotice(undefined); }}>取消候选</Button></Space>
     </div>}
   </section>;

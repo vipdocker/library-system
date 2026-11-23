@@ -33,13 +33,24 @@ export interface BookCoverMetadata {
 export type CoverChange = { action: 'KEEP' | 'REMOVE' } | {
   action: 'REPLACE'; mediaType: CoverMediaType; base64: string; sourceIsbn: string | null;
 };
+/** Sanitized upstream diagnostics (enums/integers only); missing upstreamStatus means no response headers arrived. */
+export interface OpenLibraryDiagnostic {
+  reason?: string;
+  stage?: 'METADATA' | 'COVER';
+  provider?: 'OPEN_LIBRARY' | 'COVERS' | 'ARCHIVE';
+  upstreamStatus?: number | null;
+  lastRoute?: 'DIRECT' | 'SOCKS5';
+  proxyOutcome?: 'DISABLED' | 'NOT_ATTEMPTED' | 'RESPONDED' | 'FAILED';
+  retryAfterSeconds?: number | null;
+  longWait?: boolean;
+}
 export interface OpenLibraryLookup {
   isbn: string;
   found: boolean;
   sourceUrl: string;
   fields: { title: string | null; author: string | null; publisher: string | null; description: string | null; publishYear: number | null };
   cover: { mediaType: CoverMediaType; base64: string; byteLength: number; width: number; height: number } | null;
-  warnings: { code: string; field: string | null; message: string }[];
+  warnings: { code: string; field: string | null; message: string; details?: OpenLibraryDiagnostic | null }[];
   retryAfterSeconds: number | null;
 }
 export interface ProxySettings {

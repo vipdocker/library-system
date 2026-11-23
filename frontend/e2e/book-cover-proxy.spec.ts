@@ -3,7 +3,8 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { apiGet, apiLogin, apiLogout, loginViaUi, ADMIN_USERNAME, ADMIN_PASSWORD, uniqueIsbn13, uniqueSuffix } from './helpers';
 import type { BookDetail, ProxySettings } from '../src/api/types';
-const evidence = path.resolve('..', 'docs/verification/frontend-cover-proxy/development');
+// OL-OPT-INT: an integration run may redirect evidence so earlier task evidence is never overwritten (default unchanged).
+const evidence = path.resolve('..', process.env.OL_E2E_EVIDENCE_DIR ?? 'docs/verification/frontend-cover-proxy/development');
 const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC', 'base64');
 const consoleErrors: string[] = [];
 test.beforeAll(() => mkdirSync(evidence, { recursive: true }));
@@ -191,6 +192,94 @@ test('AC-FE-04/06 real proxy save/disable and READER guard, desktop and mobile',
   expect(settingsRequests).toBe(0); await expect(page.getByRole('menuitem', { name: '系统设置' })).toHaveCount(0);
   await screenshot(page, 'proxy-reader-forbidden-390');
   expect((await page.request.get('/api/admin/settings/proxy')).status()).toBe(403);
+});
+
+// ---- OL-OPT-INT-01 browser diagnostics (controlled lookup GET responses shaped exactly like the backend's sanitized
+// ErrorResponse/warning details; book writes, session and cover reads use the real temporary-DB backend). ----
+test('OL-OPT diagnostics: upstream 401 is a local 502 Alert, session stays, manual entry saves (1440, keyboard)', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await admin(page); await page.goto('/admin/books/new');
+  const isbn = uniqueIsbn13();
+  let lookups = 0;
+  await page.route('**/api/catalog/open-library?*', async (route) => { lookups++; await route.fulfill({ status: 502, headers: { 'Cache-Control': 'no-store' }, json: {
+    code: 'OPEN_LIBRARY_UNAVAILABLE', message: 'Open Library 暂不可用，请继续手工录入', status: 502, path: '/api/catalog/open-library', timestamp: new Date().toISOString(), fieldErrors: [],
+    details: { reason: 'HTTP_ERROR', stage: 'METADATA', provider: 'OPEN_LIBRARY', lastRoute: 'SOCKS5', proxyOutcome: 'RESPONDED', upstreamStatus: 401, directReason: 'CONNECT' },
+  } }); });
+  await page.getByLabel('ISBN', { exact: true }).fill(isbn);
+  await page.getByLabel('书名', { exact: true }).fill(`诊断人工录入-${uniqueSuffix()}`);
+  await page.getByLabel('作者', { exact: true }).fill('人工作者');
+  await page.getByRole('button', { name: '获取书目与封面' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('书目服务暂不可用，可继续手动录入')).toBeVisible();
+  await expect(page.getByText('书目 · Open Library · 上游 HTTP 401 · 经代理（代理已响应）')).toBeVisible();
+  await expect(page).toHaveURL(/\/admin\/books\/new$/);
+  expect(lookups).toBe(1);
+  expect((await page.request.get('/api/auth/me')).status()).toBe(200);
+  await screenshot(page, 'ol-opt-diagnostic-401-as-502-1440');
+  await page.getByLabel('选择本地封面').setInputFiles({ name: 'cover.png', mimeType: 'image/png', buffer: png });
+  const created = await waitForSaved(page, /创建图书/, 'POST');
+  expect(created.openLibraryIsbn).toBeNull(); expect(created.cover?.sourceUrl).toBeNull();
+  expect(await (await page.request.get(`/api/books/${created.id}/cover`)).body()).toEqual(png);
+  expect(lookups).toBe(1); // no automatic retry
+});
+
+test('OL-OPT diagnostics: 429 seconds and long wait stay manual; no-response failure states no guessed status (390)', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await admin(page); await page.goto('/admin/books/new');
+  await page.getByLabel('ISBN', { exact: true }).fill(uniqueIsbn13());
+  await page.getByLabel('书名', { exact: true }).fill('人工编辑保留');
+  const cases = [
+    { status: 429, code: 'OPEN_LIBRARY_RATE_LIMITED', details: { reason: 'UPSTREAM', retryAfterSeconds: 3600, stage: 'METADATA', provider: 'OPEN_LIBRARY', lastRoute: 'DIRECT', proxyOutcome: 'NOT_ATTEMPTED', upstreamStatus: 429 },
+      expected: [/请等待 3600 秒后手动重试/, /书目 · Open Library · 上游 HTTP 429 · 直连/] },
+    { status: 429, code: 'OPEN_LIBRARY_RATE_LIMITED', details: { reason: 'COOLDOWN', longWait: true }, expected: [/上游要求长时间等待，请稍后再手动重试/] },
+    { status: 502, code: 'OPEN_LIBRARY_UNAVAILABLE', details: { reason: 'CONNECT', stage: 'METADATA', provider: 'OPEN_LIBRARY', lastRoute: 'SOCKS5', proxyOutcome: 'FAILED', upstreamStatus: null, directReason: 'CONNECT', proxyReason: 'CONNECT' },
+      expected: [/书目 · Open Library · 未收到上游响应 · 经代理（代理连接失败）/] },
+  ];
+  for (const [index, item] of cases.entries()) {
+    await page.route('**/api/catalog/open-library?*', (route) => route.fulfill({ status: item.status, json: { code: item.code, message: 'x', status: item.status, fieldErrors: [], details: item.details } }));
+    await page.getByRole('button', { name: '获取书目与封面' }).click();
+    for (const text of item.expected) { await expect(page.getByText(text)).toBeVisible(); }
+    if (index === 1) { await expect(page.getByText(/请等待 \d+ 秒/)).toHaveCount(0); }
+    await expect(page.getByLabel('书名', { exact: true })).toHaveValue('人工编辑保留');
+    await expect(page).toHaveURL(/\/admin\/books\/new$/);
+    await screenshot(page, `ol-opt-diagnostic-${index}-390`);
+    await page.unroute('**/api/catalog/open-library?*');
+  }
+  expect((await page.request.get('/api/auth/me')).status()).toBe(200);
+});
+
+test('OL-OPT diagnostics: partial candidate with cover warning applies explicitly and saves real book (390/1440)', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await admin(page);
+  const isbn = uniqueIsbn13();
+  await page.route('**/api/catalog/open-library?*', (route) => route.fulfill({ json: {
+    isbn, found: true, sourceUrl: `https://openlibrary.org/isbn/${isbn}`,
+    fields: { title: '版本书名', author: null, publisher: '版本出版社', publishYear: 1999, description: '作品级简介' },
+    cover: null, retryAfterSeconds: null,
+    warnings: [
+      { code: 'AUTHOR_UNVERIFIED', field: 'author', message: '无法核对作者与本版本一致，未采用作者，请手工录入', details: null },
+      { code: 'DESCRIPTION_FROM_WORK', field: 'description', message: '简介来自作品级记录，可能与本版本不完全一致，请核对后再应用', details: null },
+      { code: 'COVER_UNAVAILABLE', field: 'cover', message: '封面获取失败，书目信息仍可应用', details: { reason: 'HTTP_ERROR', stage: 'COVER', provider: 'ARCHIVE', lastRoute: 'SOCKS5', proxyOutcome: 'RESPONDED', upstreamStatus: 503 } },
+    ],
+  } }));
+  await page.goto('/admin/books/new');
+  await page.getByLabel('ISBN', { exact: true }).fill(isbn);
+  await page.getByLabel('作者', { exact: true }).fill('人工作者');
+  await page.getByRole('button', { name: '获取书目与封面' }).click();
+  await expect(page.getByText('封面 · 封面归档服务 · 上游 HTTP 503 · 经代理（代理已响应）')).toBeVisible();
+  await expect(page.getByText('封面暂不可用，请查看下方提示')).toBeVisible();
+  await expect(page.getByRole('checkbox', { name: '应用候选封面', exact: true })).toBeDisabled();
+  await expect(page.getByRole('checkbox', { name: '应用作者', exact: true })).toBeDisabled();
+  await screenshot(page, 'ol-opt-partial-candidate-390');
+  await page.getByRole('button', { name: '应用选中项' }).click();
+  await expect(page.getByLabel('书名', { exact: true })).toHaveValue('版本书名');
+  await expect(page.getByLabel('作者', { exact: true })).toHaveValue('人工作者');
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  const book = await waitForSaved(page, /创建图书/, 'POST');
+  expect(book.title).toBe('版本书名'); expect(book.author).toBe('人工作者'); expect(book.openLibraryIsbn).toBe(isbn); expect(book.cover).toBeNull();
+  await page.goto(`/admin/books/${book.id}/edit`);
+  await expect(page.getByLabel('书名', { exact: true })).toHaveValue('版本书名');
+  await screenshot(page, 'ol-opt-partial-saved-1440');
 });
 
 // External connectivity was observed once during development (public-lookup.json).

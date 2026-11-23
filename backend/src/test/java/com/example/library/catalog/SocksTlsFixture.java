@@ -23,8 +23,16 @@ final class SocksTlsFixture implements AutoCloseable {
     final List<Throwable> failures = new CopyOnWriteArrayList<>();
     final CountDownLatch bodyStarted = new CountDownLatch(1);
     volatile int responseStatus = 200;
-    volatile byte[] responseBody = "{\"ISBN:080442957X\":{\"title\":\"fixture book\"}}".getBytes(StandardCharsets.UTF_8);
+    /** OL-OPT-API: default Edition JSON for /books/OL1M.json (validated key + ISBN, no covers field -> ISBN cover). */
+    volatile byte[] responseBody = "{\"key\":\"/books/OL1M\",\"isbn_10\":[\"080442957X\"],\"title\":\"fixture book\"}".getBytes(StandardCharsets.UTF_8);
+    volatile String isbnLocation = "/books/OL1M.json";
+    volatile byte[] searchBody = "{\"docs\":[{\"key\":\"/works/OL1W\",\"author_key\":[\"OL1A\"],\"author_name\":[\"Fixture Author\"]}]}".getBytes(StandardCharsets.UTF_8);
+    volatile byte[] workBody = "{\"key\":\"/works/OL1W\",\"description\":\"fixture work description\"}".getBytes(StandardCharsets.UTF_8);
+    volatile String coverLocation;
+    volatile String retryAfter;
+    volatile int coverRedirectStatus = 302;
     volatile boolean stallBody;
+    volatile boolean stallHeaders;
     volatile boolean rejectAuth;
     volatile int proxyHandshakeDelayMillis;
     volatile int tlsHandshakeDelayMillis;
@@ -34,7 +42,7 @@ final class SocksTlsFixture implements AutoCloseable {
     private final ServerSocket proxy;
     private volatile boolean closed;
     private static final char[] PASSWORD = "fixture-only".toCharArray();
-    private static final KeyStore KEYS = keys("openlibrary.org,dns:covers.openlibrary.org");
+    private static final KeyStore KEYS = keys("openlibrary.org,dns:covers.openlibrary.org,dns:archive.org");
     private final KeyStore selectedKeys;
 
     private static KeyStore keys(String names) {
@@ -107,10 +115,20 @@ final class SocksTlsFixture implements AutoCloseable {
         StringBuilder request = new StringBuilder();
         for (String line; (line = reader.readLine()) != null && !line.isEmpty();) { request.append(line).append('\n'); }
         httpRequests.add(request.toString());
-        byte[] body = request.toString().contains("/b/") ? BookCoverApiTest.image("png", 4, 6) : responseBody;
-        String type = request.toString().contains("/b/") ? "image/png" : "application/json";
+        if (stallHeaders) { bodyStarted.countDown(); while (!closed && socket.getInputStream().read() != -1) { } return; }
+        String path = request.toString().split(" ", 3).length > 1 ? request.toString().split(" ", 3)[1] : "";
+        boolean cover = path.startsWith("/b/");
+        boolean image = cover || path.startsWith("/download/m_covers_");
+        boolean isbnPath = path.startsWith("/isbn/");
+        String location = cover ? coverLocation : isbnPath ? isbnLocation : null;
+        byte[] body = location != null ? new byte[0] : image ? BookCoverApiTest.image("png", 4, 6)
+                : path.startsWith("/search.json") ? searchBody : path.startsWith("/works/") ? workBody : responseBody;
+        String type = image ? "image/png" : "application/json";
+        int status = location != null ? (cover ? coverRedirectStatus : 302) : responseStatus;
         var out = socket.getOutputStream();
-        out.write(("HTTP/1.1 " + responseStatus + " Fixture\r\nContent-Type: " + type + "\r\nContent-Length: " + body.length + "\r\nConnection: close\r\n\r\n").getBytes(StandardCharsets.US_ASCII));
+        out.write(("HTTP/1.1 " + status + " Fixture\r\nContent-Type: " + type + "\r\nContent-Length: " + body.length
+                + (location == null ? "" : "\r\nLocation: " + location) + (retryAfter == null ? "" : "\r\nRetry-After: " + retryAfter)
+                + "\r\nConnection: close\r\n\r\n").getBytes(StandardCharsets.US_ASCII));
         if (stallBody) { out.write(body, 0, 1); out.flush(); bodyStarted.countDown(); while (!closed && socket.getInputStream().read() != -1) { } }
         else { out.write(body); out.flush(); }
     }

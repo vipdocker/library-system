@@ -4,7 +4,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ApiError } from '../../../api/client';
+import { ApiError, UNAUTHORIZED_EVENT } from '../../../api/client';
 import {
   addCopies,
   catalogKeys,
@@ -191,12 +191,28 @@ describe('AC-FE-01/02/05 draft and explicit lookup', () => {
     await fillValidBook();
     await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
     expect(await screen.findByText('候选标题')).toBeInTheDocument();
+    expect(screen.getByText('未提供封面')).toBeInTheDocument();
+    expect(screen.queryByText('封面暂不可用，请查看下方提示')).not.toBeInTheDocument();
     expect(screen.getByLabelText('书名')).toHaveValue('测试之书');
     expect(screen.getByRole('checkbox', { name: '应用书名' })).not.toBeChecked();
     expect(screen.getByRole('checkbox', { name: '应用出版社' })).toBeChecked();
     await userEvent.click(screen.getByRole('button', { name: '取消候选' }));
     expect(screen.getByLabelText('出版社')).toHaveValue('');
     expect(createBook).not.toHaveBeenCalled();
+  });
+  it('cover warning distinguishes unavailable image from an upstream with no cover', async () => {
+    const warning = '封面归档服务限流，请稍后手动重试，书目信息仍可应用';
+    vi.mocked(lookupOpenLibrary).mockResolvedValue({ ...candidate, warnings: [{ code: 'OPEN_LIBRARY_RATE_LIMITED', field: 'cover', message: warning }], retryAfterSeconds: 7 });
+    renderCreate(); await fillValidBook();
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    expect(await screen.findByText('候选标题')).toBeInTheDocument();
+    expect(screen.getByText('封面暂不可用，请查看下方提示')).toBeInTheDocument();
+    expect(screen.queryByText('未提供封面')).not.toBeInTheDocument();
+    expect(screen.getByText(warning)).toBeInTheDocument();
+    expect(screen.getByText('请等待 7 秒后手动重试')).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: '应用候选封面' })).toBeDisabled();
+    expect(screen.getByLabelText('书名')).toHaveValue('测试之书');
+    expect(lookupOpenLibrary).toHaveBeenCalledTimes(1); expect(createBook).not.toHaveBeenCalled();
   });
   it('explicit partial apply sets provenance only after application and submits with the sole save button', async () => {
     vi.mocked(lookupOpenLibrary).mockResolvedValue(candidate);
@@ -291,6 +307,39 @@ describe('AC-FE-01/02/05 draft and explicit lookup', () => {
     expect(await screen.findByText(status === 429 ? /42 秒/ : status === 403 ? /无权限执行/ : /暂不可用/)).toBeInTheDocument();
     expect(screen.getByLabelText('书名')).toHaveValue('测试之书');
     expect(createBook).not.toHaveBeenCalled();
+  });
+  it('OL-OPT-DIAG upstream 401 arrives as local 502 diagnostics, never a logout', async () => {
+    const unauthorized = vi.fn(); window.addEventListener(UNAUTHORIZED_EVENT, unauthorized);
+    try {
+      vi.mocked(lookupOpenLibrary).mockRejectedValue(new ApiError(502, 'OPEN_LIBRARY_UNAVAILABLE', 'failed', [], { reason: 'HTTP_ERROR', stage: 'METADATA', provider: 'OPEN_LIBRARY', upstreamStatus: 401, lastRoute: 'SOCKS5', proxyOutcome: 'RESPONDED' }));
+      renderCreate(); await fillValidBook();
+      await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+      expect(await screen.findByText(/暂不可用/)).toBeInTheDocument();
+      expect(screen.getByText('书目 · Open Library · 上游 HTTP 401 · 经代理（代理已响应）')).toBeInTheDocument();
+      expect(unauthorized).not.toHaveBeenCalled();
+      expect(screen.getByLabelText('书名')).toHaveValue('测试之书');
+    } finally { window.removeEventListener(UNAUTHORIZED_EVENT, unauthorized); }
+  });
+  it('OL-OPT-DIAG transmission failure states no upstream response instead of a guessed status', async () => {
+    vi.mocked(lookupOpenLibrary).mockRejectedValue(new ApiError(502, 'OPEN_LIBRARY_UNAVAILABLE', 'failed', [], { reason: 'CONNECT', stage: 'METADATA', provider: 'OPEN_LIBRARY', lastRoute: 'SOCKS5', proxyOutcome: 'FAILED' }));
+    renderCreate(); await fillValidBook();
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    expect(await screen.findByText('书目 · Open Library · 未收到上游响应 · 经代理（代理连接失败）')).toBeInTheDocument();
+  });
+  it('OL-OPT-DIAG long upstream wait never shows a fake seconds value', async () => {
+    vi.mocked(lookupOpenLibrary).mockRejectedValue(new ApiError(429, 'OPEN_LIBRARY_RATE_LIMITED', 'failed', [], { reason: 'COOLDOWN', longWait: true }));
+    renderCreate(); await fillValidBook();
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    expect(await screen.findByText(/上游要求长时间等待/)).toBeInTheDocument();
+    expect(screen.queryByText(/请等待 .* 秒/)).not.toBeInTheDocument();
+  });
+  it('OL-OPT-DIAG cover warning shows concise stage/provider/status diagnostics', async () => {
+    vi.mocked(lookupOpenLibrary).mockResolvedValue({ ...candidate, warnings: [{ code: 'COVER_UNAVAILABLE', field: 'cover', message: '封面获取失败，书目信息仍可应用', details: { reason: 'HTTP_ERROR', stage: 'COVER', provider: 'ARCHIVE', upstreamStatus: 503, lastRoute: 'DIRECT', proxyOutcome: 'NOT_ATTEMPTED' } }] });
+    renderCreate(); await fillValidBook();
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    expect(await screen.findByText('封面获取失败，书目信息仍可应用')).toBeInTheDocument();
+    expect(screen.getByText('封面 · 封面归档服务 · 上游 HTTP 503 · 直连')).toBeInTheDocument();
+    expect(screen.getByText('封面暂不可用，请查看下方提示')).toBeInTheDocument();
   });
   it('disconnected POST rereads the submitted ISBN even if draft ISBN has changed, never automatically resubmits', async () => {
     vi.mocked(createBook).mockRejectedValue(new TypeError('response disconnected'));

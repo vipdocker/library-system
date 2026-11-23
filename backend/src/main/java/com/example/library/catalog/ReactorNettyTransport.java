@@ -41,19 +41,31 @@ final class ReactorNettyTransport implements RoutedTransport {
     private final AddressResolverGroup<InetSocketAddress> directResolver;
     private final Scheduler timer;
     private final HttpClient base;
+    private final String metadataUserAgent;
+    private final String assetUserAgent;
     private final AtomicBoolean closed = new AtomicBoolean();
     private final AtomicReference<Attempt> active = new AtomicReference<>();
     private volatile CompletableFuture<Void> cleanup = CompletableFuture.completedFuture(null);
+    static final String DEFAULT_USER_AGENT = "LibraryCatalog";
 
-    ReactorNettyTransport() { this(platformTls(), dnsResolver()); }
+    ReactorNettyTransport() { this(DEFAULT_USER_AGENT, DEFAULT_USER_AGENT); }
+
+    ReactorNettyTransport(String metadataUserAgent, String assetUserAgent) {
+        this(platformTls(), dnsResolver(), metadataUserAgent, assetUserAgent);
+    }
 
     ReactorNettyTransport(SslContext tls, AddressResolverGroup<InetSocketAddress> directResolver) {
+        this(tls, directResolver, DEFAULT_USER_AGENT, DEFAULT_USER_AGENT);
+    }
+
+    ReactorNettyTransport(SslContext tls, AddressResolverGroup<InetSocketAddress> directResolver, String metadataUserAgent, String assetUserAgent) {
         this.directResolver = directResolver;
+        this.metadataUserAgent = metadataUserAgent;
+        this.assetUserAgent = assetUserAgent;
         timer = Schedulers.fromExecutorService(loops.onClient(false));
         base = HttpClient.newConnection().runOn(loops, false).protocol(HttpProtocol.HTTP11)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
                 .noProxy().disableRetry(true).followRedirect(false).compress(false).keepAlive(false).wiretap(false)
-                .headers(headers -> headers.set("User-Agent", "LibraryCatalog/0.1 (local library; Open Library ISBN lookup)"))
                 .secure(spec -> spec.sslContext(tls).handlerConfigurator(HttpClientSecurityUtils.HOSTNAME_VERIFICATION_CONFIGURER)
                         .handshakeTimeout(Duration.ofSeconds(3)).closeNotifyFlushTimeout(Duration.ZERO).closeNotifyReadTimeout(Duration.ZERO));
     }
@@ -85,28 +97,35 @@ final class ReactorNettyTransport implements RoutedTransport {
                                 .connectTimeoutMillis(Math.max(1, Math.min(3000, timeout.toMillis())))));
             Mono<Reply> operation = routed.flatMap(http -> http
                     .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int) Math.max(1, Math.min(3000, timeout.toMillis())))
+                    // Contact information (if configured) is sent to openlibrary.org only, never to covers/archive.
+                    .headers(headers -> headers.set("User-Agent", "openlibrary.org".equals(uri.getHost()) ? metadataUserAgent : assetUserAgent))
                     .doOnChannelInit((observer, channel, address) -> attempt.track(channel))
                     .doOnRequest((request, connection) -> attempt.connected.set(true))
-                    .doOnResponse((response, connection) -> attempt.headers.set(true))
+                    .doOnResponse((response, connection) -> attempt.responded(response.status().code(),
+                            response.responseHeaders().get("Retry-After")))
                     .get().uri(uri.toASCIIString())
                     .response((response, content) -> {
+                        Reply headersOnly = new Reply(response.status().code(), response.responseHeaders().get("Content-Type"),
+                                response.responseHeaders().get("Retry-After"), response.responseHeaders().get("Location"), new byte[0]);
+                        // Non-success bodies are never read: only status and safe headers are diagnostic evidence.
+                        if (response.status().code() != 200) { return Mono.just(headersOnly); }
                         var body = new BoundedBody(maxBytes);
-                        return content.doOnNext(body::accept).then(Mono.fromSupplier(() -> new Reply(response.status().code(),
-                                response.responseHeaders().get("Content-Type"), response.responseHeaders().get("Retry-After"), body.bytes())));
+                        return content.doOnNext(body::accept).then(Mono.fromSupplier(() -> new Reply(headersOnly.status(),
+                                headersOnly.mediaType(), headersOnly.retryAfter(), headersOnly.location(), body.bytes())));
                     }).single());
             long connectRemaining = Math.min(timeout.toNanos(), TimeUnit.SECONDS.toNanos(3)) - (System.nanoTime() - start);
             Mono<Reply> connectionLimit = Mono.delay(Duration.ofNanos(Math.max(1, connectRemaining)), timer)
-                    .flatMap(ignored -> attempt.connected.get() ? Mono.never() : Mono.error(new TimeoutException()));
+                    .flatMap(ignored -> attempt.connected.get() ? Mono.never() : Mono.error(new TimeoutException(attempt.timeoutPhase().name())));
             CompletableFuture<Reply> result = Mono.firstWithSignal(operation, connectionLimit)
                     .timeout(Duration.ofNanos(Math.max(1, deadline - System.nanoTime())), timer).toFuture();
             attempt.result(result);
             return result.get(Math.max(1, deadline - System.nanoTime()), TimeUnit.NANOSECONDS);
         } catch (ExecutionException ex) {
-            throw classify(ex.getCause(), attempt.headers.get(), attempt.stopped.get() || closed.get());
+            throw attempt.withHeaders(classify(ex.getCause(), attempt.headers.get(), attempt.stopped.get() || closed.get(), attempt.timeoutPhase()));
         } catch (TimeoutException ex) {
-            throw new TransportFailure(FailureReason.TIMEOUT, attempt.headers.get());
+            throw attempt.withHeaders(new TransportFailure(attempt.timeoutPhase(), attempt.headers.get()));
         } catch (CancellationException ex) {
-            throw new TransportFailure(FailureReason.CANCELLED, attempt.headers.get());
+            throw attempt.withHeaders(new TransportFailure(FailureReason.CANCELLED, attempt.headers.get()));
         } finally {
             attempt.stop();
             attempt.cleaned.whenComplete((ignored, error) -> active.compareAndSet(attempt, null));
@@ -138,29 +157,36 @@ final class ReactorNettyTransport implements RoutedTransport {
                 || uri.getPort() != -1 && uri.getPort() != 443) {
             throw new TransportFailure(FailureReason.PROTOCOL, false);
         }
-        boolean metadata = "openlibrary.org".equals(uri.getHost()) && "/api/books".equals(uri.getRawPath())
-                && uri.getRawQuery() != null && uri.getRawQuery().matches("bibkeys=ISBN:[0-9X]{10,13}&jscmd=data&format=json")
-                && maxBytes <= 256 * 1024;
-        boolean cover = "covers.openlibrary.org".equals(uri.getHost()) && "default=false".equals(uri.getRawQuery())
-                && uri.getRawPath().matches("/b/(?:isbn/[0-9X]{10,13}|id/[1-9][0-9]{0,18})-M\\.jpg");
+        boolean metadata = permittedMetadataResource(uri) && maxBytes <= 256 * 1024;
+        boolean cover = permittedCoverResource(uri);
         if (!metadata && !cover || route.kind() == RouteKind.SOCKS5 && (route.host() == null || route.port() == null
                 || route.port() < 1 || route.port() > 65535)) { throw new TransportFailure(FailureReason.PROTOCOL, false); }
     }
 
     static TransportFailure classify(Throwable failure, boolean headers, boolean cancelled) {
+        return classify(failure, headers, cancelled, FailureReason.TIMEOUT);
+    }
+
+    /** timeoutPhase classifies generic timeouts by how far the exchange got (TCP / handshake / response / body). */
+    static TransportFailure classify(Throwable failure, boolean headers, boolean cancelled, FailureReason timeoutPhase) {
         if (cancelled) { return new TransportFailure(FailureReason.CANCELLED, headers); }
         var causes = new ArrayList<Throwable>();
         for (Throwable next = failure; next != null && !causes.contains(next); next = next.getCause()) { causes.add(next); }
         if (causes.stream().anyMatch(c -> c instanceof ProxyConnectException)) { return new TransportFailure(FailureReason.PROTOCOL, headers); }
-        if (causes.stream().anyMatch(c -> c instanceof io.netty.handler.ssl.SslHandshakeTimeoutException)) { return new TransportFailure(FailureReason.TIMEOUT, headers); }
+        if (causes.stream().anyMatch(c -> c instanceof io.netty.handler.ssl.SslHandshakeTimeoutException)) { return new TransportFailure(FailureReason.HANDSHAKE_TIMEOUT, headers); }
         for (Throwable cause : causes) {
             if (cause instanceof SSLException || cause instanceof java.security.cert.CertificateException) { return new TransportFailure(FailureReason.TLS, headers); }
             if (cause instanceof BodyOverflow) { return new TransportFailure(FailureReason.BODY_TOO_LARGE, headers); }
         }
         for (Throwable cause : causes) {
             if (cause instanceof UnknownHostException) { return new TransportFailure(FailureReason.DNS, headers); }
-            if (cause instanceof TimeoutException || cause instanceof SocketTimeoutException || cause instanceof io.netty.channel.ConnectTimeoutException
-                    || cause instanceof io.netty.handler.timeout.TimeoutException) { return new TransportFailure(FailureReason.TIMEOUT, headers); }
+            if (cause instanceof io.netty.channel.ConnectTimeoutException) { return new TransportFailure(FailureReason.TIMEOUT, headers); }
+            if (cause instanceof TimeoutException && cause.getMessage() != null) {
+                try { return new TransportFailure(FailureReason.valueOf(cause.getMessage()), headers); }
+                catch (IllegalArgumentException ignored) { /* fall through to the phase */ }
+            }
+            if (cause instanceof TimeoutException || cause instanceof SocketTimeoutException
+                    || cause instanceof io.netty.handler.timeout.TimeoutException) { return new TransportFailure(timeoutPhase, headers); }
             if (cause instanceof NoRouteToHostException) { return new TransportFailure(FailureReason.NO_ROUTE, headers); }
             if (cause instanceof ConnectException) { return new TransportFailure(FailureReason.CONNECT, headers); }
             if (cause instanceof PrematureCloseException || cause instanceof ClosedChannelException
@@ -192,8 +218,21 @@ final class ReactorNettyTransport implements RoutedTransport {
         final AtomicBoolean headers = new AtomicBoolean();
         final AtomicBoolean stopped = new AtomicBoolean();
         final CompletableFuture<Void> cleaned = new CompletableFuture<>();
+        private volatile Integer status;
+        private volatile String retryAfter;
         private final List<Channel> channels = new ArrayList<>();
         private CompletableFuture<Reply> result;
+        void responded(int code, String retry) { status = code; retryAfter = retry; headers.set(true); }
+        synchronized boolean tcpActive() { return channels.stream().anyMatch(Channel::isActive); }
+        /** TCP connect TIMEOUT vs SOCKS/TLS HANDSHAKE_TIMEOUT vs RESPONSE_TIMEOUT (request sent) vs body TIMEOUT (headers seen). */
+        FailureReason timeoutPhase() {
+            if (headers.get()) { return FailureReason.TIMEOUT; }
+            if (connected.get()) { return FailureReason.RESPONSE_TIMEOUT; }
+            return tcpActive() ? FailureReason.HANDSHAKE_TIMEOUT : FailureReason.TIMEOUT;
+        }
+        TransportFailure withHeaders(TransportFailure failure) {
+            return failure.headersReceived ? new TransportFailure(failure.reason, true, status, retryAfter) : failure;
+        }
         synchronized void track(Channel channel) {
             channels.add(channel);
             if (stopped.get()) { channel.close(); }
