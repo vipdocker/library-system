@@ -41,7 +41,7 @@ export function CoverEditor({ book, draft, onChange, disabled, isLocked, serverE
           <Button disabled={disabled} onClick={() => change({ action: 'REMOVE' })}>移除封面</Button>
           <Button disabled={disabled || draft.action === 'KEEP'} onClick={() => change({ action: 'KEEP' })}>撤销封面修改</Button>
         </Space>
-        <Typography.Paragraph role="status" style={{ margin: '12px 0 0' }}>{reading ? '正在验证图片…' : draft.action === 'REMOVE' ? '待移除，保存后生效' : draft.action === 'REPLACE' ? `待保存 · ${draft.sourceIsbn ? 'Open Library 候选' : '本地上传'}` : '未修改封面'}</Typography.Paragraph>
+        <Typography.Paragraph role="status" style={{ margin: '12px 0 0' }}>{reading ? '正在验证图片…' : draft.action === 'REMOVE' ? '待移除，保存后生效' : draft.action === 'REPLACE' ? `待保存 · ${draft.source ? 'ShowAPI 候选' : draft.sourceIsbn ? 'Open Library 候选' : '本地上传'}` : '未修改封面'}</Typography.Paragraph>
         {displayedError && <Alert id="cover-error" type="error" showIcon title={displayedError} style={{ marginTop: 12 }} />}
       </div>
     </Flex>

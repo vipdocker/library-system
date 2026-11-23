@@ -1,12 +1,14 @@
-import type { CoverChange, CoverMediaType, OpenLibraryLookup } from '../../api/types';
+import type { BookSource, BookSourceProvider, CoverChange, CoverMediaType, OpenLibraryLookup } from '../../api/types';
 
 export type CoverDraft = { action: 'KEEP' } | { action: 'REMOVE' } | {
-  action: 'REPLACE'; blob: Blob; mediaType: CoverMediaType; base64: string; sourceIsbn: string | null;
+  action: 'REPLACE'; blob: Blob; mediaType: CoverMediaType; base64: string; sourceIsbn: string | null; source?: BookSource;
 };
 export const MAX_COVER_BYTES = 2 * 1024 * 1024;
 export function coverPayload(draft: CoverDraft): CoverChange | undefined {
   if (draft.action === 'KEEP') return undefined;
   if (draft.action === 'REMOVE') return { action: 'REMOVE' };
+  // 新通用 source 与旧 sourceIsbn 互斥：ShowAPI 只发 source，OL/本地保留旧字段形状。
+  if (draft.source) return { action: 'REPLACE', mediaType: draft.mediaType, base64: draft.base64, source: draft.source };
   return { action: 'REPLACE', mediaType: draft.mediaType, base64: draft.base64, sourceIsbn: draft.sourceIsbn };
 }
 export function readBlobBytes(blob: Blob): Promise<Uint8Array<ArrayBuffer>> {
@@ -74,7 +76,7 @@ async function decode(blob: Blob): Promise<{ width: number; height: number }> {
     });
   } finally { URL.revokeObjectURL(url); }
 }
-async function replacement(blob: Blob, sourceIsbn: string | null): Promise<CoverDraft> {
+async function replacement(blob: Blob, sourceIsbn: string | null): Promise<Extract<CoverDraft, { action: 'REPLACE' }>> {
   if (blob.size > MAX_COVER_BYTES) throw new Error('封面不能超过 2 MiB');
   if (blob.type !== 'image/jpeg' && blob.type !== 'image/png') throw new Error('请选择 JPEG 或 PNG 图片');
   const bytes = await readBlobBytes(blob);
@@ -86,11 +88,11 @@ async function replacement(blob: Blob, sourceIsbn: string | null): Promise<Cover
   return { action: 'REPLACE', blob, mediaType: blob.type, base64: btoa(binary), sourceIsbn };
 }
 export function readCoverFile(file: File): Promise<CoverDraft> { return replacement(file, null); }
-export async function replacementFromBase64(cover: NonNullable<OpenLibraryLookup['cover']>, isbn: string): Promise<CoverDraft> {
+export async function replacementFromBase64(cover: NonNullable<OpenLibraryLookup['cover']>, isbn: string, provider: BookSourceProvider = 'OPEN_LIBRARY'): Promise<CoverDraft> {
   if (cover.base64.length > 2796204) throw new Error('封面不能超过 2 MiB');
   let binary: string;
   try { binary = atob(cover.base64); } catch { throw new Error('封面 Base64 不合法'); }
   if (btoa(binary) !== cover.base64 || binary.length !== cover.byteLength) throw new Error('封面 Base64 不合法');
-  const draft = await replacement(new Blob([Uint8Array.from(binary, (c) => c.charCodeAt(0))], { type: cover.mediaType }), isbn);
-  return draft;
+  const draft = await replacement(new Blob([Uint8Array.from(binary, (c) => c.charCodeAt(0))], { type: cover.mediaType }), provider === 'OPEN_LIBRARY' ? isbn : null);
+  return provider === 'OPEN_LIBRARY' ? draft : { ...draft, source: { provider, isbn } };
 }

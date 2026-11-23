@@ -21,6 +21,9 @@ export interface Category {
 }
 
 export type CoverMediaType = 'image/jpeg' | 'image/png';
+/** showapi-design-v1 §8：通用来源引用；旧 openLibraryIsbn / cover.sourceIsbn 仍专指 Open Library。 */
+export type BookSourceProvider = 'OPEN_LIBRARY' | 'SHOWAPI';
+export interface BookSource { provider: BookSourceProvider; isbn: string }
 export interface BookCoverMetadata {
   url: string;
   mediaType: CoverMediaType;
@@ -29,9 +32,12 @@ export interface BookCoverMetadata {
   height: number;
   sha256: string;
   sourceUrl: string | null;
+  sourceProvider: BookSourceProvider | null;
+  sourceIsbn: string | null;
 }
+/** REPLACE 的 sourceIsbn（旧，专指 OL）与 source（新，通用）互斥，由 coverPayload 保证只发其一。 */
 export type CoverChange = { action: 'KEEP' | 'REMOVE' } | {
-  action: 'REPLACE'; mediaType: CoverMediaType; base64: string; sourceIsbn: string | null;
+  action: 'REPLACE'; mediaType: CoverMediaType; base64: string; sourceIsbn?: string | null; source?: BookSource;
 };
 /** Sanitized upstream diagnostics (enums/integers only); missing upstreamStatus means no response headers arrived. */
 export interface OpenLibraryDiagnostic {
@@ -62,6 +68,37 @@ export interface ProxySettings {
 }
 export type ProxySettingsInput = Pick<ProxySettings, 'enabled' | 'host' | 'port'>;
 
+/** ShowAPI-v1 预览（showapi-design-v1 §3）：仅候选不落库；sourceUrl 为后端固定说明页；无目录。 */
+export interface ShowApiLookup {
+  provider: 'SHOWAPI';
+  isbn: string;
+  found: boolean;
+  sourceUrl: string;
+  fields: OpenLibraryLookup['fields'];
+  additional: {
+    publicationDate: string | null; edition: string | null; pageCountText: string | null;
+    format: string | null; paper: string | null; binding: string | null; priceText: string | null;
+  };
+  capabilities: { tableOfContents: boolean };
+  cover: OpenLibraryLookup['cover'];
+  /** ShowAPI warning 不携带 OL 诊断 details（showapi-design-v1 §3）。 */
+  warnings: { code: string; field: string | null; message: string; details?: undefined }[];
+  retryAfterSeconds: number | null;
+}
+
+/** GET/PUT 公开视图：绝不包含 AppKey 或其片段。 */
+export interface ShowApiSettings {
+  enabled: boolean;
+  appKeyConfigured: boolean;
+  revision: number;
+  updatedAt: string | null;
+}
+/** KEEP/CLEAR 完全不携带 appKey；REPLACE 必须携带（类型层面强制）。 */
+export type ShowApiSettingsInput = { enabled: boolean; expectedRevision: number } & (
+  | { appKeyAction: 'KEEP' | 'CLEAR' }
+  | { appKeyAction: 'REPLACE'; appKey: string }
+);
+
 export interface BookSummary {
   id: number;
   isbn: string;
@@ -78,6 +115,8 @@ export interface BookSummary {
 export interface BookDetail extends BookSummary {
   openLibraryIsbn: string | null;
   metadataSourceUrl: string | null;
+  sourceProvider: BookSourceProvider | null;
+  sourceIsbn: string | null;
   description: string | null;
   createdAt: string;
   updatedAt: string;
@@ -210,6 +249,8 @@ export interface CategoryInput {
 export interface BookInput {
   cover?: CoverChange | null;
   openLibraryIsbn?: string | null;
+  /** 与 openLibraryIsbn 非空互斥；缺省/null=KEEP（不改来源）。 */
+  metadataSource?: BookSource | null;
   isbn: string;
   title: string;
   author: string;

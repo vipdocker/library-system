@@ -24,6 +24,13 @@ public enum ErrorCode {
     COVER_UNSUPPORTED_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "封面仅支持 JPEG 或 PNG"),
     OPEN_LIBRARY_UNAVAILABLE(HttpStatus.BAD_GATEWAY, "Open Library 暂不可用，请继续手工录入"),
     OPEN_LIBRARY_RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "Open Library 查询过于频繁，请稍后重试"),
+    // showapi-ac-dod-v1（showapi-isbn-20261122 主会话批准新增，2026-11-22）：ShowAPI 数据源与配置契约。
+    SHOWAPI_NOT_CONFIGURED(HttpStatus.CONFLICT, "ShowAPI 尚未启用或未配置 AppKey"),
+    SETTINGS_CONFLICT(HttpStatus.CONFLICT, "配置已被其他请求修改，请刷新后重试"),
+    SHOWAPI_RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "ShowAPI 查询过于频繁，请稍后重试"),
+    SHOWAPI_AUTH_FAILED(HttpStatus.BAD_GATEWAY, "ShowAPI 凭据被上游拒绝，请检查 AppKey 配置"),
+    SHOWAPI_UNAVAILABLE(HttpStatus.BAD_GATEWAY, "ShowAPI 暂不可用，请继续手工录入"),
+    SHOWAPI_INVALID_RESPONSE(HttpStatus.BAD_GATEWAY, "ShowAPI 返回数据不合法，未采用任何字段"),
     COPY_NOT_FOUND(HttpStatus.NOT_FOUND, "副本不存在"),
     READER_NOT_FOUND(HttpStatus.NOT_FOUND, "读者不存在"),
     LOAN_NOT_FOUND(HttpStatus.NOT_FOUND, "借阅记录不存在"),

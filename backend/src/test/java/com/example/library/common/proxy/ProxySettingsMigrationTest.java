@@ -23,7 +23,8 @@ class ProxySettingsMigrationTest {
             }
         }
         var latest = Flyway.configure().dataSource(url, null, null).load();
-        assertThat(latest.migrate().migrationsExecuted).isEqualTo(1); assertThat(latest.migrate().migrationsExecuted).isZero();
+        // V3 -> latest now applies V4 and V5 (showapi-isbn-20261122); count updated, assertions kept.
+        assertThat(latest.migrate().migrationsExecuted).isEqualTo(2); assertThat(latest.migrate().migrationsExecuted).isZero();
         try (var connection = DriverManager.getConnection(url); var sql = connection.createStatement()) {
             try (var rs = sql.executeQuery("SELECT image_data FROM book_cover")) { assertThat(rs.next()).isTrue(); assertThat(rs.getBytes(1)).isEqualTo(image); }
             try (var rs = sql.executeQuery("SELECT title,open_library_isbn FROM book")) { assertThat(rs.next()).isTrue(); assertThat(rs.getString(1)).isEqualTo("旧书"); assertThat(rs.getString(2)).isEqualTo("080442957X"); }

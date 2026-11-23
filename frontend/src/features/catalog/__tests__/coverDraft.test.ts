@@ -50,4 +50,16 @@ describe('AC-FE-01 bounded cover draft', () => {
     expect(coverPayload(draft)).toMatchObject({ sourceIsbn: '9780140328721' });
     await expect(replacementFromBase64({ mediaType: 'image/png', base64: 'data:image/png;base64,' + png, byteLength: 69, width: 1, height: 1 }, '9780140328721')).rejects.toThrow();
   });
+  it('AC-T3 ShowAPI remote draft sends generic source only, never a legacy sourceIsbn', async () => {
+    decoder();
+    const draft = await replacementFromBase64({ mediaType: 'image/png', base64: png, byteLength: 69, width: 1, height: 1 }, '9780140328721', 'SHOWAPI');
+    const payload = coverPayload(draft);
+    expect(payload).toEqual({ action: 'REPLACE', mediaType: 'image/png', base64: png, source: { provider: 'SHOWAPI', isbn: '9780140328721' } });
+    expect(payload).not.toHaveProperty('sourceIsbn');
+  });
+  it('AC-T3 explicit Open Library provider keeps the legacy sourceIsbn payload', async () => {
+    decoder();
+    const draft = await replacementFromBase64({ mediaType: 'image/png', base64: png, byteLength: 69, width: 1, height: 1 }, '9780140328721', 'OPEN_LIBRARY');
+    expect(coverPayload(draft)).toEqual({ action: 'REPLACE', mediaType: 'image/png', base64: png, sourceIsbn: '9780140328721' });
+  });
 });

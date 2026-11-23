@@ -47,6 +47,13 @@ export const ERROR_CODES = [
   'COVER_UNSUPPORTED_TYPE',
   'OPEN_LIBRARY_UNAVAILABLE',
   'OPEN_LIBRARY_RATE_LIMITED',
+  // showapi-design-v1 §5：与后端 ErrorCode.java 逐项核对新增。
+  'SHOWAPI_NOT_CONFIGURED',
+  'SETTINGS_CONFLICT',
+  'SHOWAPI_RATE_LIMITED',
+  'SHOWAPI_AUTH_FAILED',
+  'SHOWAPI_UNAVAILABLE',
+  'SHOWAPI_INVALID_RESPONSE',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];
@@ -95,6 +102,12 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
   COVER_UNSUPPORTED_TYPE: '封面须为有效的 JPEG 或 PNG 图片',
   OPEN_LIBRARY_UNAVAILABLE: '书目服务暂不可用，可继续手动录入',
   OPEN_LIBRARY_RATE_LIMITED: '书目查询过于频繁，请稍后手动重试',
+  SHOWAPI_NOT_CONFIGURED: 'ShowAPI 尚未启用或未配置 AppKey，请先在系统设置中配置',
+  SETTINGS_CONFLICT: '配置已被其他请求修改，请重新读取后重试',
+  SHOWAPI_RATE_LIMITED: 'ShowAPI 查询过于频繁，请稍后手动重试',
+  SHOWAPI_AUTH_FAILED: 'ShowAPI 凭据被上游拒绝，请检查 AppKey 配置',
+  SHOWAPI_UNAVAILABLE: 'ShowAPI 暂不可用，可继续手动录入',
+  SHOWAPI_INVALID_RESPONSE: 'ShowAPI 返回数据不合法，未采用任何字段',
 };
 
 /** 取错误码对应的中文文案；未知错误码回退到通用提示。 */

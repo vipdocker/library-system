@@ -30,10 +30,15 @@ class ContextLoadsTest extends IntegrationTestBase {
         java.util.List<String> flywayApplied = jdbcTemplate.queryForList(
                 "SELECT version FROM flyway_schema_history WHERE success = 1 ORDER BY installed_rank",
                 String.class);
-        assertThat(flywayApplied).containsExactly("1", "2", "3", "4");
+        assertThat(flywayApplied).containsExactly("1", "2", "3", "4", "5");
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM system_proxy_settings WHERE id=1 AND enabled=0 AND host IS NULL AND port IS NULL AND revision=0 AND updated_at IS NULL AND updated_by IS NULL", Long.class)).isEqualTo(1);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM showapi_settings WHERE id=1 AND enabled=0 AND app_key IS NULL AND revision=0 AND updated_at IS NULL AND updated_by IS NULL", Long.class)).isEqualTo(1);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM book_cover", Long.class)).isZero();
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM pragma_table_info('book') WHERE name='open_library_isbn'", Long.class))
+                .isEqualTo(1);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM pragma_table_info('book') WHERE name IN ('source_provider','source_isbn')", Long.class))
+                .isEqualTo(2);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM pragma_table_info('book_cover') WHERE name='provider'", Long.class))
                 .isEqualTo(1);
     }
 }

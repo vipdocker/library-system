@@ -4,7 +4,7 @@
 // 原文件断言 T02 占位页（"建设中"），页面实现后已过期；现改为断言真实页面内容，
 // 并补上 QueryClientProvider / antd App 包装；页面数据请求统一 mock api/client（不发真实请求）。
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as AntdApp } from 'antd';
 import { MemoryRouter } from 'react-router';
@@ -69,6 +69,8 @@ function bookDetailFixture(id: number): BookDetail {
     cover: null,
     openLibraryIsbn: null,
     metadataSourceUrl: null,
+    sourceProvider: null,
+    sourceIsbn: null,
     createdAt: '2026-11-01T08:00:00Z',
     updatedAt: '2026-11-10T08:00:00Z',
   };
@@ -141,6 +143,7 @@ beforeEach(() => {
     if (path === '/api/notifications/me') return emptyPage as never;
     if (path === '/api/notifications/me/unread-count') return { unreadCount: 0 } as never;
     if (path === '/api/admin/settings/proxy') return { enabled: false, host: null, port: null, revision: 0, updatedAt: null } as never;
+    if (path === '/api/admin/settings/showapi') return { enabled: false, appKeyConfigured: false, revision: 0, updatedAt: null } as never;
     if (path === '/api/categories') return [] as never;
     if (path === '/api/books') return emptyPage as never;
     const bookMatch = /^\/api\/books\/(\d+)$/.exec(path);
@@ -191,6 +194,7 @@ describe('AC-AUTH-09 路由注册与守卫（设计 10.1 全表，真实页面�
     ['/admin/reports/overdue', '逾期报表'],
     ['/admin/stats', '借阅统计'],
     ['/admin/settings/proxy', '代理配置'],
+    ['/admin/settings/showapi', 'ShowAPI 书目来源'],
     ['/books', '图书检索'],
     ['/books/5', '深入理解计算机系统'],
     ['/account/password', '修改口令'],
@@ -232,6 +236,21 @@ describe('AC-AUTH-09 路由注册与守卫（设计 10.1 全表，真实页面�
     loginAs(reader); renderRoute('/admin/settings/proxy');
     expect(await screen.findByText('无权限访问该页面')).toBeInTheDocument();
     expect(vi.mocked(apiGet).mock.calls.some(([path]) => path.startsWith('/api/admin/settings'))).toBe(false);
+  });
+
+  it('AC-S4 READER direct showapi route is forbidden before settings API is requested', async () => {
+    loginAs(reader); renderRoute('/admin/settings/showapi');
+    expect(await screen.findByText('无权限访问该页面')).toBeInTheDocument();
+    expect(vi.mocked(apiGet).mock.calls.some(([path]) => path.startsWith('/api/admin/settings'))).toBe(false);
+  });
+
+  it('AC-S4 系统设置容器：/admin/settings 重定向到代理页签，可切换到 ShowAPI 页签', async () => {
+    renderRoute('/admin/settings');
+    expect(await screen.findByRole('heading', { name: '代理配置' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('tab', { name: 'ShowAPI' }));
+    expect(await screen.findByRole('heading', { name: 'ShowAPI 书目来源' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('tab', { name: '代理' }));
+    expect(await screen.findByRole('heading', { name: '代理配置' })).toBeInTheDocument();
   });
 
   it('ADMIN 访问 /my/loans → 403 页', async () => {

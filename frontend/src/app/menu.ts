@@ -45,7 +45,7 @@ const ADMIN_MENU: MenuEntry[] = [
   { key: '/admin/reports/overdue', label: '逾期报表', icon: WarningOutlined },
   { key: '/admin/dunning', label: '催还记录', icon: FileTextOutlined },
   { key: '/admin/stats', label: '借阅统计', icon: BarChartOutlined },
-  { key: '/admin/settings/proxy', label: '系统设置', icon: SettingOutlined },
+  { key: '/admin/settings', label: '系统设置', icon: SettingOutlined },
   { key: '/account/password', label: '修改口令', icon: KeyOutlined },
 ];
 

@@ -22,7 +22,8 @@ public record BookCreateRequest(
         @Size(max = 2000) String description,
         @Min(0) @Max(50) Integer initialCopies,
         CoverChangeRequest cover,
-        String openLibraryIsbn) {
+        String openLibraryIsbn,
+        BookSourceRequest metadataSource) {
 
     public BookCreateRequest {
         isbn = Texts.trimToNull(isbn);

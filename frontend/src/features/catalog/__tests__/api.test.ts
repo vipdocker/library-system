@@ -12,6 +12,7 @@ import {
   getBook,
   getBookCover,
   lookupOpenLibrary,
+  lookupShowApi,
   listCategories,
   listCopies,
   searchBooks,
@@ -109,6 +110,12 @@ describe('AC-FE-02/03 same-origin cover and preview mappings', () => {
     expect(apiGet).toHaveBeenCalledWith('/api/catalog/open-library', { isbn: '9780140328721' }, { signal });
     await getBookCover(5, 'abc', signal);
     expect(apiGetBlob).toHaveBeenCalledWith('/api/books/5/cover', { v: 'abc' }, { signal });
+  });
+  it('AC-S1/T1 ShowAPI lookup is POST {isbn} with signal, never a query parameter', async () => {
+    const signal = new AbortController().signal;
+    await lookupShowApi('9780140328721', signal);
+    expect(apiPost).toHaveBeenCalledWith('/api/catalog/showapi', { isbn: '9780140328721' }, { signal });
+    expect(apiGet).not.toHaveBeenCalled();
   });
   it('preserves explicit cover/source input, with no extra update fields', async () => {
     const input = { isbn: '9780140328721', title: 't', author: 'a', cover: { action: 'REMOVE' as const }, openLibraryIsbn: '9780140328721' };

@@ -44,6 +44,13 @@ public class Book {
     @Column(name = "open_library_isbn")
     private String openLibraryIsbn;
 
+    /** Generic metadata source (V5): OPEN_LIBRARY or SHOWAPI; null means no applied source. */
+    @Column(name = "source_provider")
+    private String sourceProvider;
+
+    @Column(name = "source_isbn")
+    private String sourceIsbn;
+
     @Convert(converter = EpochMillisInstantConverter.class)
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
@@ -130,6 +137,22 @@ public class Book {
 
     public void setOpenLibraryIsbn(String openLibraryIsbn) {
         this.openLibraryIsbn = openLibraryIsbn;
+    }
+
+    public String getSourceProvider() {
+        return sourceProvider;
+    }
+
+    public void setSourceProvider(String sourceProvider) {
+        this.sourceProvider = sourceProvider;
+    }
+
+    public String getSourceIsbn() {
+        return sourceIsbn;
+    }
+
+    public void setSourceIsbn(String sourceIsbn) {
+        this.sourceIsbn = sourceIsbn;
     }
 
     public Instant getCreatedAt() {

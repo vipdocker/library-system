@@ -12,6 +12,7 @@ import {
   deleteCopy,
   getBook,
   lookupOpenLibrary,
+  lookupShowApi,
   searchBooks,
   listCategories,
   listCopies,
@@ -19,6 +20,8 @@ import {
   updateCopyStatus,
 } from '../api';
 import BookFormPage from '../pages/BookFormPage';
+import { sourceRadioTheme } from '../components/OpenLibraryCandidatePanel';
+import { claudeTheme, claudeTokens } from '../../../styles/claudeTheme';
 import { categoriesFixture, makeBookDetail, makeCopy, renderCatalog } from './testUtils';
 
 vi.mock('../api', async (importOriginal) => {
@@ -27,6 +30,7 @@ vi.mock('../api', async (importOriginal) => {
     ...actual,
     getBook: vi.fn(),
     lookupOpenLibrary: vi.fn(),
+    lookupShowApi: vi.fn(),
     searchBooks: vi.fn(),
     createBook: vi.fn(),
     updateBook: vi.fn(),
@@ -59,6 +63,11 @@ async function fillValidBook() {
   await userEvent.type(screen.getByLabelText('ISBN'), '978-0-306-40615-7');
   await userEvent.type(screen.getByLabelText('书名'), '测试之书');
   await userEvent.type(screen.getByLabelText('作者'), '作者甲');
+}
+
+// antd radio-button 的原生 input 为 pointer-events:none，真实用户点击的是外层 label。
+async function chooseSource(name: 'Open Library' | 'ShowAPI') {
+  await userEvent.click(screen.getByRole('radio', { name }).closest('label')!);
 }
 
 beforeEach(() => {
@@ -509,5 +518,221 @@ describe('AC-COPY-01 / AC-COPY-02 编辑页副本管理', () => {
     vi.mocked(listCopies).mockResolvedValue([]);
     renderEdit();
     expect(await screen.findByText(/暂无副本，请在右上方追加副本/)).toBeInTheDocument();
+  });
+});
+
+// showapi-design-v1 / showapi-ac-dod-v1：双来源候选（AC-S1/S2/S3/T1/T2/T3）。
+describe('AC-S1/S2 ShowAPI 双来源候选', () => {
+  const showApiCandidate = {
+    provider: 'SHOWAPI' as const, isbn: '9780306406157', found: true,
+    sourceUrl: 'https://www.showapi.com/apis/isbn-book-1626',
+    fields: { title: 'ShowAPI候选标题', author: null, publisher: 'ShowAPI出版社', description: '<b>纯文本</b>简介', publishYear: 2021 },
+    additional: { publicationDate: '2021-05', edition: '第2版', pageCountText: '300页', format: '16开', paper: '胶版纸', binding: '平装', priceText: '59.00元' },
+    capabilities: { tableOfContents: false },
+    cover: null, warnings: [], retryAfterSeconds: null,
+  };
+  it('AC-S1 默认 Open Library；切换来源本身不请求，查询按钮只调用选中来源', async () => {
+    vi.mocked(lookupShowApi).mockResolvedValue(showApiCandidate);
+    renderCreate(); await fillValidBook();
+    expect(screen.getByRole('radio', { name: 'Open Library' })).toBeChecked();
+    await chooseSource('ShowAPI');
+    expect(lookupShowApi).not.toHaveBeenCalled();
+    expect(lookupOpenLibrary).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    expect(await screen.findByText('ShowAPI候选标题')).toBeInTheDocument();
+    expect(lookupShowApi).toHaveBeenCalledTimes(1);
+    expect(lookupShowApi).toHaveBeenCalledWith('9780306406157', expect.anything());
+    expect(lookupOpenLibrary).not.toHaveBeenCalled();
+    expect(createBook).not.toHaveBeenCalled();
+  });
+  it('AC-S3/T2 附加字段只读、无目录、简介按纯文本渲染、来源链接为后端固定说明页', async () => {
+    vi.mocked(lookupShowApi).mockResolvedValue(showApiCandidate);
+    renderCreate(); await fillValidBook();
+    await chooseSource('ShowAPI');
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    await screen.findByText('ShowAPI候选标题');
+    expect(screen.getByText('此来源未提供目录')).toBeInTheDocument();
+    for (const text of ['2021-05', '第2版', '300页', '16开', '胶版纸', '平装', '59.00元']) expect(screen.getByText(text)).toBeInTheDocument();
+    expect(screen.queryByRole('checkbox', { name: /应用定价|应用版次|应用页数/ })).not.toBeInTheDocument();
+    expect(screen.getByText('<b>纯文本</b>简介')).toBeInTheDocument();
+    expect(document.querySelector('.ant-alert b, section[aria-label="ISBN 书目候选"] b')).toBeNull();
+    expect(screen.getByRole('link', { name: 'ShowAPI 来源' })).toHaveAttribute('href', 'https://www.showapi.com/apis/isbn-book-1626');
+  });
+  it('AC-S2/T3 应用空字段后保存携带 metadataSource=SHOWAPI，不携带 openLibraryIsbn，已填书名不覆盖', async () => {
+    vi.mocked(lookupShowApi).mockResolvedValue(showApiCandidate);
+    renderCreate(); await fillValidBook();
+    await chooseSource('ShowAPI');
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    await screen.findByText('ShowAPI候选标题');
+    expect(screen.getByRole('checkbox', { name: '应用书名' })).not.toBeChecked();
+    expect(screen.getByRole('checkbox', { name: '应用出版社' })).toBeChecked();
+    await userEvent.click(screen.getByRole('button', { name: '应用选中项' }));
+    expect(screen.getByLabelText('书名')).toHaveValue('测试之书');
+    expect(screen.getByLabelText('出版社')).toHaveValue('ShowAPI出版社');
+    expect(createBook).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: /创建图书/ }));
+    await waitFor(() => expect(createBook).toHaveBeenCalledTimes(1));
+    const input = vi.mocked(createBook).mock.calls[0][0];
+    expect(input.metadataSource).toEqual({ provider: 'SHOWAPI', isbn: '9780306406157' });
+    expect(input).not.toHaveProperty('openLibraryIsbn');
+    expect(input.description).toBe('<b>纯文本</b>简介');
+  });
+  it('AC-S2 未找到/查询未成功文案不笃定缺书，且不捏造 HTTP 诊断', async () => {
+    vi.mocked(lookupShowApi).mockResolvedValue({ ...showApiCandidate, found: false, fields: { title: null, author: null, publisher: null, description: null, publishYear: null }, warnings: [{ code: 'LOOKUP_UNSUCCESSFUL', field: null, message: '查询未成功或未收录，可继续手工录入' }] });
+    renderCreate(); await fillValidBook();
+    await chooseSource('ShowAPI');
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    expect(await screen.findByText('查询未成功或未收录，可继续手工录入')).toBeInTheDocument();
+    expect(screen.queryByText(/上游 HTTP/)).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /创建图书/ }));
+    await waitFor(() => expect(createBook).toHaveBeenCalledTimes(1));
+    expect(vi.mocked(createBook).mock.calls[0][0]).not.toHaveProperty('metadataSource');
+  });
+  it('AC-S3 封面失败但书目可用：warning 可见、封面勾选禁用、无 OL 诊断行', async () => {
+    vi.mocked(lookupShowApi).mockResolvedValue({ ...showApiCandidate, warnings: [{ code: 'SHOWAPI_RATE_LIMITED', field: 'cover', message: '封面请求限流，请稍后手动重试，书目信息仍可应用' }], retryAfterSeconds: 5 });
+    renderCreate(); await fillValidBook();
+    await chooseSource('ShowAPI');
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    await screen.findByText('ShowAPI候选标题');
+    expect(screen.getByText('封面暂不可用，请查看下方提示')).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: '应用候选封面' })).toBeDisabled();
+    expect(screen.getByText('请等待 5 秒后手动重试')).toBeInTheDocument();
+    expect(screen.queryByText(/上游 HTTP|经代理|直连/)).not.toBeInTheDocument();
+  });
+  it.each([
+    [409, 'SHOWAPI_NOT_CONFIGURED', /尚未启用或未配置/],
+    [429, 'SHOWAPI_RATE_LIMITED', /9 秒/],
+    [502, 'SHOWAPI_AUTH_FAILED', /凭据被上游拒绝/],
+    [502, 'SHOWAPI_UNAVAILABLE', /暂不可用/],
+  ])('AC-T1/T2 ShowAPI 错误 %s %s 保留人工录入且不登出', async (status, code, pattern) => {
+    const unauthorized = vi.fn(); window.addEventListener(UNAUTHORIZED_EVENT, unauthorized);
+    try {
+      vi.mocked(lookupShowApi).mockRejectedValue(new ApiError(status as number, code as string, 'failed', [], code === 'SHOWAPI_RATE_LIMITED' ? { retryAfterSeconds: 9, reason: 'THROTTLED' } : {}));
+      renderCreate(); await fillValidBook();
+      await chooseSource('ShowAPI');
+      await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+      expect(await screen.findByText(pattern as RegExp)).toBeInTheDocument();
+      expect(screen.getByLabelText('书名')).toHaveValue('测试之书');
+      expect(createBook).not.toHaveBeenCalled();
+      expect(unauthorized).not.toHaveBeenCalled();
+      expect(lookupShowApi).toHaveBeenCalledTimes(1);
+    } finally { window.removeEventListener(UNAUTHORIZED_EVENT, unauthorized); }
+  });
+  it('AC-T1 来源切换拒绝迟到 ShowAPI 结果并中止请求', async () => {
+    let resolve!: (value: typeof showApiCandidate) => void;
+    vi.mocked(lookupShowApi).mockReturnValue(new Promise((done) => { resolve = done; }));
+    renderCreate(); await fillValidBook();
+    await chooseSource('ShowAPI');
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    const signal = vi.mocked(lookupShowApi).mock.calls[0][1];
+    await chooseSource('Open Library');
+    resolve(showApiCandidate);
+    await waitFor(() => expect(signal?.aborted).toBe(true));
+    expect(screen.queryByText('ShowAPI候选标题')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('书名')).toHaveValue('测试之书');
+  });
+  it('AC-T1 查询期间人工输入不被预选或覆盖（ShowAPI 路径）', async () => {
+    let resolve!: (value: typeof showApiCandidate) => void;
+    vi.mocked(lookupShowApi).mockReturnValue(new Promise((done) => { resolve = done; }));
+    renderCreate(); await fillValidBook();
+    await chooseSource('ShowAPI');
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    await userEvent.type(screen.getByLabelText('出版社'), '查询期间人工填写');
+    resolve(showApiCandidate);
+    await screen.findByText('ShowAPI候选标题');
+    expect(screen.getByRole('checkbox', { name: '应用出版社' })).not.toBeChecked();
+    expect(screen.getByLabelText('出版社')).toHaveValue('查询期间人工填写');
+  });
+  it('AC-S1 切回 Open Library 后仍走 OL 查询（回归）', async () => {
+    vi.mocked(lookupOpenLibrary).mockResolvedValue({ isbn: '9780306406157', found: true, sourceUrl: 'https://openlibrary.org/isbn/9780306406157', fields: { title: 'OL候选', author: null, publisher: null, description: null, publishYear: null }, cover: null, warnings: [], retryAfterSeconds: null });
+    renderCreate(); await fillValidBook();
+    await chooseSource('ShowAPI');
+    await chooseSource('Open Library');
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    expect(await screen.findByText('OL候选')).toBeInTheDocument();
+    expect(lookupOpenLibrary).toHaveBeenCalledTimes(1);
+    expect(lookupShowApi).not.toHaveBeenCalled();
+    expect(screen.getByRole('link', { name: 'Open Library 来源' })).toBeInTheDocument();
+  });
+});
+
+describe('AC-S3/T3 ShowAPI 封面草稿与来源独立', () => {
+  const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC';
+  const showApiCandidate = {
+    provider: 'SHOWAPI' as const, isbn: '9780306406157', found: true,
+    sourceUrl: 'https://www.showapi.com/apis/isbn-book-1626',
+    fields: { title: 'ShowAPI候选标题', author: null, publisher: null, description: null, publishYear: null },
+    additional: { publicationDate: null, edition: null, pageCountText: null, format: null, paper: null, binding: null, priceText: null },
+    capabilities: { tableOfContents: false },
+    cover: { mediaType: 'image/png' as const, base64: png, byteLength: 69, width: 1, height: 1 },
+    warnings: [], retryAfterSeconds: null,
+  };
+  beforeEach(() => {
+    vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:preview');
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    vi.stubGlobal('Image', class { naturalWidth = 1; naturalHeight = 1; onload?: () => void; set src(_value: string) { queueMicrotask(() => this.onload?.()); } });
+  });
+  afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+  it('封面默认不选；仅勾选封面保存时 cover.source=SHOWAPI 且不带书目来源', async () => {
+    vi.mocked(lookupShowApi).mockResolvedValue(showApiCandidate);
+    renderCreate(); await fillValidBook();
+    await chooseSource('ShowAPI');
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    await screen.findByText('ShowAPI候选标题');
+    expect(screen.getByRole('checkbox', { name: '应用候选封面' })).not.toBeChecked();
+    await userEvent.click(screen.getByRole('checkbox', { name: '应用候选封面' }));
+    await userEvent.click(screen.getByRole('button', { name: '应用选中项' }));
+    expect(screen.getByText('待保存 · ShowAPI 候选')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /创建图书/ }));
+    await waitFor(() => expect(createBook).toHaveBeenCalledTimes(1));
+    const input = vi.mocked(createBook).mock.calls[0][0];
+    expect(input.cover).toEqual({ action: 'REPLACE', mediaType: 'image/png', base64: png, source: { provider: 'SHOWAPI', isbn: '9780306406157' } });
+    expect(input.cover).not.toHaveProperty('sourceIsbn');
+    expect(input).not.toHaveProperty('metadataSource');
+    expect(input).not.toHaveProperty('openLibraryIsbn');
+  });
+  it('只应用书目字段时保留先前本地上传封面草稿（来源独立）', async () => {
+    vi.mocked(lookupShowApi).mockResolvedValue({ ...showApiCandidate, cover: null });
+    renderCreate(); await fillValidBook();
+    await userEvent.upload(screen.getByLabelText('选择本地封面'), new File([Uint8Array.from(atob(png), (c) => c.charCodeAt(0))], 'one.png', { type: 'image/png' }));
+    await screen.findByText('待保存 · 本地上传');
+    await chooseSource('ShowAPI');
+    await userEvent.click(screen.getByRole('button', { name: '获取书目与封面' }));
+    await screen.findByText('ShowAPI候选标题');
+    await userEvent.click(screen.getByRole('checkbox', { name: '应用书名' }));
+    await userEvent.click(screen.getByRole('button', { name: '应用选中项' }));
+    expect(screen.getByText('待保存 · 本地上传')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /创建图书/ }));
+    await waitFor(() => expect(createBook).toHaveBeenCalledTimes(1));
+    const input = vi.mocked(createBook).mock.calls[0][0];
+    expect(input.cover).toEqual({ action: 'REPLACE', mediaType: 'image/png', base64: png, sourceIsbn: null });
+    expect(input.metadataSource).toEqual({ provider: 'SHOWAPI', isbn: '9780306406157' });
+  });
+});
+
+// INT-F1 回归：选中来源按钮文字继承 Radio.colorPrimary，在 colorBgContainer 上须 ≥4.5:1。
+// 断言真实导出的局部 theme 配置与真实 claude token 的 WCAG 比值；行为级证据由浏览器 computed 采样提供。
+describe('INT-F1 来源选择控件对比度', () => {
+  function luminance(hex: string): number {
+    const n = hex.replace('#', '');
+    const [r, g, b] = [0, 2, 4].map((i) => parseInt(n.slice(i, i + 2), 16) / 255)
+      .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+  function ratio(fg: string, bg: string): number {
+    const [l1, l2] = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
+    return (l1 + 0.05) / (l2 + 0.05);
+  }
+  it('局部 Radio.colorPrimary 使用既有 link token，选中/hover/active 文字均 ≥4.5，且不改背景', () => {
+    const bg = claudeTheme.token?.colorBgContainer as string;
+    expect(ratio(claudeTokens.colors.primary, bg)).toBeLessThan(4.5);
+    const radio = sourceRadioTheme.components?.Radio as Record<string, string>;
+    expect(radio.colorPrimary).toBe(claudeTokens.colors.link);
+    expect(ratio(radio.colorPrimary, bg)).toBeGreaterThanOrEqual(4.5);
+    expect(radio.colorPrimaryHover ?? (claudeTheme.token?.colorPrimaryHover as string)).toBe(claudeTokens.colors['primary-hover']);
+    expect(ratio(claudeTheme.token?.colorPrimaryHover as string, bg)).toBeGreaterThanOrEqual(4.5);
+    expect(ratio(claudeTheme.token?.colorPrimaryActive as string, bg)).toBeGreaterThanOrEqual(4.5);
+    expect(radio.buttonCheckedBg ?? bg).toBe(bg);
+    expect(Object.keys(radio)).toEqual(['colorPrimary']);
   });
 });

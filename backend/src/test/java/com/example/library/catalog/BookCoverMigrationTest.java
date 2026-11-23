@@ -19,7 +19,7 @@ class BookCoverMigrationTest {
             var result = context.getBean(BookWriteService.class).create(new com.example.library.catalog.dto.BookCreateRequest(
                     "080442957X", "重启书", "作者", null, null, null, null, 2,
                     new com.example.library.catalog.dto.CoverChangeRequest("REPLACE", "image/jpeg",
-                            java.util.Base64.getEncoder().encodeToString(bytes), null), "080442957X"));
+                            java.util.Base64.getEncoder().encodeToString(bytes), null, null), "080442957X", null));
             id = result.id();
             assertThat(result.totalCopies()).isEqualTo(2);
         }

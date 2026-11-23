@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 /** JDBC deliberately keeps BLOBs out of the JPA Book and list/detail queries. */
 @Repository
 public class BookCoverRepository {
-    private static final String METADATA = "book_id,media_type,length(image_data) AS byte_length,width,height,sha256,source_isbn";
+    private static final String METADATA = "book_id,media_type,length(image_data) AS byte_length,width,height,sha256,source_isbn,provider";
     private final JdbcTemplate jdbc;
     private final NamedParameterJdbcTemplate named;
 
@@ -41,12 +41,12 @@ public class BookCoverRepository {
                 (rs, row) -> new StoredCover(rs.getBytes(1), rs.getString(2)), id).stream().findFirst().orElse(null);
     }
 
-    public void replace(Long id, CoverImageValidator.Image image, String sourceIsbn, long now) {
-        jdbc.update("INSERT INTO book_cover(book_id,image_data,media_type,width,height,sha256,source_isbn,updated_at) "
-                + "VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(book_id) DO UPDATE SET image_data=excluded.image_data,"
+    public void replace(Long id, CoverImageValidator.Image image, String sourceIsbn, String provider, long now) {
+        jdbc.update("INSERT INTO book_cover(book_id,image_data,media_type,width,height,sha256,source_isbn,updated_at,provider) "
+                + "VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(book_id) DO UPDATE SET image_data=excluded.image_data,"
                 + "media_type=excluded.media_type,width=excluded.width,height=excluded.height,"
-                + "sha256=excluded.sha256,source_isbn=excluded.source_isbn,updated_at=excluded.updated_at",
-                id, image.bytes(), image.mediaType(), image.width(), image.height(), image.sha256(), sourceIsbn, now);
+                + "sha256=excluded.sha256,source_isbn=excluded.source_isbn,updated_at=excluded.updated_at,provider=excluded.provider",
+                id, image.bytes(), image.mediaType(), image.width(), image.height(), image.sha256(), sourceIsbn, now, provider);
     }
 
     public void remove(Long id) {
@@ -59,8 +59,12 @@ public class BookCoverRepository {
     private static BookCoverResponse response(ResultSet rs) throws SQLException {
         String sha = rs.getString("sha256");
         String source = rs.getString("source_isbn");
+        String provider = rs.getString("provider");
+        // Fixed backend source URLs only; SHOWAPI links to the public description page, never per-book.
+        String sourceUrl = source == null ? null
+                : "SHOWAPI".equals(provider) ? ShowApiClient.SOURCE_URL : "https://openlibrary.org/isbn/" + source;
         return new BookCoverResponse("/api/books/" + rs.getLong("book_id") + "/cover?v=" + sha,
                 rs.getString("media_type"), rs.getInt("byte_length"), rs.getInt("width"), rs.getInt("height"), sha,
-                source == null ? null : "https://openlibrary.org/isbn/" + source);
+                sourceUrl, provider, source);
     }
 }

@@ -18,7 +18,8 @@ public record BookUpdateRequest(
         Long categoryId,
         @Size(max = 2000) String description,
         CoverChangeRequest cover,
-        String openLibraryIsbn) {
+        String openLibraryIsbn,
+        BookSourceRequest metadataSource) {
 
     public BookUpdateRequest {
         isbn = Texts.trimToNull(isbn);

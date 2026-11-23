@@ -2,7 +2,7 @@
 // 各占位页由对应任务替换实现：T08 catalog、T09 readers、T10 circulation、T11 stats、T14 account。
 // /account/password 依据用户决定 D4① 纳入。
 import { Suspense, lazy } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import { RequireAuth } from '../auth/RequireAuth';
 import { RequireRole } from '../auth/RequireRole';
 import LoginPage from '../auth/LoginPage';
@@ -16,7 +16,7 @@ const BookSearchPage = lazy(() => import('../features/catalog/pages/BookSearchPa
 const BookDetailPage = lazy(() => import('../features/catalog/pages/BookDetailPage'));
 const AdminBookListPage = lazy(() => import('../features/catalog/pages/AdminBookListPage'));
 const BookFormPage = lazy(() => import('../features/catalog/pages/BookFormPage'));
-const ProxySettingsPage = lazy(() => import('../features/settings/pages/ProxySettingsPage'));
+const SettingsPage = lazy(() => import('../features/settings/pages/SettingsPage'));
 const CategoryPage = lazy(() => import('../features/catalog/pages/CategoryPage'));
 
 const AdminReaderListPage = lazy(() => import('../features/readers/pages/AdminReaderListPage'));
@@ -82,7 +82,9 @@ export function AppRoutes() {
             <Route path="reports/overdue" element={<OverdueReportPage />} />
             <Route path="dunning" element={<DunningCaseListPage />} />
             <Route path="stats" element={<StatsPage />} />
-            <Route path="settings/proxy" element={<ProxySettingsPage />} />
+            <Route path="settings" element={<Navigate to="/admin/settings/proxy" replace />} />
+            <Route path="settings/proxy" element={<SettingsPage />} />
+            <Route path="settings/showapi" element={<SettingsPage />} />
           </Route>
           <Route path="403" element={<ForbiddenPage />} />
           <Route path="*" element={<NotFoundPage />} />

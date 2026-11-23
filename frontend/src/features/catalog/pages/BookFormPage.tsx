@@ -21,7 +21,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router';
 import { ApiError } from '../../../api/client';
 import { errorMessage } from '../../../api/errors';
-import type { BookDetail, BookInput } from '../../../api/types';
+import type { BookDetail, BookInput, BookSource } from '../../../api/types';
 import { EmptyState } from '../../../components/EmptyState';
 import { PageError } from '../../../components/PageError';
 import { PageLoading } from '../../../components/PageLoading';
@@ -71,7 +71,7 @@ function BookForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [baseline, setBaseline] = useState<BookDetail>();
   const [draft, setDraft] = useState<CoverDraft>({ action: 'KEEP' });
-  const [sourceIsbn, setSourceIsbn] = useState<string>();
+  const [metadataSource, setMetadataSource] = useState<BookSource>();
   const [saving, setSaving] = useState(false);
   const locked = useRef(false);
   const submittedIsbn = useRef<string | undefined>(undefined);
@@ -98,7 +98,7 @@ function BookForm() {
     onSuccess: (book) => {
       setBaseline(book);
       setDraft({ action: 'KEEP' });
-      setSourceIsbn(undefined);
+      setMetadataSource(undefined);
       form.setFieldsValue({ isbn: book.isbn, title: book.title, author: book.author, publisher: book.publisher ?? undefined, publishYear: book.publishYear, categoryId: book.category?.id, description: book.description ?? undefined });
       queryClient.setQueryData(catalogKeys.book(book.id), book);
       queryClient.invalidateQueries({ queryKey: catalogKeys.all });
@@ -128,7 +128,9 @@ function BookForm() {
       isbn: normalizeIsbn(values.isbn), title: values.title.trim(), author: values.author.trim(),
       publisher: trimToNull(values.publisher), publishYear: values.publishYear ?? null,
       categoryId: values.categoryId ?? null, description: trimToNull(values.description),
-      ...(cover ? { cover } : {}), ...(sourceIsbn ? { openLibraryIsbn: sourceIsbn } : {}),
+      // OL 沿用旧 openLibraryIsbn 字段（保留既有回归）；ShowAPI 用通用 metadataSource；二者不同时发送。
+      ...(cover ? { cover } : {}),
+      ...(metadataSource ? metadataSource.provider === 'OPEN_LIBRARY' ? { openLibraryIsbn: metadataSource.isbn } : { metadataSource } : {}),
       ...(!isEdit ? { initialCopies: values.initialCopies ?? 1 } : {}),
     };
     submittedIsbn.current = input.isbn;
@@ -259,9 +261,9 @@ function BookForm() {
           </Form.Item>
         </Flex>
 
-        <OpenLibraryCandidatePanel form={form} disabled={saving} isLocked={isLocked} draft={draft} onApply={(isbn, hasMetadata, cover) => {
+        <OpenLibraryCandidatePanel form={form} disabled={saving} isLocked={isLocked} draft={draft} onApply={(isbn, hasMetadata, cover, provider) => {
           if (locked.current) return;
-          if (hasMetadata) setSourceIsbn(isbn);
+          if (hasMetadata) setMetadataSource({ provider, isbn });
           if (cover) { setDraft(cover); setCoverServerError(undefined); }
         }} />
         <CoverEditor book={book} draft={draft} onChange={(next) => { setDraft(next); setCoverServerError(undefined); }} disabled={saving} isLocked={isLocked} serverError={coverServerError} />

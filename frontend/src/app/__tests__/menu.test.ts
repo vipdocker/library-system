@@ -24,7 +24,8 @@ describe('AC-AUTH-09 / AC-UI-05 角色菜单', () => {
       '/admin/reports/overdue',
       '/admin/dunning',
       '/admin/stats',
-      '/admin/settings/proxy',
+      // showapi-design-v1 §7：系统设置单菜单入口改为容器路径，代理/ShowAPI 为页签（FE-01 披露修订）。
+      '/admin/settings',
       '/account/password',
     ]) {
       expect(keys, required).toContain(required);
@@ -49,6 +50,8 @@ describe('selectedMenuKey 最长前缀匹配', () => {
     expect(selectedMenuKey('/admin/books/new', entries)).toBe('/admin/books');
     expect(selectedMenuKey('/admin/readers/9', entries)).toBe('/admin/readers');
     expect(selectedMenuKey('/books/5', entries)).toBe('/books');
+    expect(selectedMenuKey('/admin/settings/proxy', entries)).toBe('/admin/settings');
+    expect(selectedMenuKey('/admin/settings/showapi', entries)).toBe('/admin/settings');
   });
 
   it('精确匹配与未匹配', () => {

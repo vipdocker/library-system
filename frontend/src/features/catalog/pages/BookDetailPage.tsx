@@ -15,6 +15,8 @@ import { PageLoading } from '../../../components/PageLoading';
 import { catalogKeys, getBook } from '../api';
 import { BookCover } from '../components/BookCover';
 
+const PROVIDER_LABELS = { OPEN_LIBRARY: 'Open Library', SHOWAPI: 'ShowAPI' } as const;
+
 export default function BookDetailPage() {
   const { id } = useParams();
   const bookId = Number(id);
@@ -72,8 +74,8 @@ export default function BookDetailPage() {
     { key: 'author', label: '作者', children: book.author },
     { key: 'publisher', label: '出版社', children: book.publisher ?? '—' },
     { key: 'publishYear', label: '出版年', children: book.publishYear ?? '—' },
-    { key: 'metadataSource', label: '书目来源记录', children: book.metadataSourceUrl ? <a href={book.metadataSourceUrl} target="_blank" rel="noreferrer">Open Library · {book.openLibraryIsbn}</a> : '人工录入' },
-    { key: 'coverSource', label: '封面来源记录', children: book.cover ? book.cover.sourceUrl ? <a href={book.cover.sourceUrl} target="_blank" rel="noreferrer">Open Library</a> : '本地上传' : '暂无封面' },
+    { key: 'metadataSource', label: '书目来源记录', children: book.metadataSourceUrl ? <a href={book.metadataSourceUrl} target="_blank" rel="noreferrer">{book.sourceProvider ? `${PROVIDER_LABELS[book.sourceProvider]} · ${book.sourceIsbn ?? book.openLibraryIsbn ?? ''}` : `Open Library · ${book.openLibraryIsbn}`}</a> : '人工录入' },
+    { key: 'coverSource', label: '封面来源记录', children: book.cover ? book.cover.sourceUrl ? <a href={book.cover.sourceUrl} target="_blank" rel="noreferrer">{book.cover.sourceProvider ? PROVIDER_LABELS[book.cover.sourceProvider] : 'Open Library'}</a> : '本地上传' : '暂无封面' },
     {
       key: 'category',
       label: '分类',

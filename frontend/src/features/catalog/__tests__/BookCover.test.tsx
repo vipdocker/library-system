@@ -10,7 +10,7 @@ import { adminUser, readerUser } from './testUtils';
 vi.mock('../api', async (original) => ({ ...await original<typeof import('../api')>(), getBookCover: vi.fn() }));
 vi.mock('../../../auth/AuthContext', () => ({ useAuth: vi.fn() }));
 const bytes = new Uint8Array([137, 80, 78, 71]);
-const metadata: BookCoverMetadata = { url: '/api/books/5/cover?v=sha', sha256: 'sha', mediaType: 'image/png', byteLength: 4, width: 1, height: 1, sourceUrl: null };
+const metadata: BookCoverMetadata = { url: '/api/books/5/cover?v=sha', sha256: 'sha', mediaType: 'image/png', byteLength: 4, width: 1, height: 1, sourceUrl: null, sourceProvider: null, sourceIsbn: null };
 function cover() { return <BookCover title="书" bookId={5} cover={metadata} />; }
 let client: QueryClient;
 beforeEach(() => {

@@ -103,6 +103,8 @@ export function makeBookDetail(overrides: Partial<BookDetail> = {}): BookDetail 
     ...makeBook(),
     openLibraryIsbn: null,
     metadataSourceUrl: null,
+    sourceProvider: null,
+    sourceIsbn: null,
     description: '从程序员视角讲解计算机系统的经典教材。',
     createdAt: '2026-11-01T08:00:00Z',
     updatedAt: '2026-11-10T08:00:00Z',

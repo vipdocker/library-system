@@ -49,10 +49,14 @@ public abstract class IntegrationTestBase {
     @Autowired
     private com.example.library.common.proxy.ProxySettingsService proxySettings;
 
+    @Autowired
+    private com.example.library.catalog.settings.ShowApiSettingsService showApiSettings;
+
     @BeforeEach
     void cleanDatabaseAndClock() {
         TestDatabase.cleanAllTables(jdbcTemplate);
         proxySettings.reload();
+        showApiSettings.reload();
         mutableClock.reset();
     }
 }

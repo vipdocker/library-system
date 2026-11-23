@@ -49,6 +49,13 @@ const DESIGN_ERROR_CODES = [
   'COVER_UNSUPPORTED_TYPE',
   'OPEN_LIBRARY_UNAVAILABLE',
   'OPEN_LIBRARY_RATE_LIMITED',
+  // showapi-design-v1 §5：ShowAPI 查询与系统设置错误码（与后端 ErrorCode.java 逐项核对）。
+  'SHOWAPI_NOT_CONFIGURED',
+  'SETTINGS_CONFLICT',
+  'SHOWAPI_RATE_LIMITED',
+  'SHOWAPI_AUTH_FAILED',
+  'SHOWAPI_UNAVAILABLE',
+  'SHOWAPI_INVALID_RESPONSE',
 ] as const;
 
 describe('AC-UI-03 errors.ts 错误码完整性', () => {

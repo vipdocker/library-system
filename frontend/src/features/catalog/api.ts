@@ -14,6 +14,7 @@ import type {
   CopyStatusInput,
   Page,
   OpenLibraryLookup,
+  ShowApiLookup,
 } from '../../api/types';
 
 /** 图书检索排序白名单（第 8.4 节）：title、author、publishYear、createdAt；默认 title,asc。 */
@@ -94,6 +95,11 @@ export function getBookCover(id: number, sha256: string, signal?: AbortSignal): 
 
 export function lookupOpenLibrary(isbn: string, signal?: AbortSignal): Promise<OpenLibraryLookup> {
   return apiGet<OpenLibraryLookup>('/api/catalog/open-library', { isbn }, { signal });
+}
+
+/** ShowAPI 查询为 POST JSON {isbn}（ADMIN/session/CSRF）；仅候选，不落库。 */
+export function lookupShowApi(isbn: string, signal?: AbortSignal): Promise<ShowApiLookup> {
+  return apiPost<ShowApiLookup>('/api/catalog/showapi', { isbn }, { signal });
 }
 
 export function createBook(input: BookCreateInput): Promise<BookDetail> {

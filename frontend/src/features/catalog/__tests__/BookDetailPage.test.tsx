@@ -89,3 +89,37 @@ describe('AC-SRCH-02 / AC-BOOK-03 BookDetailPage', () => {
     expect(await screen.findByRole('heading', { name: '深入理解计算机系统' })).toBeInTheDocument();
   });
 });
+
+describe('AC-S3/T3 书目与封面来源分别标注', () => {
+  it('ShowAPI 书目来源 + 本地封面：链接文案为 ShowAPI，封面为本地上传', async () => {
+    vi.mocked(getBook).mockResolvedValue(makeBookDetail({
+      sourceProvider: 'SHOWAPI', sourceIsbn: '9780306406157',
+      metadataSourceUrl: 'https://www.showapi.com/apis/isbn-book-1626',
+      cover: { url: '/api/books/5/cover?v=sha', sha256: 'sha', mediaType: 'image/png', byteLength: 4, width: 1, height: 1, sourceUrl: null, sourceProvider: null, sourceIsbn: null },
+    }));
+    renderDetail();
+    const link = await screen.findByRole('link', { name: 'ShowAPI · 9780306406157' });
+    expect(link).toHaveAttribute('href', 'https://www.showapi.com/apis/isbn-book-1626');
+    expect(screen.getByText('本地上传')).toBeInTheDocument();
+    expect(screen.queryByText(/Open Library/)).not.toBeInTheDocument();
+  });
+  it('OL 书目 + ShowAPI 封面：两个来源独立标注，不互相沿用', async () => {
+    vi.mocked(getBook).mockResolvedValue(makeBookDetail({
+      sourceProvider: 'OPEN_LIBRARY', sourceIsbn: '9780306406157', openLibraryIsbn: '9780306406157',
+      metadataSourceUrl: 'https://openlibrary.org/isbn/9780306406157',
+      cover: { url: '/api/books/5/cover?v=sha', sha256: 'sha', mediaType: 'image/png', byteLength: 4, width: 1, height: 1, sourceUrl: 'https://www.showapi.com/apis/isbn-book-1626', sourceProvider: 'SHOWAPI', sourceIsbn: '9780306406157' },
+    }));
+    renderDetail();
+    expect(await screen.findByRole('link', { name: 'Open Library · 9780306406157' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'ShowAPI' })).toHaveAttribute('href', 'https://www.showapi.com/apis/isbn-book-1626');
+  });
+  it('旧数据仅有 openLibraryIsbn/sourceUrl 时仍按 Open Library 标注（兼容回归）', async () => {
+    vi.mocked(getBook).mockResolvedValue(makeBookDetail({
+      openLibraryIsbn: '9780306406157', metadataSourceUrl: 'https://openlibrary.org/isbn/9780306406157',
+      cover: { url: '/api/books/5/cover?v=sha', sha256: 'sha', mediaType: 'image/png', byteLength: 4, width: 1, height: 1, sourceUrl: 'https://openlibrary.org/isbn/9780306406157', sourceProvider: null, sourceIsbn: null },
+    }));
+    renderDetail();
+    expect(await screen.findByRole('link', { name: 'Open Library · 9780306406157' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Open Library' })).toBeInTheDocument();
+  });
+});

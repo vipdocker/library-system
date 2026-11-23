@@ -115,7 +115,8 @@ public class BookService {
 
     /** POST /api/books：校验顺序 400（字段/ISBN）→ 404（分类）→ 409（ISBN 重复）。 */
     @Transactional
-    public BookDetailResponse create(BookCreateRequest request, BookWriteService.PreparedCover cover, String sourceIsbn) {
+    public BookDetailResponse create(BookCreateRequest request, BookWriteService.PreparedCover cover,
+                                     BookWriteService.ResolvedSource source) {
         String isbn = normalizeAndValidateIsbn(request.isbn());
         Category category = resolveCategory(request.categoryId());
         if (bookRepository.existsByIsbn(isbn)) {
@@ -128,7 +129,9 @@ public class BookService {
         book = saveConflictSafe(book);
         int initialCopies = request.initialCopies() == null ? 1 : request.initialCopies();
         copyService.createCopies(book, initialCopies);
-        book.setOpenLibraryIsbn(sourceIsbn);
+        if (source != null) {
+            applyMetadataSource(book, source);
+        }
         bookRepository.flush();
         applyCover(book.getId(), cover);
         return toDetail(book);
@@ -137,7 +140,7 @@ public class BookService {
     /** PUT /api/books/{id}：不含 initialCopies。 */
     @Transactional
     public BookDetailResponse update(Long id, BookUpdateRequest request,
-                                     BookWriteService.PreparedCover cover, String sourceIsbn) {
+                                     BookWriteService.PreparedCover cover, BookWriteService.ResolvedSource source) {
         String isbn = normalizeAndValidateIsbn(request.isbn());
         Book book = requireBook(id);
         Category category = resolveCategory(request.categoryId());
@@ -150,8 +153,8 @@ public class BookService {
         book.setCategoryId(category == null ? null : category.getId());
         applyOptionalFields(book, request.publisher(), request.publishYear(), request.description());
         book.setUpdatedAt(clock.instant());
-        if (sourceIsbn != null) {
-            book.setOpenLibraryIsbn(sourceIsbn);
+        if (source != null) {
+            applyMetadataSource(book, source);
         }
         book = saveConflictSafe(book);
         applyCover(id, cover);
@@ -182,10 +185,17 @@ public class BookService {
 
     private void applyCover(Long id, BookWriteService.PreparedCover cover) {
         if ("REPLACE".equals(cover.action())) {
-            covers.replace(id, cover.image(), cover.sourceIsbn(), clock.millis());
+            covers.replace(id, cover.image(), cover.sourceIsbn(), cover.sourceProvider(), clock.millis());
         } else if ("REMOVE".equals(cover.action())) {
             covers.remove(id);
         }
+    }
+
+    /** SHOWAPI application clears the legacy OL isbn; OPEN_LIBRARY keeps both representations in sync. */
+    private static void applyMetadataSource(Book book, BookWriteService.ResolvedSource source) {
+        book.setSourceProvider(source.provider());
+        book.setSourceIsbn(source.isbn());
+        book.setOpenLibraryIsbn("OPEN_LIBRARY".equals(source.provider()) ? source.isbn() : null);
     }
 
     private Book requireBook(Long id) {
